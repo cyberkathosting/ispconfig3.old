@@ -33,7 +33,7 @@ $conf["app_title"] = "ISPConfig";
 $conf["app_version"] = "3.0.0";
 
 
-$conf["rootpath"]			= "D:\\server\\www\\ispconfig3\\interface";
+$conf["rootpath"]			= "D:\\server\\www\\mydnsconfig\\interface";
 //$conf["rootpath"]			= "D:\\www\\ispconfig3\\interface";
 //$conf["rootpath"]			= "/home/www/ispconfig3/web/cms";
 
@@ -43,7 +43,7 @@ $conf["temppath"]			= $conf["rootpath"].$conf["fs_div"]."temp";
 
 
 define("DIR_TRENNER","\\");
-define("SERVER_ROOT","D:\\server\\www\\ispconfig3\\interface");
+define("SERVER_ROOT","D:\\server\\www\\mydnsconfig\\interface");
 define("INCLUDE_ROOT",SERVER_ROOT.DIR_TRENNER."lib");
 define("CLASSES_ROOT",INCLUDE_ROOT.DIR_TRENNER."classes");
 
@@ -53,7 +53,7 @@ define("CLASSES_ROOT",INCLUDE_ROOT.DIR_TRENNER."classes");
 
 define("DB_TYPE","mysql");
 define("DB_HOST","localhost");
-define("DB_DATABASE","ispconfig3");
+define("DB_DATABASE","mydnsconfig1_1");
 define("DB_USER","root");
 define("DB_PASSWORD","");
 
@@ -62,7 +62,7 @@ define("DB_PASSWORD","");
 
 $conf["db_type"]			= 'mysql';
 $conf["db_host"]			= 'localhost';
-$conf["db_database"]		= 'ispconfig3';
+$conf["db_database"]		= 'mydnsconfig1_1';
 $conf["db_user"]			= 'root';
 $conf["db_password"]		= '';
 
@@ -79,9 +79,9 @@ $conf["programs"]["wput"]		= $conf["rootpath"]."\\tools\\wput\\wput.exe";
         Themes
 */
 
-$conf["theme"]									= 'grey';
+$conf["theme"]					= 'grey';
 $conf["html_content_encoding"]	= 'text/html; charset=iso-8859-1';
-$conf["logo"] 									= 'themes/default/images/mydnsconfig_logo.gif';
+$conf["logo"] 					= 'themes/default/images/mydnsconfig_logo.gif';
 
 /*
         Default Language
