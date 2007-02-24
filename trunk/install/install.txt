@@ -1,0 +1,141 @@
+Install MyDNSConfig
+===================
+
+You can download MyDNSConfig from http://www.mydnsconfig.org.
+
+You should already have MyDNS installed (with a database called 'mydns' with the tables 'rr' and 'soa', and the soa table should also contain the columns 'active' and 'xfer'), as per the instructions in section 1 on http://www.howtoforge.com/mydns_name_server.
+You should also have an Apache with PHP and MySQL support.
+
+Now lets assume you have downloaded mydnsconfig-<version>.tar.gz to /tmp, and your Apache's document root is /var/www. Then you install it like this:
+
+cd /tmp
+tar xvfz mydnsconfig-<version>.tar.gz
+cd mydnsconfig
+cp -fr * /var/www
+
+Then you have to adjust /var/www/lib/config.inc.php, e.g. like this:
+
+-----------------------------
+<?php
+
+ini_set('register_globals',0);
+
+$conf["app_title"] = "MyDNSConfig";
+$conf["app_version"] = "1.0.0";
+$conf["rootpath"] = "/var/www";
+
+$conf["fs_div"] = "/"; // File system divider, \\ on windows and / on linux and unix
+$conf["classpath"] = $conf["rootpath"].$conf["fs_div"]."lib".$conf["fs_div"]."classes";
+$conf["temppath"] = $conf["rootpath"].$conf["fs_div"]."temp";
+
+/*
+        Database Settings
+*/
+
+$conf["db_type"] = 'mysql';
+$conf["db_host"] = 'localhost';
+$conf["db_database"] = 'mydns';
+$conf["db_user"] = 'mydns';
+$conf["db_password"] = 'mydns_password';
+
+/*
+        External programs
+*/
+
+//$conf["programs"]["convert"] = "/usr/bin/convert";
+//$conf["programs"]["wput"] = $conf["rootpath"]."\\tools\\wput\\wput.exe";
+
+/*
+        Themes
+*/
+
+$conf["theme"] = 'default';
+$conf["html_content_encoding"] = 'text/html; charset=iso-8859-1';
+$conf["logo"] = 'themes/default/images/mydnsconfig_logo.gif';
+
+/*
+        Default Language
+*/
+
+$conf["language"] = 'en';
+
+/*
+        Auto Load Modules
+*/
+
+$conf["start_db"] = true;
+$conf["start_session"] = true;
+
+/*
+        DNS Settings
+*/
+
+$conf["auto_create_ptr"] = 1; // Automatically create PTR records?
+$conf["default_ns"] = 'ns1.example.com.'; // must be set if $conf['auto_create_ptr'] is 1. Don't forget the trailing dot!
+$conf["default_mbox"] = 'admin.example.com.'; // Admin email address. Must be set if $conf['auto_create_ptr'] is 1. Replace "@" with ".". Don't forget the trailing dot!
+$conf["default_ttl"] = 86400;
+$conf["default_refresh"] = 28800;
+$conf["default_retry"] = 7200;
+$conf["default_expire"] = 604800;
+$conf["default_minimum_ttl"] = 86400;
+
+?>
+-----------------------------
+
+Make sure you fill in the correct database details! If you want MyDNSConfig to automatically create reverse DNS records (PTR records) when you create a new DNS records, then set $conf['auto_create_ptr'] to 1 and specify a default name server in $conf['default_ns'] (do not forget the dot at the end!) and an admin email address in $conf['default_mbox'] (also with a dot at the end, and the @ sign must be replaced by a dot!).
+
+Next you have to change the 'rr' and 'soa' table in the 'mydns' database and create a new table needed by MyDNSConfig:
+
+mysql -u root -p
+Enter password:
+
+Use mydns;
+
+ALTER TABLE `rr` ADD `sys_userid` INT NOT NULL,
+ADD `sys_groupid` INT NOT NULL AFTER `sys_userid`,
+ADD `sys_perm_user` VARCHAR( 5 ) NOT NULL AFTER `sys_groupid`,
+ADD `sys_perm_group` VARCHAR( 5 ) NOT NULL AFTER `sys_perm_user`,
+ADD `sys_perm_other` VARCHAR( 5 ) NOT NULL AFTER `sys_perm_group`;
+
+ALTER TABLE `soa` ADD `sys_userid` INT NOT NULL,
+ADD `sys_groupid` INT NOT NULL AFTER `sys_userid`,
+ADD `sys_perm_user` VARCHAR( 5 ) NOT NULL AFTER `sys_groupid`,
+ADD `sys_perm_group` VARCHAR( 5 ) NOT NULL AFTER `sys_perm_user`,
+ADD `sys_perm_other` VARCHAR( 5 ) NOT NULL AFTER `sys_perm_group`;
+
+CREATE TABLE `sys_user` (
+`userid` int(11) NOT NULL auto_increment,
+`sys_userid` int(11) NOT NULL default '0',
+`sys_groupid` int(11) NOT NULL default '0',
+`sys_perm_user` varchar(5) NOT NULL default '',
+`sys_perm_group` varchar(5) NOT NULL default '',
+`sys_perm_other` varchar(5) NOT NULL default '',
+`username` varchar(100) NOT NULL default '',
+`passwort` varchar(100) NOT NULL default '',
+`modules` varchar(255) NOT NULL default '',
+`startmodule` varchar(255) NOT NULL default '',
+`app_theme` varchar(100) NOT NULL default 'default',
+`typ` varchar(20) NOT NULL default 'user',
+`active` tinyint(4) NOT NULL default '1',
+`name` varchar(100) NOT NULL default '',
+`vorname` varchar(100) NOT NULL default '',
+`unternehmen` varchar(100) NOT NULL default '',
+`strasse` varchar(100) NOT NULL default '',
+`ort` varchar(100) NOT NULL default '',
+`plz` varchar(10) NOT NULL default '',
+`land` varchar(50) NOT NULL default '',
+`email` varchar(100) NOT NULL default '',
+`url` varchar(255) NOT NULL default '',
+`telefon` varchar(100) NOT NULL default '',
+`fax` varchar(100) NOT NULL default '',
+`language` varchar(10) NOT NULL default 'de',
+`groups` varchar(255) NOT NULL default '',
+`default_group` int(11) NOT NULL default '0',
+PRIMARY KEY (`userid`)
+) TYPE=MyISAM AUTO_INCREMENT=2 ;
+
+INSERT INTO `sys_user` (`userid`, `sys_userid`, `sys_groupid`, `sys_perm_user`, `sys_perm_group`, `sys_perm_other`, `username`, `passwort`, `modules`, `startmodule`, `app_theme`, `typ`, `active`, `name`, `vorname`, `unternehmen`, `strasse`, `ort`, `plz`, `land`, `email`, `url`, `telefon`, `fax`, `language`, `groups`, `default_group`) VALUES (1, 1, 0, 'riud', 'riud', '', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin,designer,resellers,sites,dns', 'dns', 'default', 'admin', 1, '', 'Administrator', '', '', '', '', '', '', '', '', '', 'en', '1,2', 1);
+
+quit;
+
+Now you can access MyDNSConfig under http://<your_ip_address>. The default login username is admin, the password is also admin. Please change the password after your first login under System -> Edit user.

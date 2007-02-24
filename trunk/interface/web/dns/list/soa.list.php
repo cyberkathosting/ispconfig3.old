@@ -43,7 +43,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 $liste["name"]                                 = "soa";
 
 // Database table
-$liste["table"]                         = "dns_soa";
+$liste["table"]                         = "soa";
 
 // Index index field of the database table
 $liste["table_idx"]                        = "id";

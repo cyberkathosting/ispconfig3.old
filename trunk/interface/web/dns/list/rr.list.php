@@ -43,7 +43,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 $liste["name"]                                 = "rr";
 
 // Database table
-$liste["table"]                         = "dns_rr";
+$liste["table"]                         = "rr";
 
 // Index index field of the database table
 $liste["table_idx"]                        = "id";
