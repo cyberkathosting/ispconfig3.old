@@ -3,14 +3,18 @@ Install MyDNSConfig
 
 You can download MyDNSConfig from http://www.mydnsconfig.org.
 
-You should already have MyDNS installed (with a database called 'mydns' with the tables 'rr' and 'soa', and the soa table should also contain the columns 'active' and 'xfer'), as per the instructions in section 1 on http://www.howtoforge.com/mydns_name_server.
+You should already have MyDNS installed but not created the
+database. The MyDNSConfig database .sql file contains all
+tables needed for MyDNS 1.0. and 1.1.
+
 You should also have an Apache with PHP and MySQL support.
 
-Now lets assume you have downloaded mydnsconfig-<version>.tar.gz to /tmp, and your Apache's document root is /var/www. Then you install it like this:
+Now lets assume you have downloaded mydnsconfig-<version>.tar.gz to /tmp, and your Apache's document
+root is /var/www. Then you install it like this:
 
 cd /tmp
 tar xvfz mydnsconfig-<version>.tar.gz
-cd mydnsconfig
+cd mydnsconfig/interface
 cp -fr * /var/www
 
 Then you have to adjust /var/www/lib/config.inc.php, e.g. like this:
@@ -21,7 +25,7 @@ Then you have to adjust /var/www/lib/config.inc.php, e.g. like this:
 ini_set('register_globals',0);
 
 $conf["app_title"] = "MyDNSConfig";
-$conf["app_version"] = "1.0.0";
+$conf["app_version"] = "1.1.0";
 $conf["rootpath"] = "/var/www";
 
 $conf["fs_div"] = "/"; // File system divider, \\ on windows and / on linux and unix
@@ -82,7 +86,11 @@ $conf["default_minimum_ttl"] = 86400;
 ?>
 -----------------------------
 
-Make sure you fill in the correct database details! If you want MyDNSConfig to automatically create reverse DNS records (PTR records) when you create a new DNS records, then set $conf['auto_create_ptr'] to 1 and specify a default name server in $conf['default_ns'] (do not forget the dot at the end!) and an admin email address in $conf['default_mbox'] (also with a dot at the end, and the @ sign must be replaced by a dot!).
+Make sure you fill in the correct database details! If you want MyDNSConfig to automatically
+create reverse DNS records (PTR records) when you create a new DNS records, then set 
+$conf['auto_create_ptr'] to 1 and specify a default name server in $conf['default_ns'] 
+(do not forget the dot at the end!) and an admin email address in $conf['default_mbox'] 
+(also with a dot at the end, and the @ sign must be replaced by a dot!).
 
 Next you have to change the 'rr' and 'soa' table in the 'mydns' database and create a new table needed by MyDNSConfig:
 
