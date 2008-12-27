@@ -1,0 +1,11 @@
+<?php
+$wb['list_head_txt'] = 'Aliasdomain';
+$wb['active_txt'] = 'Активный';
+$wb['server_id_txt'] = 'Сервер';
+$wb['parent_domain_id_txt'] = 'Website';
+$wb['domain_txt'] = 'Aliasdomain';
+$wb['add_new_record_txt'] = 'Добавить новый aliasdomain';
+$wb['domain_error_empty'] = 'Домен пустой.';
+$wb['domain_error_unique'] = 'Домен должен быть уникальным.';
+$wb['domain_error_regex'] = 'Имя домена неправильно.';
+?>

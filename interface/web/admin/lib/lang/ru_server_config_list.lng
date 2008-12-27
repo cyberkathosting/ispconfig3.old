@@ -1,0 +1,4 @@
+<?php
+$wb['list_head_txt'] = 'Натсройки сервера';
+$wb['server_name_txt'] = 'Сервер';
+?>

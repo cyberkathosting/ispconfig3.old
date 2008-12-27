@@ -1,0 +1,11 @@
+<?php
+$wb['list_head_txt'] = 'A-Record';
+$wb['active_txt'] = 'Active';
+$wb['server_id_txt'] = 'Servidor';
+$wb['zone_txt'] = 'Zona';
+$wb['name_txt'] = 'Nombre';
+$wb['data_txt'] = 'Fecha';
+$wb['aux_txt'] = 'Prioridad';
+$wb['type_txt'] = 'Tipo';
+$wb['add_new_record_txt'] = 'Añadir nuevo registro A';
+?>

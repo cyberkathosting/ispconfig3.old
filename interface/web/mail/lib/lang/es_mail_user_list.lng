@@ -1,0 +1,6 @@
+<?php
+$wb['list_head_txt'] = 'Buzón';
+$wb['email_txt'] = 'Dirección de correo';
+$wb['autoresponder_txt'] = 'Autoresponder';
+$wb['add_new_record_txt'] = 'Añadir nuevo buzón';
+?>

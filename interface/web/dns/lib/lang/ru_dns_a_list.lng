@@ -1,0 +1,11 @@
+<?php
+$wb['list_head_txt'] = 'A-Record';
+$wb['active_txt'] = 'Активный';
+$wb['server_id_txt'] = 'Сервер';
+$wb['zone_txt'] = 'Zone';
+$wb['name_txt'] = 'Name';
+$wb['data_txt'] = 'Data';
+$wb['type_txt'] = 'Тип';
+$wb['add_new_record_txt'] = 'Добавить DNS A-Record';
+$wb['aux_txt'] = 'Priority';
+?>

@@ -1,0 +1,6 @@
+<?php
+$wb['list_head_txt'] = 'Групи';
+$wb['description_txt'] = 'Описание';
+$wb['name_txt'] = 'Група';
+$wb['add_new_record_txt'] = 'Нова група';
+?>

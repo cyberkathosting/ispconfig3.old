@@ -1,0 +1,6 @@
+<?php
+$wb['email_txt'] = 'Email';
+$wb['destination_txt'] = 'Получатель Email';
+$wb['active_txt'] = 'Активный';
+$wb['limit_mailforward_txt'] = 'Максимальное число forwarders достигнуто.';
+?>

@@ -1,0 +1,4 @@
+<?php
+$wb['rulename_txt'] = 'Naam';
+$wb['add_new_record_txt'] = 'Toevoegen Filter';
+?>

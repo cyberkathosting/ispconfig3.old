@@ -1,0 +1,6 @@
+<?php
+$wb['server_id_txt'] = 'Servidor';
+$wb['ip_address_txt'] = 'Dirección IP';
+$wb['virtualhost_txt'] = 'NameVirtualHost HTTP';
+$wb['ip_err'] = 'Dirección IP inválida';
+?>
