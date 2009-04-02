@@ -1,8 +1,8 @@
 #!/bin/bash
 
 cd /tmp
-wget http://www.ispconfig.org/downloads/ISPConfig-3-stable.tar.gz
-tar xvfz ISPConfig-3-stable.tar.gz
-cd ispconfig3_install/install/
+wget http://www.mydnsconfig.org/downloads/MyDNSConfig-3-stable.tar.gz
+tar xvfz MyDNSConfig-3-stable.tar.gz
+cd mydnsconfig/install/
 php -q update.php
-rm -rf /tmp/ispconfig3_install/install
+rm -rf /tmp/mydnsconfig/install

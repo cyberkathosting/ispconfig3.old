@@ -76,14 +76,14 @@ require_once('/usr/local/ispconfig/server/lib/config.inc.php');
 
 
 echo "\n\n".str_repeat('-',80)."\n";
-echo " _____ ___________   _____              __ _       
-|_   _/  ___| ___ \ /  __ \            / _(_)      
-  | | \ `--.| |_/ / | /  \/ ___  _ __ | |_ _  __ _ 
-  | |  `--. \  __/  | |    / _ \| '_ \|  _| |/ _` |
- _| |_/\__/ / |     | \__/\ (_) | | | | | | | (_| |
- \___/\____/\_|      \____/\___/|_| |_|_| |_|\__, |
-                                              __/ |
-                                             |___/ ";
+echo " __  __       _____  _   _  _____  _____             __ _       
+|  \/  |     |  __ \| \ | |/ ____|/ ____|           / _(_)      
+| \  / |_   _| |  | |  \| | (___ | |     ___  _ __ | |_ _  __ _ 
+| |\/| | | | | |  | | . ` |\___ \| |    / _ \| '_ \|  _| |/ _` |
+| |  | | |_| | |__| | |\  |____) | |___| (_) | | | | | | | (_| |
+|_|  |_|\__, |_____/|_| \_|_____/ \_____\___/|_| |_|_| |_|\__, |
+         __/ |                                             __/ |
+        |___/                                             |___/";
 echo "\n".str_repeat('-',80)."\n";
 echo "\n\n>> Update  \n\n";
 echo "Please choose the update method. For production systems select 'stable'. \nThe update from svn is only for development systems and may break your current setup.\n\n";
