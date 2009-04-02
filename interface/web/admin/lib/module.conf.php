@@ -47,10 +47,11 @@ $items[] = array( 'title' 	=> 'Add server',
 				  'target' 	=> 'content',
 				  'link'	=> 'admin/server_edit.php');
 */
+/*
 $items[] = array( 'title' 	=> 'Edit server',
 				  'target' 	=> 'content',
 				  'link'	=> 'admin/server_list.php');
-
+*/
 $items[] = array( 'title' 	=> 'Server Config',
 				  'target' 	=> 'content',
 				  'link'	=> 'admin/server_config_list.php');
@@ -64,10 +65,11 @@ $items[] = array( 'title' 	=> 'Edit Server IP',
 				  'target' 	=> 'content',
 				  'link'	=> 'admin/server_ip_list.php');				  
 
-
+/*
 $items[] = array( 'title' 	=> 'Interface Config',
 				  'target' 	=> 'content',
 				  'link'	=> 'admin/system_config_edit.php?id=1');
+*/
 
 $module['nav'][] = array(	'title'	=> 'System',
 							'open' 	=> 1,

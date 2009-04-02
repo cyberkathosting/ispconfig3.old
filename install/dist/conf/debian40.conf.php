@@ -45,12 +45,12 @@ $conf['cron_tab'] = '/var/spool/cron/crontabs/root';
 $conf['pam'] = '/etc/pam.d';
 
 //* Services provided by this server, this selection will be overridden by the expert mode
-$conf['services']['mail'] = true;
-$conf['services']['web'] = true;
+$conf['services']['mail'] = false;
+$conf['services']['web'] = false;
 $conf['services']['dns'] = true;
-$conf['services']['file'] = true;
-$conf['services']['db'] = true;
-$conf['services']['vserver'] = true;
+$conf['services']['file'] = false;
+$conf['services']['db'] = false;
+$conf['services']['vserver'] = false;
 
 //* MySQL
 $conf['mysql']['installed'] = false; // will be detected automatically during installation
