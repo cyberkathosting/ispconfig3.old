@@ -114,22 +114,6 @@ $module["nav"][] = array(	'title'	=> 'Server State',
  */
 unset($items);
 
-$items[] = array( 'title' 	=> "Show Mail-Queue",
-                  'target' 	=> 'content',
-                  'link'	=> 'monitor/show_data.php?type=mailq');
-
-$items[] = array( 'title' 	=> "Show Mail-Log",
-                  'target' 	=> 'content',
-                  'link'	=> 'monitor/show_log.php?log=log_mail');
-
-$items[] = array( 'title' 	=> "Show Mail warn-Log",
-                  'target' 	=> 'content',
-                  'link'	=> 'monitor/show_log.php?log=log_mail_warn');
-
-$items[] = array( 'title' 	=> "Show Mail err-Log",
-                  'target' 	=> 'content',
-                  'link'	=> 'monitor/show_log.php?log=log_mail_err');
-
 $items[] = array( 'title' 	=> "Show System-Log",
                   'target' 	=> 'content',
                   'link'	=> 'monitor/show_log.php?log=log_messages');
@@ -137,14 +121,6 @@ $items[] = array( 'title' 	=> "Show System-Log",
 $items[] = array( 'title' 	=> "Show ISPC Cron-Log",
                   'target' 	=> 'content',
                   'link'	=> 'monitor/show_log.php?log=log_ispc_cron');
-
-$items[] = array( 'title' 	=> "Show Freshclam-Log",
-                  'target' 	=> 'content',
-                  'link'	=> 'monitor/show_log.php?log=log_freshclam');
-
-$items[] = array( 'title' 	=> "Show Clamav-Log",
-                  'target' 	=> 'content',
-                  'link'	=> 'monitor/show_log.php?log=log_clamav');
 
 $items[] = array( 'title' 	=> "Show RKHunter-Log",
                   'target' 	=> 'content',

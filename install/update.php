@@ -106,7 +106,7 @@ $inst->is_update = true;
 //** Detect the installed applications
 $inst->find_installed_apps();
 
-echo "This application will update ISPConfig 3 on your server.\n";
+echo "This application will update MyDNSConfig 3 on your server.\n";
 
 //** Initialize the MySQL server connection
 include_once('lib/mysql.lib.php');
@@ -232,46 +232,6 @@ $reconfigure_services_answer = $inst->simple_query('Reconfigure Services?', arra
 
 if($reconfigure_services_answer == 'yes') {
 	
-	if($conf['services']['mail']) {
-		//** Configure postfix
-		swriteln('Configuring Postfix');
-		$inst->configure_postfix('dont-create-certs');
-	
-		//* Configure Jailkit
-		swriteln('Configuring Jailkit');
-		$inst->configure_jailkit();
-	
-		//** Configure saslauthd
-		swriteln('Configuring SASL');
-		$inst->configure_saslauthd();
-	
-		//** Configure PAM
-		swriteln('Configuring PAM');
-		$inst->configure_pam();
-
-		//** Configure courier
-		swriteln('Configuring Courier');
-		$inst->configure_courier();
-
-		//** Configure Spamasassin
-		swriteln('Configuring Spamassassin');
-		$inst->configure_spamassassin();
-
-		//** Configure Amavis
-		swriteln('Configuring Amavisd');
-		$inst->configure_amavis();
-
-		//** Configure Getmail
-		swriteln('Configuring Getmail');
-		$inst->configure_getmail();
-	}
-	
-	if($conf['services']['web']) {
-		//** Configure Pureftpd
-		swriteln('Configuring Pureftpd');
-		$inst->configure_pureftpd();
-	}
-	
 	if($conf['services']['dns']) {
 		//** Configure MyDNS
 		swriteln('Configuring MyDNS');
@@ -284,12 +244,6 @@ if($reconfigure_services_answer == 'yes') {
 		$inst->configure_apache();
 	}
 	
-
-	//* Configure DBServer
-	swriteln('Configuring Database');
-	$inst->configure_dbserver();
-
-	
 	//if(@is_dir('/etc/Bastille')) {
 	//* Configure Firewall
 	swriteln('Configuring Firewall');
@@ -298,11 +252,11 @@ if($reconfigure_services_answer == 'yes') {
 }
 
 //** Configure ISPConfig
-swriteln('Updating ISPConfig');
+swriteln('Updating MyDNSConfig');
 
 
 //** Customise the port ISPConfig runs on
-$conf['apache']['vhost_port'] = $inst->free_query('ISPConfig Port', '8080');
+$conf['apache']['vhost_port'] = $inst->free_query('MyDNSConfig Port', '8080');
 
 $inst->install_ispconfig();
 
@@ -317,20 +271,8 @@ if($update_crontab_answer == 'yes') {
 if($reconfigure_services_answer == 'yes') {
 	swriteln('Restarting services ...');
 	if($conf['mysql']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['mysql']['init_script']))					system($conf['init_scripts'].'/'.$conf['mysql']['init_script'].' restart');
-	if($conf['services']['mail']) {
-		if($conf['postfix']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['postfix']['init_script']))				system($conf['init_scripts'].'/'.$conf['postfix']['init_script'].' restart');
-		if($conf['saslauthd']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['saslauthd']['init_script']))			system($conf['init_scripts'].'/'.$conf['saslauthd']['init_script'].' restart');
-		if($conf['amavis']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['amavis']['init_script']))					system($conf['init_scripts'].'/'.$conf['amavis']['init_script'].' restart');
-		if($conf['clamav']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['clamav']['init_script']))					system($conf['init_scripts'].'/'.$conf['clamav']['init_script'].' restart');
-		if($conf['courier']['courier-authdaemon'] != '' && is_file($conf['init_scripts'].'/'.$conf['courier']['courier-authdaemon'])) system($conf['init_scripts'].'/'.$conf['courier']['courier-authdaemon'].' restart');
-		if($conf['courier']['courier-imap'] != '' && is_file($conf['init_scripts'].'/'.$conf['courier']['courier-imap'])) 			system($conf['init_scripts'].'/'.$conf['courier']['courier-imap'].' restart');
-		if($conf['courier']['courier-imap-ssl'] != '' && is_file($conf['init_scripts'].'/'.$conf['courier']['courier-imap-ssl'])) 	system($conf['init_scripts'].'/'.$conf['courier']['courier-imap-ssl'].' restart');
-		if($conf['courier']['courier-pop'] != '' && is_file($conf['init_scripts'].'/'.$conf['courier']['courier-pop'])) 				system($conf['init_scripts'].'/'.$conf['courier']['courier-pop'].' restart');
-		if($conf['courier']['courier-pop-ssl'] != '' && is_file($conf['init_scripts'].'/'.$conf['courier']['courier-pop-ssl'])) 		system($conf['init_scripts'].'/'.$conf['courier']['courier-pop-ssl'].' restart');
-	}
 	if($conf['services']['web']) {
 		if($conf['apache']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['apache']['init_script'])) 				system($conf['init_scripts'].'/'.$conf['apache']['init_script'].' restart');
-		if($conf['pureftpd']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['pureftpd']['init_script']))				system($conf['init_scripts'].'/'.$conf['pureftpd']['init_script'].' restart');
 	}
 	if($conf['services']['dns']) {
 		if($conf['mydns']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['mydns']['init_script']))					system($conf['init_scripts'].'/'.$conf['mydns']['init_script'].' restart &> /dev/null');

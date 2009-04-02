@@ -147,42 +147,6 @@ if($install_mode == 'standard') {
 	//* Insert the Server record into the database
 	$inst->add_database_server_record();
 
-	//* Configure postfix
-	$inst->configure_postfix();
-	
-	//* Configure jailkit
-	swriteln('Configuring Jailkit');
-	$inst->configure_jailkit();
-
-	//* Configure saslauthd
-	swriteln('Configuring SASL');
-	$inst->configure_saslauthd();
-
-	//* Configure PAM
-	swriteln('Configuring PAM');
-	$inst->configure_pam();
-
-	//* Configure courier
-	swriteln('Configuring Courier');
-	$inst->configure_courier();
-
-	//* Configure Spamasassin
-	swriteln('Configuring Spamassassin');
-	$inst->configure_spamassassin();
-
-	//* Configure Amavis
-	swriteln('Configuring Amavisd');
-	$inst->configure_amavis();
-
-	//* Configure Getmail
-	swriteln('Configuring Getmail');
-	$inst->configure_getmail();
-	
-
-	//* Configure Pureftpd
-	swriteln('Configuring Pureftpd');
-	$inst->configure_pureftpd();
-
 	//* Configure MyDNS
 	swriteln('Configuring MyDNS');
 	$inst->configure_mydns();
@@ -196,41 +160,24 @@ if($install_mode == 'standard') {
 	$inst->configure_firewall();
 
 	//* Configure ISPConfig
-	swriteln('Installing ISPConfig');
+	swriteln('Installing MyDNSConfig');
 	
 	//** Customise the port ISPConfig runs on
-	$conf['apache']['vhost_port'] = $inst->free_query('ISPConfig Port', '8080');
+	$conf['apache']['vhost_port'] = $inst->free_query('MyDNSConfig Port', '8080');
 
 	$inst->install_ispconfig();
-	
-	//* Configure DBServer
-	swriteln('Configuring DBServer');
-	$inst->configure_dbserver();
 
 	//* Configure ISPConfig
 	swriteln('Installing Crontab');
 	$inst->install_crontab();
 	
 	swriteln('Restarting services ...');
-	if($conf['mysql']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['mysql']['init_script']))					system($conf['init_scripts'].'/'.$conf['mysql']['init_script'].' restart');
-	if($conf['postfix']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['postfix']['init_script']))				system($conf['init_scripts'].'/'.$conf['postfix']['init_script'].' restart');
-	if($conf['saslauthd']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['saslauthd']['init_script']))			system($conf['init_scripts'].'/'.$conf['saslauthd']['init_script'].' restart');
-	if($conf['amavis']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['amavis']['init_script']))					system($conf['init_scripts'].'/'.$conf['amavis']['init_script'].' restart');
-	if($conf['clamav']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['clamav']['init_script']))					system($conf['init_scripts'].'/'.$conf['clamav']['init_script'].' restart');
-	if($conf['courier']['courier-authdaemon'] != '' && is_file($conf['init_scripts'].'/'.$conf['courier']['courier-authdaemon'])) system($conf['init_scripts'].'/'.$conf['courier']['courier-authdaemon'].' restart');
-	if($conf['courier']['courier-imap'] != '' && is_file($conf['init_scripts'].'/'.$conf['courier']['courier-imap'])) 			system($conf['init_scripts'].'/'.$conf['courier']['courier-imap'].' restart');
-	if($conf['courier']['courier-imap-ssl'] != '' && is_file($conf['init_scripts'].'/'.$conf['courier']['courier-imap-ssl'])) 	system($conf['init_scripts'].'/'.$conf['courier']['courier-imap-ssl'].' restart');
-	if($conf['courier']['courier-pop'] != '' && is_file($conf['init_scripts'].'/'.$conf['courier']['courier-pop'])) 				system($conf['init_scripts'].'/'.$conf['courier']['courier-pop'].' restart');
-	if($conf['courier']['courier-pop-ssl'] != '' && is_file($conf['init_scripts'].'/'.$conf['courier']['courier-pop-ssl'])) 		system($conf['init_scripts'].'/'.$conf['courier']['courier-pop-ssl'].' restart');
 	if($conf['apache']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['apache']['init_script'])) 				system($conf['init_scripts'].'/'.$conf['apache']['init_script'].' restart');
-	if($conf['pureftpd']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['pureftpd']['init_script']))				system($conf['init_scripts'].'/'.$conf['pureftpd']['init_script'].' restart');
 	if($conf['mydns']['init_script'] != '' && is_file($conf['init_scripts'].'/'.$conf['mydns']['init_script']))					system($conf['init_scripts'].'/'.$conf['mydns']['init_script'].' restart &> /dev/null');
 	
 }else{
 	
 	//* In expert mode, we select the services in the following steps, only db is always available
-	$conf['services']['mail'] = false;
-	$conf['services']['web'] = false;
 	$conf['services']['dns'] = false;
 	$conf['services']['db'] = true;
 	
@@ -239,7 +186,7 @@ if($install_mode == 'standard') {
 	// $conf['server_id'] = $inst->free_query('Unique Numeric ID of the server','1');
 	// Server ID is an autoInc value of the mysql database now
 	
-	if(strtolower($inst->simple_query('Shall this server join an existing ISPConfig multiserver setup',array('y','n'),'n')) == 'y') {
+	if(strtolower($inst->simple_query('Shall this server join an existing MyDNSConfig multiserver setup',array('y','n'),'n')) == 'y') {
 		$conf['mysql']['master_slave_setup'] = 'y';
 		
 		//** Get MySQL root credentials
@@ -280,66 +227,9 @@ if($install_mode == 'standard') {
 	$inst->configure_database();
 		
 	//* Insert the Server record into the database
-	swriteln('Adding ISPConfig server record to database.');
+	swriteln('Adding MyDNSConfig server record to database.');
 	swriteln('');
 	$inst->add_database_server_record();
-
-	
-	if(strtolower($inst->simple_query('Configure Mail', array('y','n') ,'y') ) == 'y') {
-		
-		$conf['services']['mail'] = true;
-		
-		//* Configure Postfix
-		swriteln('Configuring Postfix');
-		$inst->configure_postfix();
-		
-		//* Configure saslauthd
-		swriteln('Configuring SASL');
-		$inst->configure_saslauthd();
-		
-		//* Configure PAM
-		swriteln('Configuring PAM');
-		$inst->configure_pam();
-
-		//* Configure courier
-		swriteln('Configuring Courier');
-		$inst->configure_courier();
-
-		//* Configure Spamasassin
-		swriteln('Configuring Spamassassin');
-		$inst->configure_spamassassin();
-
-		//* Configure Amavis
-		swriteln('Configuring Amavisd');
-		$inst->configure_amavis();
-
-		//* Configure Getmail
-		swriteln('Configuring Getmail');
-		$inst->configure_getmail();
-		
-		if($conf['postfix']['init_script'] != '')			system($conf['init_scripts'].'/'.$conf['postfix']['init_script'].' restart');
-		if($conf['saslauthd']['init_script'] != '')			system($conf['init_scripts'].'/'.$conf['saslauthd']['init_script'].' restart');
-		if($conf['amavis']['init_script'] != '')			system($conf['init_scripts'].'/'.$conf['amavis']['init_script'].' restart');
-		if($conf['clamav']['init_script'] != '')			system($conf['init_scripts'].'/'.$conf['clamav']['init_script'].' restart');
-		if($conf['courier']['courier-authdaemon'] != '') 	system($conf['init_scripts'].'/'.$conf['courier']['courier-authdaemon'].' restart');
-		if($conf['courier']['courier-imap'] != '') 			system($conf['init_scripts'].'/'.$conf['courier']['courier-imap'].' restart');
-		if($conf['courier']['courier-imap-ssl'] != '') 		system($conf['init_scripts'].'/'.$conf['courier']['courier-imap-ssl'].' restart');
-		if($conf['courier']['courier-pop'] != '') 			system($conf['init_scripts'].'/'.$conf['courier']['courier-pop'].' restart');
-		if($conf['courier']['courier-pop-ssl'] != '') 		system($conf['init_scripts'].'/'.$conf['courier']['courier-pop-ssl'].' restart');
-	}
-	
-	//** Configure Jailkit
-	if(strtolower($inst->simple_query('Configure Jailkit', array('y','n'),'y') ) == 'y') {	
-		swriteln('Configuring Jailkit');
-		$inst->configure_jailkit();
-	}
-	
-	//** Configure Pureftpd
-	if(strtolower($inst->simple_query('Configure FTP Server', array('y','n'),'y') ) == 'y') {	
-		swriteln('Configuring Pureftpd');
-		$inst->configure_pureftpd();
-		if($conf['pureftpd']['init_script'] != '') system($conf['init_scripts'].'/'.$conf['pureftpd']['init_script'].' restart');
-	}
 	
 	//** Configure MyDNS
 	if(strtolower($inst->simple_query('Configure DNS Server',array('y','n'),'y')) == 'y') {
@@ -350,7 +240,7 @@ if($install_mode == 'standard') {
 	}
 	
 	//** Configure Apache
-	swriteln("\nHint: If this server shall run the ispconfig interface, select 'y' in the next option.\n");
+	swriteln("\nHint: If this server shall run the MyDNSConfig interface, select 'y' in the next option.\n");
 	if(strtolower($inst->simple_query('Configure Apache Server',array('y','n'),'y')) == 'y') {	
 		$conf['services']['web'] = true;
 		swriteln('Configuring Apache');
@@ -364,8 +254,8 @@ if($install_mode == 'standard') {
 	}
 	
 	//** Configure ISPConfig :-)
-	if(strtolower($inst->simple_query('Install ISPConfig Web-Interface',array('y','n'),'y')) == 'y') {
-		swriteln('Installing ISPConfig');
+	if(strtolower($inst->simple_query('Install MyDNSConfig Web-Interface',array('y','n'),'y')) == 'y') {
+		swriteln('Installing MyDNSConfig');
 		
 		//** We want to check if the server is a module or cgi based php enabled server
 		//** TODO: Don't always ask for this somehow ?
@@ -382,7 +272,7 @@ if($install_mode == 'standard') {
 		*/
 
 		//** Customise the port ISPConfig runs on
-		$conf['apache']['vhost_port'] = $inst->free_query('ISPConfig Port', '8080');
+		$conf['apache']['vhost_port'] = $inst->free_query('MyDNSConfig Port', '8080');
 		
 		$inst->install_ispconfig_interface = true;
 			
@@ -391,10 +281,6 @@ if($install_mode == 'standard') {
 	}
 	
 	$inst->install_ispconfig();
-	
-	//* Configure DBServer
-	swriteln('Configuring DBServer');
-	$inst->configure_dbserver();
 		
 	//* Configure ISPConfig
 	swriteln('Installing Crontab');

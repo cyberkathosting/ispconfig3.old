@@ -1,9 +1,0 @@
-<?php
-$wb['list_head_txt'] = 'Email Catchall';
-$wb['active_txt'] = 'Активный';
-$wb['source_txt'] = 'source';
-$wb['destination_txt'] = 'Email адрес получатель';
-$wb['server_id_txt'] = 'Сервер';
-$wb['domain_txt'] = 'Домен';
-$wb['add_new_record_txt'] = 'Добавить Catchall';
-?>
