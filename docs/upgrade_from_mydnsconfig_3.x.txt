@@ -3,7 +3,7 @@
 # To upgrade from a previous MyDNSConfig 3.x installation,
 # simply run
 
-ispconfig_update.sh
+mydnsconfig_update.sh
 
 # on the command line and follow the wizard.
 #
