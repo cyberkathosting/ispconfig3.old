@@ -143,7 +143,7 @@ $conf['services']['dns'] = ($tmp['dns_server'] == 1)?true:false;
 $conf['services']['file'] = ($tmp['file_server'] == 1)?true:false;
 $conf['services']['db'] = ($tmp['db_server'] == 1)?true:false;
 $conf['services']['vserver'] = ($tmp['vserver_server'] == 1)?true:false;
-$conf['postfix']['vmail_mailbox_base'] = $ini_array['mail']['homedir_path'];
+if($ini_array['mail']['homedir_path']) $conf['postfix']['vmail_mailbox_base'] = $ini_array['mail']['homedir_path'];
 
 //** Delete the old database
 if( !$inst->db->query('DROP DATABASE IF EXISTS '.$conf['mysql']['database']) ) {
