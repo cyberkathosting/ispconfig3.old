@@ -1,0 +1,69 @@
+# UPGRADE FROM MYDNSCONFIG 1.x TO MYDNSCONFIG 3
+#
+# This document assumes that your old MyDNSConfig 1.x uses the database table mydns,
+# and that your new MyDNSConfig 3 installation uses the database dbispconfig.
+# First install MyDNSConfig 3 as follows:
+
+cd /tmp
+wget http://www.mydnsconfig.org/downloads/MyDNSConfig-3-stable.tar.gz
+tar xvfz MyDNSConfig-3-stable.tar.gz
+cd mydnsconfig/install/
+php -q install.php
+
+# Follow the installation wizard. After the installation has finished (and BEFORE you
+# create any records in the MyDNSConfig 3 web interface!!!), open phpMyAdmin or a
+# MySQL shell and execute the following MySQL queries to import the DNS records from
+# your old MyDNSConfig 1.x installation into MyDNSConfig 3 (make sure you use the correct
+# database names - you must replace `mydns` and `dbispconfig` if your database names
+# differ!):
+
+ALTER TABLE `mydns`.`rr` ADD `server_id` int(11) NOT NULL default '1',
+ADD `active` enum('N','Y') NOT NULL default 'Y',
+ADD `stamp` timestamp NOT NULL default CURRENT_TIMESTAMP,
+ADD `serial` int(10) unsigned default NULL;
+
+ALTER TABLE `mydns`.`rr` MODIFY `sys_userid` int(11) unsigned NOT NULL AFTER `id`,
+MODIFY `sys_groupid` int(11) unsigned NOT NULL AFTER `sys_userid`,
+MODIFY `sys_perm_user` varchar(5) NOT NULL AFTER `sys_groupid`,
+MODIFY `sys_perm_group` varchar(5) NOT NULL AFTER `sys_perm_user`,
+MODIFY `sys_perm_other` varchar(5) NOT NULL AFTER `sys_perm_group`,
+MODIFY `server_id` int(11) NOT NULL default '1' AFTER `sys_perm_other`;
+
+INSERT INTO `dbispconfig`.`dns_rr`
+SELECT *
+FROM `mydns`.`rr`;
+
+UPDATE `dbispconfig`.`dns_rr` SET `sys_userid` = 1,
+`sys_groupid` = 0,
+`sys_perm_user` = 'riud',
+`sys_perm_group` = 'riud',
+`sys_perm_other` = '',
+`server_id` = 1;
+
+
+ALTER TABLE `mydns`.`soa` ADD `server_id` int(11) NOT NULL default '1';
+
+ALTER TABLE `mydns`.`soa` MODIFY `sys_userid` int(11) unsigned NOT NULL AFTER `id`,
+MODIFY `sys_groupid` int(11) unsigned NOT NULL AFTER `sys_userid`,
+MODIFY `sys_perm_user` varchar(5) NOT NULL AFTER `sys_groupid`,
+MODIFY `sys_perm_group` varchar(5) NOT NULL AFTER `sys_perm_user`,
+MODIFY `sys_perm_other` varchar(5) NOT NULL AFTER `sys_perm_group`,
+MODIFY `server_id` int(11) NOT NULL default '1' AFTER `sys_perm_other`;
+
+INSERT INTO `dbispconfig`.`dns_soa`
+SELECT *
+FROM `mydns`.`soa`;
+
+UPDATE `dbispconfig`.`dns_soa` SET `sys_userid` = 1,
+`sys_groupid` = 0,
+`sys_perm_user` = 'riud',
+`sys_perm_group` = 'riud',
+`sys_perm_other` = '',
+`server_id` = 1;
+
+# Afterwards, you can access MyDNSConfig 3 on port 8080 (e.g.
+# http://server1.example.com:8080); the default login is admin:admin.
+#
+# Please note that these MySQL queries make that all zones are owned by admin.
+# If you have zones that should be owned by someone else, create a client for each
+# user in MyDNSConfig 3 and go to the DNS tab and select the correct client for the zones.
