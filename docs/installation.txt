@@ -1,0 +1,11 @@
+# MYDNSCONFIG 3 INSTALLATION
+#
+# MyDNSConfig 3 can be installed as follows:
+
+cd /tmp
+wget http://www.mydnsconfig.org/downloads/MyDNSConfig-3-stable.tar.gz
+tar xvfz MyDNSConfig-3-stable.tar.gz
+cd mydnsconfig/install/
+php -q install.php
+
+# Then follow the installation wizard.

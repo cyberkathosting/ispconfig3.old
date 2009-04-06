@@ -1,0 +1,13 @@
+# UPGRADE FROM MYDNSCONFIG 3.x
+#
+# To upgrade from a previous MyDNSConfig 3.x installation,
+# simply run
+
+ispconfig_update.sh
+
+# on the command line and follow the wizard.
+#
+# PLEASE NOTE: you can upgrade to the latest stable version
+# and to the svn version. It is highly recommended to upgrade
+# to the latest stable version as the svn version is used for
+# development and might contain bugs. YOU HAVE BEEN WARNED!!!
