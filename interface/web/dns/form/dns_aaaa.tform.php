@@ -33,10 +33,10 @@
 
 */
 
-$form["title"] 			= "DNS ALIAS";
+$form["title"] 			= "DNS AAAA";
 $form["description"] 	= "";
-$form["name"] 			= "dns_alias";
-$form["action"]			= "dns_alias_edit.php";
+$form["name"] 			= "dns_aaaa";
+$form["action"]			= "dns_aaaa_edit.php";
 $form["db_table"]		= "dns_rr";
 $form["db_table_idx"]	= "id";
 $form["db_history"]		= "yes";
@@ -51,9 +51,9 @@ $form["auth_preset"]["perm_group"] = 'riud'; //r = read, i = insert, u = update,
 $form["auth_preset"]["perm_other"] = ''; //r = read, i = insert, u = update, d = delete
 
 $form["tabs"]['dns'] = array (
-	'title' 	=> "DNS ALIAS",
+	'title' 	=> "DNS AAAA",
 	'width' 	=> 100,
-	'template' 	=> "templates/dns_alias_edit.htm",
+	'template' 	=> "templates/dns_aaaa_edit.htm",
 	'fields' 	=> array (
 	##################################
 	# Begin Datatable fields
@@ -77,10 +77,8 @@ $form["tabs"]['dns'] = array (
 		'name' => array (
 			'datatype'	=> 'VARCHAR',
 			'formtype'	=> 'TEXT',
-			'validators'	=> array ( 	0 => array (	'type'	=> 'NOTEMPTY',
-														'errmsg'=> 'name_error_empty'),
-										1 => array (	'type'	=> 'REGEX',
-														'regex' => '/^[\w\.\-]{1,64}$/',
+			'validators'	=> array ( 	0 => array (	'type'	=> 'REGEX',
+														'regex' => '/^[\w\.\-\*]{0,64}$/',
 														'errmsg'=> 'name_error_regex'),
 									),
 			'default'	=> '',
@@ -91,7 +89,7 @@ $form["tabs"]['dns'] = array (
 		'type' => array (
 			'datatype'	=> 'VARCHAR',
 			'formtype'	=> 'TEXT',
-			'default'	=> 'ALIAS',
+			'default'	=> 'AAAA',
 			'value'		=> '',
 			'width'		=> '5',
 			'maxlength'	=> '5'
@@ -102,7 +100,7 @@ $form["tabs"]['dns'] = array (
 			'validators'	=> array ( 	0 => array (	'type'	=> 'NOTEMPTY',
 														'errmsg'=> 'data_error_empty'),
 										1 => array (	'type'	=> 'REGEX',
-														'regex' => '/^[\w\.\-]{1,64}$/',
+														'regex' => '/^\s*((([0-9A-Fa-f]{1,4}:){7}(([0-9A-Fa-f]{1,4})|:))|(([0-9A-Fa-f]{1,4}:){6}(:|((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})|(:[0-9A-Fa-f]{1,4})))|(([0-9A-Fa-f]{1,4}:){5}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:)(:[0-9A-Fa-f]{1,4}){0,4}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(:(:[0-9A-Fa-f]{1,4}){0,5}((:((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})))(%.+)?\s*$/',
 														'errmsg'=> 'data_error_regex'),
 									),
 			'default'	=> '',

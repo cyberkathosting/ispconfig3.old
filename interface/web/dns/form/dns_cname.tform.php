@@ -78,7 +78,7 @@ $form["tabs"]['dns'] = array (
 			'datatype'	=> 'VARCHAR',
 			'formtype'	=> 'TEXT',
 			'validators'	=> array ( 	0 => array (	'type'	=> 'REGEX',
-														'regex' => '/^[\w\.\-]{0,64}$/',
+														'regex' => '/^[\w\.\-\*]{0,64}$/',
 														'errmsg'=> 'name_error_regex'),
 									),
 			'default'	=> '',
@@ -131,6 +131,22 @@ $form["tabs"]['dns'] = array (
 			'formtype'	=> 'CHECKBOX',
 			'default'	=> 'Y',
 			'value'		=> array(0 => 'N',1 => 'Y')
+		),
+		'stamp' => array (
+			'datatype'	=> 'VARCHAR',
+			'formtype'	=> 'TEXT',
+			'default'	=> '',
+			'value'		=> '',
+			'width'		=> '30',
+			'maxlength'	=> '255'
+		),
+		'serial' => array (
+			'datatype'	=> 'INTEGER',
+			'formtype'	=> 'TEXT',
+			'default'	=> '',
+			'value'		=> '',
+			'width'		=> '10',
+			'maxlength'	=> '10'
 		),
 	##################################
 	# ENDE Datatable fields

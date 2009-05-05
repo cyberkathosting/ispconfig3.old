@@ -165,9 +165,11 @@ CREATE TABLE `dns_rr` (
   `aux` int(11) unsigned NOT NULL default '0',
   `ttl` int(11) unsigned NOT NULL default '86400',
   `active` enum('N','Y') NOT NULL default 'Y',
+  `stamp` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `serial` int(10) unsigned default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `rr` (`zone`,`name`,`type`,`data`)
-) ENGINE=MyISAM AUTO_INCREMENT=1;
+) ENGINE=MyISAM  AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
@@ -1146,7 +1148,7 @@ INSERT INTO `sys_user` (`userid`, `sys_userid`, `sys_groupid`, `sys_perm_user`, 
 -- Dumping data for table `sys_config`
 --
 
-INSERT INTO sys_config VALUES ('1','db','db_version','3.0.0.9');
+INSERT INTO sys_config VALUES ('1','db','db_version','3.0.1.2');
 
 -- --------------------------------------------------------
 

@@ -83,7 +83,7 @@ class installer_dist extends installer_base {
 		$postconf_commands = array (
 			'myhostname = '.$conf['hostname'],
 			'mydestination = '.$conf['hostname'].', localhost, localhost.localdomain',
-			'mynetworks = 127.0.0.0/8',
+			'mynetworks = 127.0.0.0/8 [::1]/128',
 			'virtual_alias_domains =',
 			'virtual_alias_maps = proxy:mysql:'.$config_dir.'/mysql-virtual_forwardings.cf, mysql:'.$config_dir.'/mysql-virtual_email2email.cf',
 			'virtual_mailbox_domains = proxy:mysql:'.$config_dir.'/mysql-virtual_domains.cf',
@@ -554,6 +554,8 @@ class installer_dist extends installer_base {
 		$content = str_replace('{mysql_master_server_host}', $conf['mysql']['master_host'], $content);
 		
 		$content = str_replace('{ispconfig_log_priority}', $conf['ispconfig_log_priority'], $content);
+		$content = str_replace('{language}', $conf['language'], $content);
+		
 		wf("$install_dir/interface/lib/$configfile", $content);
 		
 		//* Create the config file for ISPConfig server

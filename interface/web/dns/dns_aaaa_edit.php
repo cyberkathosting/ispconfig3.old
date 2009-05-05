@@ -32,7 +32,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * Begin Form configuration
 ******************************************/
 
-$tform_def_file = "form/dns_mx.tform.php";
+$tform_def_file = "form/dns_aaaa.tform.php";
 
 /******************************************
 * End Form configuration
@@ -130,6 +130,7 @@ class page_action extends tform_actions {
 		$serial = $app->validate_dns->increase_serial($soa["serial"]);
 		$app->db->datalogUpdate('dns_soa', "serial = $serial", 'id', $soa_id);
 	}
+	
 }
 
 $page = new page_action;
