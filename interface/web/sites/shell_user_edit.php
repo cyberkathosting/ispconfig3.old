@@ -56,17 +56,11 @@ class page_action extends tform_actions {
 		
 		// we will check only users, not admins
 		if($_SESSION["s"]["user"]["typ"] == 'user') {
-			
-			// Get the limits of the client
-			$client_group_id = $_SESSION["s"]["user"]["default_group"];
-			$client = $app->db->queryOneRecord("SELECT limit_shell_user FROM sys_group, client WHERE sys_group.client_id = client.client_id and sys_group.groupid = $client_group_id");
-			
-			// Check if the user may add another shell user.
-			if($client["limit_shell_user"] >= 0) {
-				$tmp = $app->db->queryOneRecord("SELECT count(shell_user_id) as number FROM shell_user WHERE sys_groupid = $client_group_id");
-				if($tmp["number"] >= $client["limit_shell_user"]) {
-					$app->error($app->tform->wordbook["limit_shell_user_txt"]);
-				}
+			if(!$app->tform->checkClientLimit('limit_shell_user')) {
+				$app->error($app->tform->wordbook["limit_shell_user_txt"]);
+			}
+			if(!$app->tform->checkResellerLimit('limit_shell_user')) {
+				$app->error('Reseller: '.$app->tform->wordbook["limit_shell_user_txt"]);
 			}
 		}
 		
@@ -115,6 +109,9 @@ class page_action extends tform_actions {
 		// Set a few fixed values
 		$this->dataRecord["server_id"] = $parent_domain["server_id"];
 		
+		if(isset($this->dataRecord['username']) && trim($this->dataRecord['username']) == '') $app->tform->errorMessage .= $app->tform->lng('username_error_empty').'<br />';
+		if(isset($this->dataRecord['username']) && empty($this->dataRecord['parent_domain_id'])) $app->tform->errorMessage .= $app->tform->lng('parent_domain_id_error_empty').'<br />';
+		
 		parent::onSubmit();
 	}
 	
@@ -129,7 +126,7 @@ class page_action extends tform_actions {
 			}
 		}
 		unset($blacklist);
-
+		
 		/*
 		 * If the names should be restricted -> do it!
 		 */

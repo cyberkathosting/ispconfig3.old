@@ -315,12 +315,12 @@ $form["tabs"]['limits'] = array (
 			'datatype'	=> 'INTEGER',
 			'formtype'	=> 'SELECT',
 			'default'	=> '1',
-			'datasource'	=> array ( 	'type'	=> 'SQL',
-										'querystring' => 'SELECT server_id,server_name FROM server WHERE mail_server = 1 AND {AUTHSQL} ORDER BY server_name',
-										'keyfield'=> 'server_id',
-										'valuefield'=> 'server_name'
+			'datasource'	=> array ( 	'type'	=> 'CUSTOM',
+										'class'=> 'custom_datasource',
+										'function'=> 'client_servers'
 									 ),
-			'value'		=> ''
+			'value'		=> '',
+			'name'		=> 'default_mailserver'
 		),
 		'limit_maildomain' => array (
 			'datatype'	=> 'INTEGER',
@@ -494,12 +494,12 @@ $form["tabs"]['limits'] = array (
 			'datatype'	=> 'INTEGER',
 			'formtype'	=> 'SELECT',
 			'default'	=> '1',
-			'datasource'	=> array ( 	'type'	=> 'SQL',
-										'querystring' => 'SELECT server_id,server_name FROM server WHERE web_server = 1 AND {AUTHSQL} ORDER BY server_name',
-										'keyfield'=> 'server_id',
-										'valuefield'=> 'server_name'
+			'datasource'	=> array ( 	'type'	=> 'CUSTOM',
+										'class'=> 'custom_datasource',
+										'function'=> 'client_servers'
 									 ),
-			'value'		=> ''
+			'value'		=> '',
+			'name'		=> 'default_webserver'
 		),
 		'limit_web_domain' => array (
 			'datatype'	=> 'INTEGER',
@@ -520,6 +520,7 @@ $form["tabs"]['limits'] = array (
 			'formtype'	=> 'CHECKBOXARRAY',
 			'default'	=> '',
 			'separator' => ',',
+			'valuelimit' => 'client:web_php_options',
 			'value'		=> array('no' => 'Disabled', 'fast-cgi' => 'Fast-CGI', 'cgi' => 'CGI', 'mod' => 'Mod-PHP', 'suphp' => 'SuPHP')
 		),
 		'limit_web_aliasdomain' => array (
@@ -583,18 +584,19 @@ $form["tabs"]['limits'] = array (
 			'formtype'	=> 'CHECKBOXARRAY',
 			'default'	=> '',
 			'separator' => ',',
+			'valuelimit' => 'client:ssh_chroot',
 			'value'		=> array('no' => 'None', 'jailkit' => 'Jailkit')
 		),
 		'default_dnsserver' => array (
 			'datatype'	=> 'INTEGER',
 			'formtype'	=> 'SELECT',
 			'default'	=> '1',
-			'datasource'	=> array ( 	'type'	=> 'SQL',
-										'querystring' => 'SELECT server_id,server_name FROM server WHERE dns_server = 1 AND {AUTHSQL} ORDER BY server_name',
-										'keyfield'=> 'server_id',
-										'valuefield'=> 'server_name'
+			'datasource'	=> array ( 	'type'	=> 'CUSTOM',
+										'class'=> 'custom_datasource',
+										'function'=> 'client_servers'
 									 ),
-			'value'		=> ''
+			'value'		=> '',
+			'name'		=> 'default_dnsserver'
 		),
 		'limit_dns_zone' => array (
 			'datatype'	=> 'INTEGER',
@@ -642,12 +644,12 @@ $form["tabs"]['limits'] = array (
 			'datatype'	=> 'INTEGER',
 			'formtype'	=> 'SELECT',
 			'default'	=> '1',
-			'datasource'	=> array ( 	'type'	=> 'SQL',
-										'querystring' => 'SELECT server_id,server_name FROM server WHERE db_server = 1 AND {AUTHSQL} ORDER BY server_name',
-										'keyfield'=> 'server_id',
-										'valuefield'=> 'server_name'
+			'datasource'	=> array ( 	'type'	=> 'CUSTOM',
+										'class'=> 'custom_datasource',
+										'function'=> 'client_servers'
 									 ),
-			'value'		=> ''
+			'value'		=> '',
+			'name'		=> 'default_dbserver'
 		),
 		'limit_database' => array (
 			'datatype'	=> 'INTEGER',
@@ -663,6 +665,40 @@ $form["tabs"]['limits'] = array (
 			'rows'		=> '',
 			'cols'		=> ''
 		),
+        'limit_cron' => array (
+            'datatype'  => 'INTEGER',
+            'formtype'  => 'TEXT',
+            'validators'    => array (  0 => array (    'type'  => 'ISINT',
+                                                        'errmsg'=> 'limit_cron_error_notint'),
+                                    ),
+            'default'   => '0',
+            'value'     => '',
+            'separator' => '',
+            'width'     => '10',
+            'maxlength' => '10',
+            'rows'      => '',
+            'cols'      => ''
+        ),
+        'limit_cron_type' => array (
+            'datatype'  => 'VARCHAR',
+            'formtype'  => 'SELECT',
+            'default'   => '',
+            'value'     => array('full' => 'Full Cron','chrooted' => 'Chrooted Cron','url' => 'URL Cron')
+        ),
+        'limit_cron_frequency' => array (
+            'datatype'  => 'INTEGER',
+            'formtype'  => 'TEXT',
+            'validators'    => array (  0 => array (    'type'  => 'ISINT',
+                                                        'errmsg'=> 'limit_cron_error_frequency'),
+                                    ),
+            'default'   => '-1',
+            'value'     => '',
+            'separator' => '',
+            'width'     => '10',
+            'maxlength' => '10',
+            'rows'      => '',
+            'cols'      => ''
+        ),
 	##################################
 	# END Datatable fields
 	##################################

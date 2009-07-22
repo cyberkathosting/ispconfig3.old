@@ -113,24 +113,35 @@ class page_action extends tform_actions {
 		
 		$content = '';
 		$content .= '### BEGIN FILTER_ID:'.$this->id."\n";
-		
+
+		$TargetNoQuotes = $this->dataRecord["target"];
+		$TargetQuotes = "\"$TargetNoQuotes\"";
+
+		$TestChDirNoQuotes = '$DEFAULT/.'.$TargetNoQuotes;
+		$TestChDirQuotes = "\"$TestChDirNoQuotes\"";
+
+		$MailDirMakeNoQuotes = $TargetQuotes.' $DEFAULT';
+
+		$EchoTargetFinal = $TargetNoQuotes;
+
+
 		if($this->dataRecord["action"] == 'move') {
-		
+
 			$content .= "
-`test -e ".'$DEFAULT/.'.$this->dataRecord["target"]."`
-if ( ".'$RETURNCODE'." != 0 )
+`test -e ".$TestChDirQuotes." && exit 1 || exit 0`
+if ( ".'$RETURNCODE'." != 1 )
 {
-  `maildirmake -f ".$this->dataRecord["target"].' $DEFAULT'."`
-  `chmod -R 0700 ".'$DEFAULT/'.$this->dataRecord["target"]."`
-  `echo INBOX.".$this->dataRecord["target"]." >> ".'$DEFAULT'."/courierimapsubscribed`
+	`maildirmake -f $MailDirMakeNoQuotes`
+	`chmod -R 0700 ".$TestChDirQuotes."`
+	`echo \"INBOX.$EchoTargetFinal\" >> ".'$DEFAULT'."/courierimapsubscribed`
 }
-";		
+";
 		}
-		
+
 		$content .= "if (/^".$this->dataRecord["source"].":";
-		
+
 		$searchterm = preg_quote($this->dataRecord["searchterm"]);
-		
+
 		if($this->dataRecord["op"] == 'contains') {
 			$content .= ".*".$searchterm."/:h)\n";
 		} elseif ($this->dataRecord["op"] == 'is') {
@@ -140,18 +151,21 @@ if ( ".'$RETURNCODE'." != 0 )
 		} elseif ($this->dataRecord["op"] == 'ends') {
 			$content .= ".*".$searchterm."$/:h)\n";
 		}
-		
+
 		$content .= "{\n";
 		$content .= "exception {\n";
-		
+
 		if($this->dataRecord["action"] == 'move') {
-			$content .= 'to $DEFAULT/.'.$this->dataRecord["target"]."/\n";
+			$content .= 'ID' . "$this->id" . 'EndFolder = "$DEFAULT/.' . $this->dataRecord['target'] . '/"' . "\n";
+			$content .= "to ". '$ID' . "$this->id" . 'EndFolder' . "\n";
 		} else {
 			$content .= "to /dev/null\n";
 		}
+
+		$content .= "}\n";
+		$content .= "}\n";
 		
-		$content .= "}\n";
-		$content .= "}\n";
+		//}
 		
 		$content .= '### END FILTER_ID:'.$this->id."\n";
 		

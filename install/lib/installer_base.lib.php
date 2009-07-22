@@ -210,7 +210,11 @@ class installer_base {
 		$tpl_ini_array['web']['website_basedir'] = $conf['web']['website_basedir'];
 		$tpl_ini_array['web']['website_path'] = $conf['web']['website_path'];
 		$tpl_ini_array['web']['website_symlinks'] = $conf['web']['website_symlinks'];
-		
+        $tpl_ini_array['cron']['crontab_dir'] = $conf['cron']['crontab_dir'];
+		$tpl_ini_array['web']['security_level'] = 20;
+		$tpl_ini_array['web']['user'] = $conf['apache']['user'];
+		$tpl_ini_array['web']['group'] = $conf['apache']['group'];
+        
 		$server_ini_content = array_to_ini($tpl_ini_array);
 		$server_ini_content = mysql_real_escape_string($server_ini_content);
 		
@@ -233,33 +237,10 @@ class installer_base {
 			$sql = "INSERT INTO `server` (`server_id`, `sys_userid`, `sys_groupid`, `sys_perm_user`, `sys_perm_group`, `sys_perm_other`, `server_name`, `mail_server`, `web_server`, `dns_server`, `file_server`, `db_server`, `vserver_server`, `config`, `updated`, `active`) VALUES ('".$conf['server_id']."',1, 1, 'riud', 'riud', 'r', '".$conf['hostname']."', '$mail_server_enabled', '$web_server_enabled', '$dns_server_enabled', '$file_server_enabled', '$db_server_enabled', '$vserver_server_enabled', '$server_ini_content', 0, 1);";
 			$this->db->query($sql);
 			
-			//* insert the ispconfig user in the remote server
-			$from_host = $conf['hostname'];
-			$from_ip = gethostbyname($conf['hostname']);
-			
 			//* username for the ispconfig user
 			$conf['mysql']['master_ispconfig_user'] = 'ispcsrv'.$conf['server_id'];
-		
-			//* Delete ISPConfig user in the master database, in case that it exists
-			$this->dbmaster->query("DELETE FROM mysql.user WHERE User = '".$conf['mysql']['master_ispconfig_user']."' AND Host = '".$from_host."';");
-			$this->dbmaster->query("DELETE FROM mysql.db WHERE Db = '".$conf['mysql']['master_database']."' AND Host = '".$from_host."';");
-			$this->dbmaster->query("DELETE FROM mysql.user WHERE User = '".$conf['mysql']['master_ispconfig_user']."' AND Host = '".$from_ip."';");
-			$this->dbmaster->query("DELETE FROM mysql.db WHERE Db = '".$conf['mysql']['master_database']."' AND Host = '".$from_ip."';");
-			$this->dbmaster->query('FLUSH PRIVILEGES;');
-		
-			//* Create the ISPConfig database user in the remote database
-        	$query = 'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$conf['mysql']['master_database'].".* "
-                	."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$from_host."' "
-                	."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
-			if(!$this->dbmaster->query($query)) {
-				$this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
-			}
-			$query = 'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$conf['mysql']['master_database'].".* "
-                	."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$from_ip."' "
-                	."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
-			if(!$this->dbmaster->query($query)) {
-				$this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
-			}
+            
+            $this->grant_master_database_rights();
 		
 		} else {
 			//* Insert the server, if its not a mster / slave setup
@@ -272,6 +253,93 @@ class installer_base {
 		
 	}
 	
+    public function grant_master_database_rights()
+    {
+        global $conf;
+        
+        if($conf['mysql']['master_slave_setup'] != 'y') return;
+        
+        //* insert the ispconfig user in the remote server
+        $from_host = $conf['hostname'];
+        $from_ip = gethostbyname($conf['hostname']);
+        
+        //* Delete ISPConfig user in the master database, in case that it exists
+        $this->dbmaster->query("DELETE FROM mysql.user WHERE User = '".$conf['mysql']['master_ispconfig_user']."' AND Host = '".$from_host."';");
+        $this->dbmaster->query("DELETE FROM mysql.db WHERE Db = '".$conf['mysql']['master_database']."' AND Host = '".$from_host."';");
+        $this->dbmaster->query("DELETE FROM mysql.user WHERE User = '".$conf['mysql']['master_ispconfig_user']."' AND Host = '".$from_ip."';");
+        $this->dbmaster->query("DELETE FROM mysql.db WHERE Db = '".$conf['mysql']['master_database']."' AND Host = '".$from_ip."';");
+        $this->dbmaster->query('FLUSH PRIVILEGES;');
+    
+        $hosts = array($from_host, $from_ip);
+        
+        foreach($hosts as $src_host) {
+            //* Create the ISPConfig database user in the remote database
+            $query = "GRANT SELECT ON ".$conf['mysql']['master_database'].".`server` "
+                    ."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$src_host."' "
+                    ."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
+            if(!$this->dbmaster->query($query)) {
+                $this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
+            }
+            
+            $query = "GRANT SELECT, INSERT ON ".$conf['mysql']['master_database'].".`sys_log` "
+                    ."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$src_host."' "
+                    ."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
+            if(!$this->dbmaster->query($query)) {
+                $this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
+            }
+            
+            $query = "GRANT SELECT, UPDATE(`status`) ON ".$conf['mysql']['master_database'].".`sys_datalog` "
+                    ."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$src_host."' "
+                    ."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
+            if(!$this->dbmaster->query($query)) {
+                $this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
+            }
+            
+            $query = "GRANT UPDATE(`status`) ON ".$conf['mysql']['master_database'].".`software_update_inst` "
+                    ."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$src_host."' "
+                    ."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
+            if(!$this->dbmaster->query($query)) {
+                $this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
+            }
+            
+            $query = "GRANT UPDATE (`ssl_request`, `ssl_cert`, `ssl_action`) ON ".$conf['mysql']['master_database'].".`web_domain` "
+                    ."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$src_host."' "
+                    ."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
+            if(!$this->dbmaster->query($query)) {
+                $this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
+            }
+            
+            $query = "GRANT SELECT ON ".$conf['mysql']['master_database'].".`sys_group` "
+                    ."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$src_host."' "
+                    ."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
+            if(!$this->dbmaster->query($query)) {
+                $this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
+            }
+            
+            $query = "GRANT INSERT , DELETE ON ".$conf['mysql']['master_database'].".`monitor_data` "
+                    ."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$src_host."' "
+                    ."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
+            if(!$this->dbmaster->query($query)) {
+                $this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
+            }
+            
+            $query = "GRANT SELECT, INSERT, UPDATE ON ".$conf['mysql']['master_database'].".`mail_traffic` "
+                    ."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$src_host."' "
+                    ."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
+            if(!$this->dbmaster->query($query)) {
+                $this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
+            }
+            
+            $query = "GRANT SELECT, INSERT, UPDATE ON ".$conf['mysql']['master_database'].".`web_traffic` "
+                    ."TO '".$conf['mysql']['master_ispconfig_user']."'@'".$src_host."' "
+                    ."IDENTIFIED BY '".$conf['mysql']['master_ispconfig_password']."';";
+            if(!$this->dbmaster->query($query)) {
+                $this->error('Unable to create database user in master database: '.$conf['mysql']['master_ispconfig_user'].' Error: '.$this->dbmaster->errorMessage);
+            }
+            
+        }
+    
+    }
 
     //** writes postfix configuration files
     public function process_postfix_config($configfile)
@@ -710,6 +778,7 @@ class installer_base {
 		if(is_file('/etc/suphp/suphp.conf')) {
 			replaceLine('/etc/suphp/suphp.conf','php=php:/usr/bin','x-httpd-suphp=php:/usr/bin/php-cgi',0);
 			//replaceLine('/etc/suphp/suphp.conf','docroot=','docroot=/var/clients',0);
+			replaceLine('/etc/suphp/suphp.conf','umask=0077','umask=0022',0);
 		}
 		
 		if(is_file('/etc/apache2/sites-enabled/000-default')) {
@@ -743,6 +812,23 @@ class installer_base {
 		if(!@is_link($vhost_conf_enabled_dir."/000-ispconfig.conf")) {
 			exec("ln -s ".$vhost_conf_dir."/ispconfig.conf ".$vhost_conf_enabled_dir."/000-ispconfig.conf");
 		}
+		
+		//* make sure that webalizer finds its config file when it is directly in /etc
+		if(@is_file('/etc/webalizer.conf') && !@is_dir('/etc/webalizer')) {
+			exec('mkdir /etc/webalizer');
+			exec('ln -s /etc/webalizer.conf /etc/webalizer/webalizer.conf');
+		}
+		
+		if(is_file('/etc/webalizer/webalizer.conf')) {
+			// Change webalizer mode to incremental
+			replaceLine('/etc/webalizer/webalizer.conf','Incremental     no','Incremental     yes',0,0);
+			replaceLine('/etc/webalizer/webalizer.conf','IncrementalName webalizer.current','IncrementalName webalizer.current',0,0);
+			replaceLine('/etc/webalizer/webalizer.conf','HistoryName     webalizer.hist','HistoryName     webalizer.hist',0,0);
+		}
+		
+		//* add a sshusers group
+		$command = 'groupadd sshusers';
+		if(!is_group('sshusers')) caselog($command.' &> /dev/null 2> /dev/null', __FILE__, __LINE__, "EXECUTED: $command", "Failed to execute the command $command");
 		
 	}
 	
@@ -807,7 +893,32 @@ class installer_base {
 
 	}
 	
-	
+    public function configure_vlogger()
+    {
+        global $conf;
+        
+        //** Configure vlogger to use traffic logging to mysql (master) db
+        $configfile = 'vlogger-dbi.conf';
+        if(is_file($conf["vlogger"]["config_dir"].'/'.$configfile)) copy($conf["vlogger"]["config_dir"].'/'.$configfile,$conf["vlogger"]["config_dir"].'/'.$configfile.'~');
+        if(is_file($conf["vlogger"]["config_dir"].'/'.$configfile.'~')) exec('chmod 400 '.$conf["vlogger"]["config_dir"].'/'.$configfile.'~');
+        $content = rf("tpl/".$configfile.".master");
+        if($conf['mysql']['master_slave_setup'] == 'y') {
+            $content = str_replace('{mysql_server_ispconfig_user}',$conf['mysql']['master_ispconfig_user'],$content);
+            $content = str_replace('{mysql_server_ispconfig_password}',$conf['mysql']['master_ispconfig_password'], $content);
+            $content = str_replace('{mysql_server_database}',$conf['mysql']['master_database'],$content);
+            $content = str_replace('{mysql_server_ip}',$conf["mysql"]["master_host"],$content);
+        } else {
+            $content = str_replace('{mysql_server_ispconfig_user}',$conf['mysql']['ispconfig_user'],$content);
+            $content = str_replace('{mysql_server_ispconfig_password}',$conf['mysql']['ispconfig_password'], $content);
+            $content = str_replace('{mysql_server_database}',$conf['mysql']['database'],$content);
+            $content = str_replace('{mysql_server_ip}',$conf["mysql"]["host"],$content);
+        }
+        wf($conf["vlogger"]["config_dir"].'/'.$configfile,$content);
+        exec('chmod 600 '.$conf["vlogger"]["config_dir"].'/'.$configfile);
+        exec('chown root:root '.$conf["vlogger"]["config_dir"].'/'.$configfile);
+    
+    }
+    
 	public function install_ispconfig()
     {
 		global $conf;

@@ -55,17 +55,11 @@ class page_action extends tform_actions {
 		
 		// we will check only users, not admins
 		if($_SESSION["s"]["user"]["typ"] == 'user') {
-			
-			// Get the limits of the client
-			$client_group_id = $_SESSION["s"]["user"]["default_group"];
-			$client = $app->db->queryOneRecord("SELECT limit_maildomain FROM sys_group, client WHERE sys_group.client_id = client.client_id and sys_group.groupid = $client_group_id");
-			
-			// Check if the user may add another maildomain.
-			if($client["limit_maildomain"] >= 0) {
-				$tmp = $app->db->queryOneRecord("SELECT count(domain_id) as number FROM mail_domain WHERE sys_groupid = $client_group_id");
-				if($tmp["number"] >= $client["limit_maildomain"]) {
-					$app->error($app->tform->wordbook["limit_maildomain_txt"]);
-				}
+			if(!$app->tform->checkClientLimit('limit_maildomain')) {
+				$app->error($app->tform->wordbook["limit_maildomain_txt"]);
+			}
+			if(!$app->tform->checkResellerLimit('limit_maildomain')) {
+				$app->error('Reseller: '.$app->tform->wordbook["limit_maildomain_txt"]);
 			}
 		}
 		
@@ -98,7 +92,7 @@ class page_action extends tform_actions {
 
 			// Get the limits of the client
 			$client_group_id = $_SESSION["s"]["user"]["default_group"];
-			$client = $app->db->queryOneRecord("SELECT client.client_id, limit_web_domain, default_webserver FROM sys_group, client WHERE sys_group.client_id = client.client_id and sys_group.groupid = $client_group_id");
+			$client = $app->db->queryOneRecord("SELECT client.client_id, contact_name FROM sys_group, client WHERE sys_group.client_id = client.client_id and sys_group.groupid = $client_group_id");
 			
 			// Set the webserver to the default server of the client
 			$tmp = $app->db->queryOneRecord("SELECT server_name FROM server WHERE server_id = $client[default_webserver]");
@@ -108,7 +102,7 @@ class page_action extends tform_actions {
 			// Fill the client select field
 			$sql = "SELECT groupid, name FROM sys_group, client WHERE sys_group.client_id = client.client_id AND client.parent_client_id = ".$client['client_id'];
 			$clients = $app->db->queryAllRecords($sql);
-			$client_select = '';
+			$client_select = '<option value="'.$client['client_id'].'">'.$client['contact_name'].'</option>';
 			if(is_array($clients)) {
 				foreach( $clients as $client) {
 					$selected = @($client["groupid"] == $this->dataRecord["sys_groupid"])?'SELECTED':'';
@@ -180,6 +174,11 @@ class page_action extends tform_actions {
 			// Clients may not set the client_group_id, so we unset them if user is not a admin
 			if(!$app->auth->has_clients($_SESSION['s']['user']['userid'])) unset($this->dataRecord["client_group_id"]);
 		}
+		
+		//* make sure that the email domain is lowercase
+		if(isset($this->dataRecord["domain"])) $this->dataRecord["domain"] = strtolower($this->dataRecord["domain"]);
+		
+		
 		parent::onSubmit();
 	}
 	
@@ -221,11 +220,21 @@ class page_action extends tform_actions {
 		//* Check if the server has been changed
 		// We do this only for the admin or reseller users, as normal clients can not change the server ID anyway
 		if($_SESSION["s"]["user"]["typ"] == 'admin' || $app->auth->has_clients($_SESSION['s']['user']['userid'])) {
-			$rec = $app->db->queryOneRecord("SELECT server_id from mail_domain WHERE domain_id = ".$this->id);
+			$rec = $app->db->queryOneRecord("SELECT server_id, domain from mail_domain WHERE domain_id = ".$this->id);
 			if($rec['server_id'] != $this->dataRecord["server_id"]) {
 				//* Add a error message and switch back to old server
 				$app->tform->errorMessage .= $app->lng('The Server can not be changed.');
 				$this->dataRecord["server_id"] = $rec['server_id'];
+			}
+			unset($rec);
+		//* If the user is neither admin nor reseller
+		} else {
+			//* We do not allow users to change a domain which has been created by the admin
+			$rec = $app->db->queryOneRecord("SELECT domain from mail_domain WHERE domain_id = ".$this->id);
+			if($rec['domain'] != $this->dataRecord["domain"] && $app->tform->checkPerm($this->id,'u')) {
+				//* Add a error message and switch back to old server
+				$app->tform->errorMessage .= $app->lng('The Domain can not be changed. Please ask your Administrator if you want to change the domain name.');
+				$this->dataRecord["domain"] = $rec['domain'];
 			}
 			unset($rec);
 		}
@@ -297,6 +306,11 @@ class page_action extends tform_actions {
 					$app->db->datalogUpdate('mail_forwarding', "source = '$source', destination = '$destination'", 'forwarding_id', $rec['forwarding_id']);
 				}
 			}
+			
+			//* Delete the old spamfilter record
+			$tmp = $app->db->queryOneRecord("SELECT id FROM spamfilter_users WHERE email = '@".mysql_real_escape_string($this->oldDataRecord["domain"])."'");
+			$app->db->datalogDelete('spamfilter_users', 'id', $tmp["id"]);
+			unset($tmp);
 			
 		} // end if domain name changed
 		

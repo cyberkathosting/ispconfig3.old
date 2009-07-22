@@ -146,8 +146,12 @@ class apache2_plugin {
     		@unlink($rand_file);
     		$ssl_request = file_get_contents($csr_file);
     		$ssl_cert = file_get_contents($crt_file);
+			/* Update the DB of the (local) Server */
     		$app->db->query("UPDATE web_domain SET ssl_request = '$ssl_request', ssl_cert = '$ssl_cert' WHERE domain = '".$data["new"]["domain"]."'");
 			$app->db->query("UPDATE web_domain SET ssl_action = '' WHERE domain = '".$data["new"]["domain"]."'");
+			/* Update also the master-DB of the Server-Farm */
+    		$app->dbmaster->query("UPDATE web_domain SET ssl_request = '$ssl_request', ssl_cert = '$ssl_cert' WHERE domain = '".$data["new"]["domain"]."'");
+			$app->dbmaster->query("UPDATE web_domain SET ssl_action = '' WHERE domain = '".$data["new"]["domain"]."'");
 		}
 		
 		//* Save a SSL certificate to disk
@@ -160,7 +164,10 @@ class apache2_plugin {
 			file_put_contents($csr_file,$data["new"]["ssl_request"]);
 			file_put_contents($crt_file,$data["new"]["ssl_cert"]);
 			if(trim($data["new"]["ssl_bundle"]) != '') file_put_contents($bundle_file,$data["new"]["ssl_bundle"]);
+			/* Update the DB of the (local) Server */
 			$app->db->query("UPDATE web_domain SET ssl_action = '' WHERE domain = '".$data["new"]["domain"]."'");
+			/* Update also the master-DB of the Server-Farm */
+			$app->dbmaster->query("UPDATE web_domain SET ssl_action = '' WHERE domain = '".$data["new"]["domain"]."'");
 			$app->log("Saving SSL Cert for: $domain",LOGLEVEL_DEBUG);
 		}
 		
@@ -174,7 +181,12 @@ class apache2_plugin {
 			unlink($csr_file);
 			unlink($crt_file);
 			unlink($bundle_file);
+			/* Update the DB of the (local) Server */
+    		$app->db->query("UPDATE web_domain SET ssl_request = '', ssl_cert = '' WHERE domain = '".$data["new"]["domain"]."'");
 			$app->db->query("UPDATE web_domain SET ssl_action = '' WHERE domain = '".$data["new"]["domain"]."'");
+			/* Update also the master-DB of the Server-Farm */
+    		$app->dbmaster->query("UPDATE web_domain SET ssl_request = '', ssl_cert = '' WHERE domain = '".$data["new"]["domain"]."'");
+			$app->dbmaster->query("UPDATE web_domain SET ssl_action = '' WHERE domain = '".$data["new"]["domain"]."'");
 			$app->log("Deleting SSL Cert for: $domain",LOGLEVEL_DEBUG);
 		}
 		
@@ -249,7 +261,7 @@ class apache2_plugin {
 					// Remove trailing slash
 					if(substr($tmp_symlink, -1, 1) == '/') $tmp_symlink = substr($tmp_symlink, 0, -1);
 					// create the symlinks, if not exist
-					if(!is_link($tmp_symlink)) {
+					if(is_link($tmp_symlink)) {
 						exec("rm -f ".escapeshellcmd($tmp_symlink));
 						$app->log("Removed Symlink: rm -f ".$tmp_symlink,LOGLEVEL_DEBUG);
 					}
@@ -431,7 +443,7 @@ class apache2_plugin {
 		
 		$username = escapeshellcmd($data["new"]["system_user"]);
 		if($data["new"]["system_user"] != '' && !$app->system->is_user($data["new"]["system_user"])) {
-			exec("useradd -d ".escapeshellcmd($data["new"]["document_root"])." -g $groupname $username -s /bin/false");
+			exec("useradd -d ".escapeshellcmd($data["new"]["document_root"])." -g $groupname -G sshusers $username -s /bin/false");
 			$app->log("Adding the user: $username",LOGLEVEL_DEBUG);
 		}
 		
@@ -447,7 +459,6 @@ class apache2_plugin {
 			exec("setquota -T -u $username 604800 604800 -a &> /dev/null");
 		}
 		
-		
 		if($this->action == 'insert') {
 			// Chown and chmod the directories below the document root
 			exec("chown -R $username:$groupname ".escapeshellcmd($data["new"]["document_root"]));
@@ -456,8 +467,35 @@ class apache2_plugin {
 			exec("chown root:root ".escapeshellcmd($data["new"]["document_root"]));
 		}
 		
-		// make temp direcory writable for the apache user and the website user
-		exec("chmod 777 ".escapeshellcmd($data["new"]["document_root"]."/tmp"));
+		
+		
+		// If the security level is set to high
+		if($web_config['security_level'] == 20) {
+			
+			exec("chmod 711 ".escapeshellcmd($data["new"]["document_root"]."/"));
+			exec("chmod 711 ".escapeshellcmd($data["new"]["document_root"])."/*");
+			exec("chmod 710 ".escapeshellcmd($data["new"]["document_root"]."/web"));
+			
+			// make temp direcory writable for the apache user and the website user
+			exec("chmod 777 ".escapeshellcmd($data["new"]["document_root"]."/tmp"));
+			
+			$command = 'usermod';
+			$command .= ' --groups sshusers';
+			$command .= ' '.escapeshellcmd($data["new"]["system_user"]);
+			exec($command);
+			
+			//* add the apache user to the client group
+			$app->system->add_user_to_group($groupname, escapeshellcmd($web_config['user']));
+			
+		// If the security Level is set to medium
+		} else {
+		
+			exec("chmod 755 ".escapeshellcmd($data["new"]["document_root"]."/"));
+			exec("chmod 755 ".escapeshellcmd($data["new"]["document_root"]."/*"));
+		
+			// make temp direcory writable for the apache user and the website user
+			exec("chmod 777 ".escapeshellcmd($data["new"]["document_root"]."/tmp"));
+		}
 		
 		
 		// Create the vhost config file
@@ -470,6 +508,7 @@ class apache2_plugin {
 		$vhost_data["web_document_root"] = $data["new"]["document_root"]."/web";
 		$vhost_data["web_document_root_www"] = $web_config["website_basedir"]."/".$data["new"]["domain"]."/web";
 		$vhost_data["web_basedir"] = $web_config["website_basedir"];
+		$vhost_data["security_level"] = $web_config["security_level"];
 		
 		// Check if a SSL cert exists
 		$ssl_dir = $data["new"]["document_root"]."/ssl";
@@ -494,6 +533,7 @@ class apache2_plugin {
 		// Rewrite rules
 		$rewrite_rules = array();
 		if($data["new"]["redirect_type"] != '') {
+			if(substr($data["new"]["redirect_path"],-1) != '/') $data["new"]["redirect_path"] .= '/';
 			$rewrite_rules[] = array(	'rewrite_domain' 	=> $data["new"]["domain"],
 										'rewrite_type' 		=> ($data["new"]["redirect_type"] == 'no')?'':'['.$data["new"]["redirect_type"].']',
 										'rewrite_target' 	=> $data["new"]["redirect_path"]);
@@ -515,30 +555,32 @@ class apache2_plugin {
 		
 		// get alias domains (co-domains and subdomains)
 		$aliases = $app->db->queryAllRecords("SELECT * FROM web_domain WHERE parent_domain_id = ".$data["new"]["domain_id"]." AND active = 'y'");
-        switch($data["new"]["subdomain"]) {
+        $server_alias = array();
+		switch($data["new"]["subdomain"]) {
         case 'www':
-            $server_alias .= 'www.'.$data["new"]["domain"].' ';
+            $server_alias[] .= 'www.'.$data["new"]["domain"].' ';
             break;
         case '*':
-            $server_alias .= '*.'.$data["new"]["domain"].' ';    
+            $server_alias[] .= '*.'.$data["new"]["domain"].' ';    
             break;
         }
 		if(is_array($aliases)) {
 			foreach($aliases as $alias) {
                 switch($alias["subdomain"]) {
                 case 'www':
-                    $server_alias .= 'www.'.$alias["domain"].' '.$alias["domain"].' ';
+                    $server_alias[] .= 'www.'.$alias["domain"].' '.$alias["domain"].' ';
                     break;
                 case '*':
-                    $server_alias .= '*.'.$alias["domain"].' '.$alias["domain"].' ';    
+                    $server_alias[] .= '*.'.$alias["domain"].' '.$alias["domain"].' ';    
                     break;
                 default:
-                    $server_alias .= $alias["domain"].' ';            
+                    $server_alias[] .= $alias["domain"].' ';            
                     break;
                 }
 				$app->log("Add server alias: $alias[domain]",LOGLEVEL_DEBUG);
 				// Rewriting
 				if($alias["redirect_type"] != '') {
+					if(substr($data["new"]["redirect_path"],-1) != '/') $data["new"]["redirect_path"] .= '/';
 					$rewrite_rules[] = array(	'rewrite_domain' 	=> $alias["domain"],
 												'rewrite_type' 		=> ($alias["redirect_type"] == 'no')?'':'['.$alias["redirect_type"].']',
 												'rewrite_target' 	=> $alias["redirect_path"]);
@@ -558,7 +600,24 @@ class apache2_plugin {
 				}
 			}
 		}
-		$tpl->setVar('alias',trim($server_alias));
+		
+		//* If we have some alias records
+		if(count($server_alias) > 0) {
+			$server_alias_str = '';
+			$n = 0;
+			
+			// begin a new ServerAlias line after 30 alias domains
+			foreach($server_alias as $tmp_alias) {
+				if($n % 30 == 0) $server_alias_str .= "\n    ServerAlias ";
+				$server_alias_str .= $tmp_alias;
+			}
+			unset($tmp_alias);
+			
+			$tpl->setVar('alias',trim($server_alias_str));
+		} else {
+			$tpl->setVar('alias','');
+		}
+		
 		if(count($rewrite_rules) > 0) {
 			$tpl->setVar('rewrite_enabled',1);
 		} else {
@@ -599,6 +658,7 @@ class apache2_plugin {
 			$fcgi_tpl->setVar('php_fcgi_children',$fastcgi_config["fastcgi_children"]);
 			$fcgi_tpl->setVar('php_fcgi_max_requests',$fastcgi_config["fastcgi_max_requests"]);
 			$fcgi_tpl->setVar('php_fcgi_bin',$fastcgi_config["fastcgi_bin"]);
+			$fcgi_tpl->setVar('security_level',$web_config["security_level"]);
 				
 			$fcgi_starter_script = escapeshellcmd($fastcgi_starter_path.$fastcgi_config["fastcgi_starter_script"]);
 			file_put_contents($fcgi_starter_script,$fcgi_tpl->grab());
@@ -650,6 +710,7 @@ class apache2_plugin {
 			// This will NOT work!
 			//$cgi_tpl->setVar('open_basedir', "/var/www/" . $data["new"]["domain"]);
 			$cgi_tpl->setVar('php_cgi_bin',$cgi_config["cgi_bin"]);
+			$cgi_tpl->setVar('security_level',$web_config["security_level"]);
 
 			$cgi_starter_script = escapeshellcmd($cgi_starter_path.$cgi_config["cgi_starter_script"]);
 			file_put_contents($cgi_starter_script,$cgi_tpl->grab());
@@ -695,7 +756,7 @@ class apache2_plugin {
 		}
 		
 		//* Create .htaccess and .htpasswd file for website statistics
-		if(!is_file($data["new"]["document_root"].'/web/stats/.htaccess')) {
+		if(!is_file($data["new"]["document_root"].'/web/stats/.htaccess') or $data["old"]["document_root"] != $data["new"]["document_root"]) {
 			if(!is_dir($data["new"]["document_root"].'/web/stats')) mkdir($data["new"]["document_root"].'/web/stats');
 			$ht_file = "AuthType Basic\nAuthName \"Members Only\"\nAuthUserFile ".$data["new"]["document_root"]."/.htpasswd_stats\n<limit GET PUT POST>\nrequire valid-user\n</limit>";
 			file_put_contents($data["new"]["document_root"].'/web/stats/.htaccess',$ht_file);
@@ -716,6 +777,9 @@ class apache2_plugin {
 		
 		// request a httpd reload when all records have been processed
 		$app->services->restartServiceDelayed('httpd','reload');
+		
+		//* Unset action to clean it for next processed vhost.
+		$this->action = '';
 		
 	}
 	

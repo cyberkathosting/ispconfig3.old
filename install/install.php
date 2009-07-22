@@ -53,6 +53,10 @@ require_once('lib/install.lib.php');
 //** Include the base class of the installer class
 require_once('lib/installer_base.lib.php');
 
+//** Ensure that current working directory is install directory
+$cur_dir = getcwd();
+if(realpath(dirname(__FILE__)) != $cur_dir) die("Please run installation/update from _inside_ the install directory!\n");
+
 //** Install logfile
 define('ISPC_LOG_FILE', '/var/log/ispconfig_install.log');
 define('ISPC_INSTALL_ROOT', realpath(dirname(__FILE__).'/../'));
@@ -191,6 +195,10 @@ if($install_mode == 'standard') {
 	swriteln('Configuring Apache');
 	$inst->configure_apache();
 	
+    //** Configure vlogger
+    swriteln('Configuring vlogger');
+    $inst->configure_vlogger();
+    
 	//* Configure Firewall
 	swriteln('Configuring Firewall');
 	$inst->configure_firewall();
@@ -355,6 +363,10 @@ if($install_mode == 'standard') {
 		$conf['services']['web'] = true;
 		swriteln('Configuring Apache');
 		$inst->configure_apache();
+        
+        //** Configure vlogger
+        swriteln('Configuring vlogger');
+        $inst->configure_vlogger();
 	}
 	
 	//** Configure Firewall

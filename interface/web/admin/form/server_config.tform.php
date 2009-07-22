@@ -339,6 +339,34 @@ $form["tabs"]['web'] = array (
 			'width'		=> '40',
 			'maxlength'	=> '255'
 		),
+		'security_level' => array (
+			'datatype'	=> 'VARCHAR',
+			'formtype'	=> 'SELECT',
+			'default'	=> '20',
+			'value'		=> array('10' => 'Medium', '20' => 'High')
+		),
+		'user' => array (
+			'datatype'	=> 'VARCHAR',
+			'formtype'	=> 'TEXT',
+			'default'	=> '',
+			'validators'	=> array ( 	0 => array (	'type'	=> 'NOTEMPTY',
+														'errmsg'=> 'apache_user_error_empty'),
+									),
+			'value'		=> '',
+			'width'		=> '40',
+			'maxlength'	=> '255'
+		),
+		'group' => array (
+			'datatype'	=> 'VARCHAR',
+			'formtype'	=> 'TEXT',
+			'default'	=> '',
+			'validators'	=> array ( 	0 => array (	'type'	=> 'NOTEMPTY',
+														'errmsg'=> 'apache_group_error_empty'),
+									),
+			'value'		=> '',
+			'width'		=> '40',
+			'maxlength'	=> '255'
+		),
 	##################################
 	# ENDE Datatable fields
 	##################################
@@ -478,6 +506,17 @@ $form["tabs"]['jailkit'] = array (
 			'width'		=> '40',
 			'maxlength'	=> '1000'
 		),
+        'jailkit_chroot_cron_programs' => array (
+            'datatype'  => 'VARCHAR',
+            'formtype'  => 'TEXT',
+            'default'   => '',
+            'validators'    => array (  0 => array (    'type'  => 'NOTEMPTY',
+                                                        'errmsg'=> 'jailkit_chroot_cron_programs_error_empty'),
+                                    ),
+            'value'     => '',
+            'width'     => '40',
+            'maxlength' => '1000'
+        ),
 	##################################
 	# ENDE Datatable fields
 	##################################
@@ -485,10 +524,79 @@ $form["tabs"]['jailkit'] = array (
 );
 
 
+$form["tabs"]['vlogger'] = array (
+    'title'     => "vlogger",
+    'width'     => 80,
+    'template'  => "templates/server_config_vlogger_edit.htm",
+    'fields'    => array (
+    ##################################
+    # Begin Datatable fields
+    ##################################
+        'config_dir' => array (
+            'datatype'  => 'VARCHAR',
+            'formtype'  => 'TEXT',
+            'default'   => '',
+            'validators'    => array (  0 => array (    'type'  => 'NOTEMPTY',
+                                                        'errmsg'=> 'vlogger_config_dir_error_empty'),
+                                    ),
+            'value'     => '',
+            'width'     => '40',
+            'maxlength' => '255'
+        ),
+    ##################################
+    # ENDE Datatable fields
+    ##################################
+    )
+);
 
 
 
-
+$form["tabs"]['cron'] = array (
+    'title'     => "Cron",
+    'width'     => 80,
+    'template'  => "templates/server_config_cron_edit.htm",
+    'fields'    => array (
+    ##################################
+    # Begin Datatable fields
+    ##################################
+        'init_script' => array (
+            'datatype'  => 'VARCHAR',
+            'formtype'  => 'TEXT',
+            'default'   => '',
+            'validators'    => array (  0 => array (    'type'  => 'NOTEMPTY',
+                                                        'errmsg'=> 'cron_init_script_error_empty'),
+                                    ),
+            'value'     => '',
+            'width'     => '40',
+            'maxlength' => '255'
+        ),
+        'crontab_dir' => array (
+            'datatype'  => 'VARCHAR',
+            'formtype'  => 'TEXT',
+            'default'   => '',
+            'validators'    => array (  0 => array (    'type'  => 'NOTEMPTY',
+                                                        'errmsg'=> 'crontab_dir_error_empty'),
+                                    ),
+            'value'     => '',
+            'width'     => '40',
+            'maxlength' => '255'
+        ),
+        'wget' => array (
+            'datatype'  => 'VARCHAR',
+            'formtype'  => 'TEXT',
+            'default'   => '',
+            'validators'    => array (  0 => array (    'type'  => 'NOTEMPTY',
+                                                        'errmsg'=> 'cron_wget_error_empty'),
+                                    ),
+            'value'     => '',
+            'width'     => '40',
+            'maxlength' => '255'
+        ),
+    ##################################
+    # ENDE Datatable fields
+    ##################################
+    )
+);
 
 
 

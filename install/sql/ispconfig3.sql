@@ -92,6 +92,9 @@ CREATE TABLE `client` (
   `limit_dns_record` int(11) NOT NULL default '-1',
   `default_dbserver` int(11) NOT NULL default '1',
   `limit_database` int(11) NOT NULL default '-1',
+  `limit_cron` int(11) NOT NULL default '0',
+  `limit_cron_type` enum('url','chrooted','full') NOT NULL default 'url',
+  `limit_cron_frequency` int(11) NOT NULL default '5',
   `limit_client` int(11) NOT NULL default '0',
   `parent_client_id` int(11) unsigned NOT NULL default '0',
   `username` varchar(64) default NULL,
@@ -140,9 +143,39 @@ CREATE TABLE `client_template` (
   `limit_dns_zone` int(11) NOT NULL default '-1',
   `limit_dns_record` int(11) NOT NULL default '-1',
   `limit_database` int(11) NOT NULL default '-1',
+  `limit_cron` int(11) NOT NULL default '0',
+  `limit_cron_type` enum('url','chrooted','full') NOT NULL default 'url',
+  `limit_cron_frequency` int(11) NOT NULL default '5',
   `limit_client` int(11) NOT NULL default '0',
   PRIMARY KEY  (`template_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1;
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table  `dns_rr`
+-- 
+CREATE TABLE `cron` (
+  `id` int(11) unsigned NOT NULL auto_increment,
+  `sys_userid` int(11) unsigned NOT NULL default '0',
+  `sys_groupid` int(11) unsigned NOT NULL default '0',
+  `sys_perm_user` varchar(5) NULL default NULL,
+  `sys_perm_group` varchar(5) NULL default NULL,
+  `sys_perm_other` varchar(5) NULL default NULL,
+  `server_id` int(11) unsigned NOT NULL default '0',
+  `parent_domain_id` int(11) unsigned NOT NULL default '0',
+  `type` enum('url','chrooted','full') NOT NULL default 'url',
+  `command` varchar(255) NOT NULL,
+  `run_min` varchar(100) NULL,
+  `run_hour` varchar(100) NULL,
+  `run_mday` varchar(100) NULL,
+  `run_month` varchar(100) NULL,
+  `run_wday` varchar(100) NULL,
+  `active` enum('n','y') NOT NULL default 'y',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  AUTO_INCREMENT=1;
+
 
 -- --------------------------------------------------------
 
@@ -1010,9 +1043,24 @@ CREATE TABLE `web_database` (
   `database_password` varchar(64) default NULL,
   `database_charset` varchar(64) default NULL,
   `remote_access` enum('n','y') NOT NULL default 'y',
+  `remote_ips` text NOT NULL,
   `active` enum('n','y') NOT NULL default 'y',
   PRIMARY KEY  (`database_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table  `web_traffic`
+--
+
+CREATE TABLE `web_traffic` (
+  `hostname` varchar(255) NOT NULL,
+  `traffic_date` date NOT NULL,
+  `traffic_bytes` bigint(32) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`hostname`,`traffic_date`)
+) ENGINE=MyISAM;
 
 
 -- --------------------------------------------------------
@@ -1148,7 +1196,7 @@ INSERT INTO `sys_user` (`userid`, `sys_userid`, `sys_groupid`, `sys_perm_user`, 
 -- Dumping data for table `sys_config`
 --
 
-INSERT INTO sys_config VALUES ('1','db','db_version','3.0.1.3');
+INSERT INTO sys_config VALUES ('1','db','db_version','3.0.1.4');
 
 -- --------------------------------------------------------
 

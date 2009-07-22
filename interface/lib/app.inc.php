@@ -151,17 +151,14 @@ class app {
     public function lng($text)
     {
 		if($this->_language_inc != 1) {
-			//* loading global and module Wordbook
-            // TODO: this need to be made clearer somehow - pedro
-			//@include_once(ISPC_ROOT_PATH.'/lib/lang/'.$_SESSION['s']['language'].'.lng');
+			//* loading global Wordbook
 			$this->load_language_file('/lib/lang/'.$_SESSION['s']['language'].'.lng');
+			//* Load module wordbook, if it exists
 			if(isset($_SESSION['s']['module']['name']) && isset($_SESSION['s']['language'])) {
 				$lng_file = '/web/'.$_SESSION['s']['module']['name'].'/lib/lang/'.$_SESSION['s']['language'].'.lng';
-				if(!file_exists($lng_file)) $lng_file = '/web/'.$_SESSION['s']['module']['name'].'/lib/lang/en.lng';
-				//@include_once($lng_file);
+				if(!file_exists(ISPC_ROOT_PATH.$lng_file)) $lng_file = '/web/'.$_SESSION['s']['module']['name'].'/lib/lang/en.lng';
 				$this->load_language_file($lng_file);
 			}
-			//if(isset($wb)) $this->_wb = $wb;
 			$this->_language_inc = 1;
 		}		
 		if(!empty($this->_wb[$text])) {
@@ -189,7 +186,11 @@ class app {
     public function tpl_defaults()
     {	
 		$this->tpl->setVar('app_title', $this->_conf['app_title']);
-		$this->tpl->setVar('app_version', $this->_conf['app_version']);
+		if(isset($_SESSION['s']['user'])) {
+			$this->tpl->setVar('app_version', $this->_conf['app_version']);
+		} else {
+			$this->tpl->setVar('app_version', '');
+		}
 		$this->tpl->setVar('app_link', $this->_conf['app_link']);
 		if(isset($this->_conf['app_logo']) && $this->_conf['app_logo'] != '' && @is_file($this->_conf['app_logo'])){
 			$this->tpl->setVar('app_logo', '<img src="'.$this->_conf['app_logo'].'">');

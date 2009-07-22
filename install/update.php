@@ -53,6 +53,10 @@ require_once('lib/install.lib.php');
 //** Include the base class of the installer class
 require_once('lib/installer_base.lib.php');
 
+//** Ensure that current working directory is install directory
+$cur_dir = getcwd();
+if(realpath(dirname(__FILE__)) != $cur_dir) die("Please run installation/update from _inside_ the install directory!\n");
+
 //** Install logfile
 define('ISPC_LOG_FILE', '/var/log/ispconfig_install.log');
 define('ISPC_INSTALL_ROOT', realpath(dirname(__FILE__).'/../'));
@@ -155,6 +159,9 @@ if( !$inst->db->query('DROP DATABASE IF EXISTS '.$conf['mysql']['database']) ) {
 
 //** Create the mysql database
 $inst->configure_database();
+
+//** Update master database rights
+$inst->grant_master_database_rights();
 
 //** empty all databases
 $db_tables = $inst->db->getTables();
@@ -284,6 +291,10 @@ if($reconfigure_services_answer == 'yes') {
 		//** Configure Apache
 		swriteln('Configuring Apache');
 		$inst->configure_apache();
+        
+        //** Configure vlogger
+        swriteln('Configuring vlogger');
+        $inst->configure_vlogger();
 	}
 	
 

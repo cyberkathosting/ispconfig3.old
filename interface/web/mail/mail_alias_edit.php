@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright (c) 2005, Till Brehm, projektfarm Gmbh
+Copyright (c) 2005 - 2009, Till Brehm, projektfarm Gmbh
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -55,17 +55,11 @@ class page_action extends tform_actions {
 		
 		// we will check only users, not admins
 		if($_SESSION["s"]["user"]["typ"] == 'user') {
-			
-			// Get the limits of the client
-			$client_group_id = $_SESSION["s"]["user"]["default_group"];
-			$client = $app->db->queryOneRecord("SELECT limit_mailalias FROM sys_group, client WHERE sys_group.client_id = client.client_id and sys_group.groupid = $client_group_id");
-			
-			// Check if the user may add another mailbox.
-			if($client["limit_mailalias"] >= 0) {
-				$tmp = $app->db->queryOneRecord("SELECT count(forwarding_id) as number FROM mail_forwarding WHERE sys_groupid = $client_group_id and type = 'alias'");
-				if($tmp["number"] >= $client["limit_mailalias"]) {
-					$app->error($app->tform->wordbook["limit_mailalias_txt"]);
-				}
+			if(!$app->tform->checkClientLimit('limit_mailalias',"type = 'alias'")) {
+				$app->error($app->tform->wordbook["limit_mailalias_txt"]);
+			}
+			if(!$app->tform->checkResellerLimit('limit_mailalias',"type = 'alias'")) {
+				$app->error('Reseller: '.$app->tform->wordbook["limit_mailalias_txt"]);
 			}
 		}
 		
@@ -80,7 +74,7 @@ class page_action extends tform_actions {
 		$app->tpl->setVar("email_local_part",$email_parts[0]);
 		
 		// Getting Domains of the user
-		$sql = "SELECT domain FROM mail_domain WHERE ".$app->tform->getAuthSQL('r');
+		$sql = "SELECT domain FROM mail_domain WHERE ".$app->tform->getAuthSQL('r').' ORDER BY domain';
 		$domains = $app->db->queryAllRecords($sql);
 		$domain_select = '';
 		if(is_array($domains)) {
@@ -125,6 +119,11 @@ class page_action extends tform_actions {
 		
 		unset($this->dataRecord["email_local_part"]);
 		unset($this->dataRecord["email_domain"]);
+		
+		//* Check if there is no mailbox with this address
+		$tmp = $app->db->queryOneRecord("SELECT count(mailuser_id) as number FROM mail_user WHERE email = '".$app->db->quote($this->dataRecord["source"])."'");
+		if($tmp['number'] > 0) $app->tform->errorMessage .= $app->tform->lng("duplicate_mailbox_txt")."<br>";
+		unset($tmp);
 		
 		parent::onSubmit();
 	}
