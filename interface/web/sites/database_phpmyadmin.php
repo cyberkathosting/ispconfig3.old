@@ -60,5 +60,4 @@ $serverData = $app->db->queryOneRecord(
 isset($_SERVER['HTTPS'])? $http = 'https' : $http = 'http';
 header('location:' . $http . '://' . $serverData['server_name'] . '/phpmyadmin');
 exit;
-
 ?>

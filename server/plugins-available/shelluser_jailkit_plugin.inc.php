@@ -84,13 +84,17 @@ class shelluser_jailkit_plugin {
 				$this->data = $data;
 				$this->app = $app;
 				$this->jailkit_config = $app->getconf->get_server_config($conf["server_id"], 'jailkit');
+				
+				$this->_update_website_security_level();
 			
 				$this->_setup_jailkit_chroot();
+				
+				$this->_add_jailkit_user();
 				
 				$command .= 'usermod -U '.escapeshellcmd($data['new']['username']);
 				exec($command);
 				
-				$this->_add_jailkit_user();
+				$this->_update_website_security_level();
 			}
 		
 			$app->log("Jailkit Plugin -> insert username:".$data['new']['username'],LOGLEVEL_DEBUG);
@@ -119,9 +123,13 @@ class shelluser_jailkit_plugin {
 				$this->data = $data;
 				$this->app = $app;
 				$this->jailkit_config = $app->getconf->get_server_config($conf["server_id"], 'jailkit');
+				
+				$this->_update_website_security_level();
 			
 				$this->_setup_jailkit_chroot();
 				$this->_add_jailkit_user();
+				
+				$this->_update_website_security_level();
 			}
 		
 			$app->log("Jailkit Plugin -> update username:".$data['new']['username'],LOGLEVEL_DEBUG);
@@ -157,6 +165,7 @@ class shelluser_jailkit_plugin {
 				exec($command);
 				$app->log("Jailkit Plugin -> delete chroot home:".$data['old']['dir'].$jailkit_chroot_userhome,LOGLEVEL_DEBUG);
 			}
+			
 		}
 		
 		$app->log("Jailkit Plugin -> delete username:".$data['old']['username'],LOGLEVEL_DEBUG);
@@ -263,7 +272,31 @@ class shelluser_jailkit_plugin {
 			$this->app->log("Added created jailkit parent user home in : ".$this->data['new']['dir'].$jailkit_chroot_puserhome,LOGLEVEL_DEBUG);
 	}
 	
+	//* Update the website root directory permissions depending on the security level
+	function _update_website_security_level() {
+		global $app,$conf;
+		
+		// load the server configuration options
+		$app->uses("getconf");
+		$web_config = $app->getconf->get_server_config($conf["server_id"], 'web');
+		
+		// Get the parent website of this shell user
+		$web = $app->db->queryOneRecord("SELECT * FROM web_domain WHERE domain_id = ".$this->data['new']['parent_domain_id']);
+		
+		//* If the security level is set to high
+		if($web_config['security_level'] == 20) {
+			$this->_exec("chmod 755 ".escapeshellcmd($web["document_root"]));
+			$this->_exec("chown root:root ".escapeshellcmd($web["document_root"]));
+		}
+		
+	}
 	
+	//* Wrapper for exec function for easier debugging
+	private function _exec($command) {
+		global $app;
+		$app->log("exec: ".$command,LOGLEVEL_DEBUG);
+		exec($command);
+	}
 
 } // end class
 
