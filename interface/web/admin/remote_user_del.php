@@ -28,26 +28,35 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-//** TODO: These options need to be in an install script somehow
+/******************************************
+* Begin Form configuration
+******************************************/
 
-//** Installation Options
+$list_def_file = "list/remote_user.list.php";
+$tform_def_file = "form/remote_user.tform.php";
 
-$conf['language'] = 'en';
-$conf['distname'] = 'debian40';
-$conf['hostname'] = 'server1.domain.tld'; // Full hostname
-$conf['ispconfig_install_dir'] = '/usr/local/ispconfig';
-$conf['ispconfig_config_dir'] = '/usr/local/ispconfig';
-$conf['server_id'] = 1;
+/******************************************
+* End Form configuration
+******************************************/
 
-//**MySQL Database settings
-$conf['mysql']['host'] = 'localhost';
-$conf['mysql']['ip'] = '127.0.0.1';
-$conf['mysql']['port'] = '3306';
-$conf['mysql']['database'] = 'dbispconfig';
-$conf['mysql']['admin_user'] = 'root';
-$conf['mysql']['admin_password'] = '';
-$conf['mysql']['charset'] = 'utf8';
-$conf['mysql']['ispconfig_user'] = 'ispconfig';
-$conf['mysql']['ispconfig_password'] = '5sDrewBhk';
+require_once('../../lib/config.inc.php');
+require_once('../../lib/app.inc.php');
+
+//* Check permissions for module
+$app->auth->check_module_permissions('admin');
+
+$app->uses('tpl,tform');
+$app->load('tform_actions');
+
+// Create a class page_action that extends the tform_actions base class 
+
+class page_action extends tform_actions { 
+
+
+	// Customisations for the page actions will be defined here
+   	
+}
+$page = new page_action;
+$page->onDelete();
 
 ?>
