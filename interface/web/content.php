@@ -31,15 +31,20 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 require_once('../lib/config.inc.php');
 require_once('../lib/app.inc.php');
 
+/*
 $module = $_REQUEST["s_mod"];
 $page = $_REQUEST["s_pg"];
+*/
 
-if(!preg_match("/^[a-z]{0,20}$/i", $module)) die('module name contains unallowed chars.');
-if(!preg_match("/^[a-z]{0,20}$/i", $page)) die('page name contains unallowed chars.');
+$module = 'login';
+$page = 'index';
 
-if(is_file("$module/$page.php")) {
+if(!preg_match("/^[a-z]{2,20}$/i", $module)) die('module name contains unallowed chars.');
+if(!preg_match("/^[a-z]{2,20}$/i", $page)) die('page name contains unallowed chars.');
+
+if(is_file(ISPC_WEB_PATH."/$module/$page.php")) {
 	
-	include_once("$module/$page.php");
+	include_once(ISPC_WEB_PATH."/$module/$page.php");
 
 	$classname = $module.'_'.$page;
 	$page = new $classname();
@@ -54,8 +59,8 @@ if(is_file("$module/$page.php")) {
 		if(!preg_match("/^[a-z]{2,20}$/i", $module)) die('target module name contains unallowed chars.');
 		if(!preg_match("/^[a-z]{2,20}$/i", $page)) die('target page name contains unallowed chars.');
 		
-		if(is_file("$module/$page.php")) {
-			include_once("$module/$page.php");
+		if(is_file(ISPC_WEB_PATH."/$module/$page.php")) {
+			include_once(ISPC_WEB_PATH."/$module/$page.php");
 			
 			$classname = $module.'_'.$page;
 			$page = new $classname();

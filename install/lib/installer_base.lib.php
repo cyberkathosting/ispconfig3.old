@@ -807,7 +807,7 @@ class installer_base {
 		
 		$content = rf("tpl/apache_ispconfig.conf.master");
 		$records = $this->db->queryAllRecords("SELECT * FROM server_ip WHERE server_id = ".$conf["server_id"]." AND virtualhost = 'y'");
-		if(count($records) > 0) {
+		if(is_array($records) && count($records) > 0) {
 			foreach($records as $rec) {
 				$content .= "NameVirtualHost ".$rec["ip_address"].":80\n";
 				$content .= "NameVirtualHost ".$rec["ip_address"].":443\n";
@@ -828,9 +828,9 @@ class installer_base {
 		
 		if(is_file('/etc/webalizer/webalizer.conf')) {
 			// Change webalizer mode to incremental
-			replaceLine('/etc/webalizer/webalizer.conf','Incremental     no','Incremental     yes',0,0);
-			replaceLine('/etc/webalizer/webalizer.conf','IncrementalName webalizer.current','IncrementalName webalizer.current',0,0);
-			replaceLine('/etc/webalizer/webalizer.conf','HistoryName     webalizer.hist','HistoryName     webalizer.hist',0,0);
+			replaceLine('/etc/webalizer/webalizer.conf','#IncrementalName','IncrementalName webalizer.current',0,0);
+			replaceLine('/etc/webalizer/webalizer.conf','#Incremental','Incremental     yes',0,0);
+			replaceLine('/etc/webalizer/webalizer.conf','#HistoryName','HistoryName     webalizer.hist',0,0);
 		}
 		
 		//* add a sshusers group

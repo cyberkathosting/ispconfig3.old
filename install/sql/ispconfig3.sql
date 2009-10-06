@@ -103,7 +103,7 @@ CREATE TABLE `client` (
   `usertheme` varchar(32) NOT NULL default 'default',
   `template_master` int(11) unsigned NOT NULL default '0',
   `template_additional` varchar(255) NOT NULL default '',
-  `created_at` datetime default NULL,
+  `created_at` bigint(20) DEFAULT NULL,
   PRIMARY KEY  (`client_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1;
 
@@ -388,7 +388,7 @@ CREATE TABLE `mail_forwarding` (
   `sys_perm_other` varchar(5) NOT NULL default '',
   `server_id` int(11) unsigned NOT NULL default '0',
   `source` varchar(255) NOT NULL,
-  `destination` varchar(255) NOT NULL default '',
+  `destination` text NOT NULL default '',
   `type` enum('alias','forward','catchall') NOT NULL default 'alias',
   `active` enum('n','y') NOT NULL,
   PRIMARY KEY  (`forwarding_id`),
@@ -1201,7 +1201,7 @@ INSERT INTO `sys_user` (`userid`, `sys_userid`, `sys_groupid`, `sys_perm_user`, 
 -- Dumping data for table `sys_config`
 --
 
-INSERT INTO sys_config VALUES ('1','db','db_version','3.0.1.4');
+INSERT INTO sys_config VALUES ('1','db','db_version','3.0.1.5');
 
 -- --------------------------------------------------------
 
