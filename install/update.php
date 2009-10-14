@@ -207,11 +207,13 @@ if( !$inst->db->query('DROP DATABASE IF EXISTS '.$conf['mysql']['database']) ) {
 //** Create the mysql database
 $inst->configure_database();
 
-//** Update master database rights
-$reconfigure_master_database_rights_answer = $inst->simple_query('Reconfigure Permissions in master database?', array('yes','no'),'no');
+if($conf['mysql']['master_slave_setup'] == 'y') {
+	//** Update master database rights
+	$reconfigure_master_database_rights_answer = $inst->simple_query('Reconfigure Permissions in master database?', array('yes','no'),'no');
 
-if($reconfigure_master_database_rights_answer == 'yes') {
-	$inst->grant_master_database_rights();
+	if($reconfigure_master_database_rights_answer == 'yes') {
+		$inst->grant_master_database_rights();
+	}
 }
 
 //** empty all databases
