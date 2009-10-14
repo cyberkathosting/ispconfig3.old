@@ -208,7 +208,11 @@ if( !$inst->db->query('DROP DATABASE IF EXISTS '.$conf['mysql']['database']) ) {
 $inst->configure_database();
 
 //** Update master database rights
-$inst->grant_master_database_rights();
+$reconfigure_master_database_rights_answer = $inst->simple_query('Reconfigure Permissions in master database?', array('yes','no'),'no');
+
+if($reconfigure_master_database_rights_answer == 'yes') {
+	$inst->grant_master_database_rights();
+}
 
 //** empty all databases
 $db_tables = $inst->db->getTables();
