@@ -579,7 +579,7 @@ class apache2_plugin {
 		$rewrite_rules = array();
 		if($data["new"]["redirect_type"] != '') {
 			if(substr($data["new"]["redirect_path"],-1) != '/') $data["new"]["redirect_path"] .= '/';
-			if($data["new"]["redirect_type"] == 'no' && substr($data["new"]["redirect_path"],0,4) != 'http') {
+			if(substr($data["new"]["redirect_path"],0,4) != 'http') {
 				$data["new"]["redirect_path"] = $data["new"]["document_root"]."/web".realpath($data["new"]["redirect_path"]).'/';
 			}
 			
