@@ -133,10 +133,12 @@ $webalizer_conf = escapeshellcmd($rec["document_root"].'/log/webalizer.conf');
 
 if(!@is_file($webalizer_conf)) {
 	exec("cp $webalizer_conf_main $webalizer_conf");
+}
 
+if(@is_file($webalizer_conf)) {
 	setConfigVar($webalizer_conf, 'Incremental', 'yes');
-	setConfigVar($webalizer_conf, 'IncrementalName', $logdir.'/webalizer.current');
-	setConfigVar($webalizer_conf, 'HistoryName', $logdir.'/webalizer.hist');
+	setConfigVar($webalizer_conf, 'IncrementalName', $statsdir.'/webalizer.current');
+	setConfigVar($webalizer_conf, 'HistoryName', $statsdir.'/webalizer.hist');
 }
 
 if(!@is_dir($statsdir)) mkdir($statsdir);
