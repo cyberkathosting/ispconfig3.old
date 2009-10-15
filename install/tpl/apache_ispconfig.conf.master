@@ -13,4 +13,10 @@ CustomLog "| /usr/local/ispconfig/server/scripts/vlogger -s access.log -t \"%Y%m
     Deny from all
 </Directory>
 
+<Directory />
+       AllowOverride None
+       Order Deny,Allow
+       Deny from all
+</Directory>
+
 

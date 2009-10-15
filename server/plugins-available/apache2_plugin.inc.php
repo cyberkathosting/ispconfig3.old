@@ -578,9 +578,15 @@ class apache2_plugin {
 		// Rewrite rules
 		$rewrite_rules = array();
 		if($data["new"]["redirect_type"] != '') {
+			$data["new"]["redirect_path"] = str_replace('../','',$data["new"]["redirect_path"]);
 			if(substr($data["new"]["redirect_path"],-1) != '/') $data["new"]["redirect_path"] .= '/';
 			if($data["new"]["redirect_type"] != 'R' && substr($data["new"]["redirect_path"],0,4) != 'http') {
-				$data["new"]["redirect_path"] = $data["new"]["document_root"]."/web".realpath($data["new"]["redirect_path"]).'/';
+				if($data["new"]["redirect_path"] == '/') {
+					$data["new"]["redirect_path"] = $data["new"]["document_root"]."/web/";
+				} else {
+					if(substr($data["new"]["redirect_path"],0,1) != '/') $data["new"]["redirect_path"] = '/'.$data["new"]["redirect_path"];
+					$data["new"]["redirect_path"] = $data["new"]["document_root"]."/web".$data["new"]["redirect_path"];
+				}
 			}
 			
 			$rewrite_rules[] = array(	'rewrite_domain' 	=> $data["new"]["domain"],
@@ -629,9 +635,15 @@ class apache2_plugin {
 				$app->log("Add server alias: $alias[domain]",LOGLEVEL_DEBUG);
 				// Rewriting
 				if($alias["redirect_type"] != '') {
-					if(substr($data["new"]["redirect_path"],-1) != '/') $data["new"]["redirect_path"] .= '/';
-					if($data["new"]["redirect_type"] != 'L' && substr($data["new"]["redirect_path"],0,4) != 'http') {
-						$data["new"]["redirect_path"] = $data["new"]["document_root"]."/web".realpath($data["new"]["redirect_path"]).'/';
+					$alias["redirect_path"] = str_replace('../','',$alias["redirect_path"]);
+					if(substr($alias["redirect_path"],-1) != '/') $alias["redirect_path"] .= '/';
+					if($alias["redirect_type"] != 'R' && substr($alias["redirect_path"],0,4) != 'http') {
+						if($alias["redirect_path"] == '/') {
+							$alias["redirect_path"] = $data["new"]["document_root"]."/web/";
+						} else {
+							if(substr($alias["redirect_path"],0,1) != '/') $alias["redirect_path"] = '/'.$alias["redirect_path"];
+							$alias["redirect_path"] = $data["new"]["document_root"]."/web".$alias["redirect_path"];
+						}
 					}
 					$rewrite_rules[] = array(	'rewrite_domain' 	=> $alias["domain"],
 												'rewrite_type' 		=> ($alias["redirect_type"] == 'no')?'':'['.$alias["redirect_type"].']',
