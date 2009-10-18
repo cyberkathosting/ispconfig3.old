@@ -30,3 +30,4 @@ CustomLog "| /usr/local/ispconfig/server/scripts/vlogger -s access.log -t \"%Y%m
         Order allow,deny
         Allow from all
 </Directory>
+
