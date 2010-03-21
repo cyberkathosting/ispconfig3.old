@@ -203,6 +203,9 @@ class page_action extends tform_actions {
 			$app->tpl->setVar("edit_disabled", 0);
 		}
 		
+		$tmp_txt = ($this->dataRecord['traffic_quota_lock'] == 'y')?'<b>('.$app->tform->lng('traffic_quota_exceeded_txt').')</b>':'';
+		$app->tpl->setVar("traffic_quota_exceeded_txt", $tmp_txt);
+		
 		parent::onShowEnd();
 	}
 	
@@ -393,7 +396,7 @@ class page_action extends tform_actions {
 			$client_id = intval($client["client_id"]);
 		}
 		
-		if(($_SESSION["s"]["user"]["typ"] == 'admin' || $app->auth->has_clients($_SESSION['s']['user']['userid'])) &&  isset($this->dataRecord["client_group_id"]) && $this->dataRecord["client_group_id"] != $this->oldDataRecord["client_group_id"]) {
+		if(($_SESSION["s"]["user"]["typ"] == 'admin' || $app->auth->has_clients($_SESSION['s']['user']['userid'])) &&  isset($this->dataRecord["client_group_id"]) && $this->dataRecord["client_group_id"] != $this->oldDataRecord["sys_groupid"]) {
 			// Set the values for document_root, system_user and system_group
 			$system_user = $app->db->quote('web'.$this->id);
 			$system_group = $app->db->quote('client'.$client_id);

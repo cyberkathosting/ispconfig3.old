@@ -186,9 +186,9 @@ if(is_array($records)) {
 	foreach($records as $rec){
 		$tmp_path = realpath(escapeshellcmd($rec["document_root"].'/tmp'));
 		if($tmp_path != '' && strlen($tmp_path) > 10 && is_dir($tmp_path) && $app->system->is_user($rec['system_user'])){
-			exec("cd ".$tmp_path."; find -ctime +1 -user ".escapeshellcmd($rec['system_user'])." | grep -v -w .no_delete | xargs rm &> /dev/null");
-			if($app->system->is_user('www-data')) exec("cd ".$tmp_path."; find -ctime +1 -user www-data | grep -v -w .no_delete | xargs rm &> /dev/null");
-			if($app->system->is_user('wwwrun')) exec("cd ".$tmp_path."; find -ctime +1 -user wwwrun | grep -v -w .no_delete | xargs rm &> /dev/null");
+			exec("cd ".$tmp_path."; find -ctime +1 -user ".escapeshellcmd($rec['system_user'])." | grep -v -w .no_delete | xargs rm &> /dev/null 2> /dev/null");
+			if($app->system->is_user('www-data')) exec("cd ".$tmp_path."; find -ctime +1 -user www-data | grep -v -w .no_delete | xargs rm &> /dev/null 2> /dev/null");
+			if($app->system->is_user('wwwrun')) exec("cd ".$tmp_path."; find -ctime +1 -user wwwrun | grep -v -w .no_delete | xargs rm &> /dev/null 2> /dev/null");
 		}
 	}
 }
@@ -251,7 +251,7 @@ if ($app->dbmaster == $app->db) {
 		foreach($records as $rec) {
 			
 			$web_traffic_quota = $rec['traffic_quota'];
-			$domain = $rec['web_domain'];
+			$domain = $rec['domain'];
 			
 			// get the client
 			/*
@@ -264,7 +264,7 @@ if ($app->dbmaster == $app->db) {
 			*/
 			
 			//* get the traffic
-			$tmp = $app->db->query("SELECT traffic_bytes FROM web_traffic WHERE traffic_date like '$current_month%' AND hostname = '$domain'");
+			$tmp = $app->db->queryOneRecord("SELECT traffic_bytes FROM web_traffic WHERE traffic_date like '$current_month%' AND hostname = '$domain'");
 			$web_traffic = $tmp['traffic_bytes']/1024/1024;
 			
 			//* Website is over quota, we will disable it
@@ -272,12 +272,12 @@ if ($app->dbmaster == $app->db) {
 				($client_traffic_quota > 0 && $web_traffic > $client_traffic_quota) ||
 				($reseller_traffic_quota > 0 && $web_traffic > $reseller_traffic_quota)) {*/
 			if($web_traffic_quota > 0 && $web_traffic > $web_traffic_quota) {
-				$app->db->datalogUpdate('web_domain', "traffic_quota_lock = 'y',active = 'n'", 'domain_id', $rec['domain_id']);
+				$app->dbmaster->datalogUpdate('web_domain', "traffic_quota_lock = 'y',active = 'n'", 'domain_id', $rec['domain_id']);
 				$app->log("Traffic quota for ".$rec['domain_id']." Exceeded. Disabling website.",LOGLEVEL_DEBUG);
 			} else {
 				//* unlock the website, if traffic is lower then quota
 				if($rec['traffic_quota_lock'] == 'y') {
-					$app->db->datalogUpdate('web_domain', "traffic_quota_lock = 'n',active = 'y'", 'domain_id', $rec['domain_id']);
+					$app->dbmaster->datalogUpdate('web_domain', "traffic_quota_lock = 'n',active = 'y'", 'domain_id', $rec['domain_id']);
 					$app->log("Traffic quota for ".$rec['domain_id']." ok again. Enabling website.",LOGLEVEL_DEBUG);
 				}
 			}
