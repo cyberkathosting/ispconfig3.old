@@ -815,12 +815,14 @@ class installer_base {
 
 		//* configure pure-ftpd for MySQL authentication against the ispconfig database
 		$configfile = 'db/mysql.conf';
+		/* We do not create a backup of thid config file as it would get included into the pure-ftpd configuration.
 		if(is_file("$config_dir/$configfile")){
             copy("$config_dir/$configfile", "$config_dir/$configfile~");
         }
 		if(is_file("$config_dir/$configfile~")){
             exec("chmod 400 $config_dir/$configfile~");
         }
+		*/
 		$content = rf('tpl/pureftpd_mysql.conf.master');
 		$content = str_replace('{mysql_server_ispconfig_user}', $conf["mysql"]["ispconfig_user"], $content);
 		$content = str_replace('{mysql_server_ispconfig_password}', $conf["mysql"]["ispconfig_password"], $content);
