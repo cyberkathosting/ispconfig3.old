@@ -76,7 +76,7 @@ class installer extends installer_base {
 		if(is_file("$config_dir/$configfile")){
             copy("$config_dir/$configfile", "$config_dir/$configfile~");
         }
-		copy('tpl/debian_dovecot.conf.master',"$config_dir/$configfile");
+		copy('tpl/debian6_dovecot.conf.master',"$config_dir/$configfile");
 		
 		//* dovecot-sql.conf
 		$configfile = 'dovecot-sql.conf';
