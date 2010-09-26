@@ -40,7 +40,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *        - DOUBLE
 *        - CURRENCY (Formats digits in currency notation)
 *        - VARCHAR (No format check)
-*        - DATE (Date format, converts from and to linux timestamps automatically)
+*        - DATE (Date format, converts from and to UNIX timestamps automatically)
 *
 *        Formtype:
 *        - TEXT (Normal text field)
@@ -362,7 +362,7 @@ class tform {
                                         // If Datasource is set, get the data from there
                                         if(isset($field['datasource']) && is_array($field['datasource'])) {
 												if(is_array($field["value"])) {
-													$field["value"] = $field["value"] + $this->getDatasourceData($field, $record);
+													$field["value"] = array_merge($field["value"],$this->getDatasourceData($field, $record));
 												} else {
                                                 	$field["value"] = $this->getDatasourceData($field, $record);
 												}
@@ -620,8 +620,9 @@ class tform {
                                 break;
 								case 'DATE':
                                         if($record[$key] != '' && $record[$key] != '0000-00-00') {
-                                                list($tag,$monat,$jahr) = explode('.',$record[$key]);
-                                                $new_record[$key] = $jahr.'-'.$monat.'-'.$tag;
+												$date_parts = date_parse_from_format($this->dateformat,$record[$key]);
+												//list($tag,$monat,$jahr) = explode('.',$record[$key]);
+                                                $new_record[$key] = $date_parts['year'].'-'.$date_parts['month'].'-'.$date_parts['day'];
 												//$tmp = strptime($record[$key],$this->dateformat);
 												//$new_record[$key] = ($tmp['tm_year']+1900).'-'.($tmp['tm_mon']+1).'-'.$tmp['tm_mday'];
                                         } else {
@@ -733,7 +734,7 @@ class tform {
                                         }
                                 break;
                                 case 'ISEMAIL':
-                                        if(!preg_match("/^\w+[\w\.\-\+]*\w{0,}@\w+[\w.-]*\w+\.[a-z]{2,10}$/i", $field_value)) {
+                                        if(!preg_match("/^\w+[\w\.\-\+]*\w{0,}@\w+[\w.-]*\w+\.[a-z\-]{2,10}$/i", $field_value)) {
                                                 $errmsg = $validator['errmsg'];
                                                 if(isset($this->wordbook[$errmsg])) {
                                                     $this->errorMessage .= $this->wordbook[$errmsg]."<br />\r\n";

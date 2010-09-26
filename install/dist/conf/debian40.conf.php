@@ -37,11 +37,11 @@ $conf['hostname'] = 'server1.domain.tld'; // Full hostname
 $conf['ispconfig_install_dir'] = '/usr/local/ispconfig';
 $conf['ispconfig_config_dir'] = '/usr/local/ispconfig';
 $conf['ispconfig_log_priority'] = 2;  // 0 = Debug, 1 = Warning, 2 = Error
+$conf['ispconfig_log_dir'] = '/var/log/ispconfig';
 $conf['server_id'] = 1;
 $conf['init_scripts'] = '/etc/init.d';
 $conf['runlevel'] = '/etc';
 $conf['shells'] = '/etc/shells';
-$conf['cron_tab'] = '/var/spool/cron/crontabs/root';
 $conf['pam'] = '/etc/pam.d';
 
 //* Services provided by this server, this selection will be overridden by the expert mode
@@ -125,11 +125,11 @@ $conf['courier']['courier-imap'] = 'courier-imap';
 $conf['courier']['courier-imap-ssl'] = 'courier-imap-ssl';
 $conf['courier']['courier-pop'] = 'courier-pop';
 $conf['courier']['courier-pop-ssl'] = 'courier-pop-ssl';
-$conf['dovecot']['init_script'] = 'dovecot';
 
 //* Dovecot
 $conf['dovecot']['installed'] = false; // will be detected automatically during installation
 $conf['dovecot']['config_dir'] = '/etc/dovecot';
+$conf['dovecot']['init_script'] = 'dovecot';
 
 //* SASL
 $conf['saslauthd']['installed'] = false; // will be detected automatically during installation

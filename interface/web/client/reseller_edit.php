@@ -144,7 +144,7 @@ class page_action extends tform_actions {
 		$username = $app->db->quote($this->dataRecord["username"]);
 		$password = $app->db->quote($this->dataRecord["password"]);
 		$modules = $conf['interface_modules_enabled'] . ',client';
-		$startmodule = 'client';
+		$startmodule = (stristr($modules,'dashboard'))?'dashboard':'client'; 
 		$usertheme = $app->db->quote($this->dataRecord["usertheme"]);
 		$type = 'user';
 		$active = 1;
@@ -173,7 +173,7 @@ class page_action extends tform_actions {
 		global $app, $conf;
 		
 		// username changed
-		if(isset($this->dataRecord['username']) && $this->dataRecord['username'] != '' && $this->oldDataRecord['username'] != $this->dataRecord['username']) {
+		if($conf['demo_mode'] != true && isset($this->dataRecord['username']) && $this->dataRecord['username'] != '' && $this->oldDataRecord['username'] != $this->dataRecord['username']) {
 			$username = $app->db->quote($this->dataRecord["username"]);
 			$client_id = $this->id;
 			$sql = "UPDATE sys_user SET username = '$username' WHERE client_id = $client_id";
@@ -185,7 +185,7 @@ class page_action extends tform_actions {
 		}
 		
 		// password changed
-		if(isset($this->dataRecord["password"]) && $this->dataRecord["password"] != '') {
+		if($conf['demo_mode'] != true && isset($this->dataRecord["password"]) && $this->dataRecord["password"] != '') {
 			$password = $app->db->quote($this->dataRecord["password"]);
 			$client_id = $this->id;
 			$sql = "UPDATE sys_user SET passwort = md5('$password') WHERE client_id = $client_id";
@@ -193,11 +193,18 @@ class page_action extends tform_actions {
 		}
 		
 		// language changed
-		if(isset($this->dataRecord['language']) && $this->dataRecord['language'] != '' && $this->oldDataRecord['language'] != $this->dataRecord['language']) {
+		if($conf['demo_mode'] != true && isset($this->dataRecord['language']) && $this->dataRecord['language'] != '' && $this->oldDataRecord['language'] != $this->dataRecord['language']) {
 			$language = $app->db->quote($this->dataRecord["language"]);
 			$client_id = $this->id;
 			$sql = "UPDATE sys_user SET language = '$language' WHERE client_id = $client_id";
 			$app->db->query($sql);
+		}
+		
+		// ensure that a reseller is not converted to a client in demo mode when client_id <= 2
+		if($conf['demo_mode'] == true && $this->id <= 2) {
+			if(isset($this->dataRecord["limit_client"]) && $this->dataRecord["limit_client"] != -1) {
+				$app->db->query('UPDATE client set limit_client = -1 WHERE client_id = '.$this->id);
+			}
 		}
 		
 		// reseller status changed

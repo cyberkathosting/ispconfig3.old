@@ -53,6 +53,8 @@ CREATE TABLE `client` (
   `sys_perm_other` varchar(5) default NULL,
   `company_name` varchar(64) default NULL,
   `contact_name` varchar(64) default NULL,
+  `customer_no` varchar(64) default NULL,
+  `vat_id` varchar(64) default NULL,
   `street` varchar(255) default NULL,
   `zip` varchar(32) default NULL,
   `city` varchar(64) default NULL,
@@ -684,7 +686,7 @@ CREATE TABLE `server` (
   `config` text NOT NULL,
   `updated` bigint(20) unsigned NOT NULL default '0',
   `mirror_server_id` int(11) unsigned NOT NULL default '0',
-  `dbversion` int(11) unsigned NOT NULL default '0',
+  `dbversion` int(11) unsigned NOT NULL default '1',
   `active` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`server_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1;
@@ -747,6 +749,7 @@ CREATE TABLE `software_package` (
   `package_type` enum('ispconfig','app','web') NOT NULL default 'app',
   `package_installable` enum('yes','no','key') NOT NULL default 'yes',
   `package_requires_db` enum('no','mysql') NOT NULL default 'no',
+  `package_remote_functions` text,
   `package_key` varchar(255) NOT NULL,
   `package_config` text,
   PRIMARY KEY  (`package_id`),
@@ -1067,6 +1070,21 @@ CREATE TABLE `sys_user` (
 -- --------------------------------------------------------
 
 -- 
+-- Table structure for table  `sys_session`
+-- 
+
+CREATE TABLE `sys_session` (
+  `session_id` varchar(32) NOT NULL default '',
+  `date_created` datetime NOT NULL default '0000-00-00 00:00:00',
+  `last_updated` datetime NOT NULL default '0000-00-00 00:00:00',
+  `session_data` longtext,
+  PRIMARY KEY  (`session_id`),
+  KEY `last_updated` (`last_updated`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+-- 
 -- Table structure for table  `web_domain`
 -- 
 
@@ -1084,6 +1102,7 @@ CREATE TABLE `web_domain` (
   `parent_domain_id` int(11) unsigned NOT NULL default '0',
   `vhost_type` varchar(32) default NULL,
   `document_root` varchar(255) default NULL,
+  `document_root_www` varchar(255) default NULL,
   `system_user` varchar(255) default NULL,
   `system_group` varchar(255) default NULL,
   `hd_quota` bigint(20) NOT NULL default '0',
@@ -1327,7 +1346,7 @@ INSERT INTO `sys_ini` (`sysini_id`, `config`) VALUES (1, '');
 -- Dumping data for table `sys_user`
 -- 
 
-INSERT INTO `sys_user` (`userid`, `sys_userid`, `sys_groupid`, `sys_perm_user`, `sys_perm_group`, `sys_perm_other`, `username`, `passwort`, `modules`, `startmodule`, `app_theme`, `typ`, `active`, `language`, `groups`, `default_group`, `client_id`) VALUES (1, 1, 0, 'riud', 'riud', '', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin,client,mail,monitor,sites,dns,tools,help', 'mail', 'default', 'admin', 1, 'en', '1,2', 1, 0);
+INSERT INTO `sys_user` (`userid`, `sys_userid`, `sys_groupid`, `sys_perm_user`, `sys_perm_group`, `sys_perm_other`, `username`, `passwort`, `modules`, `startmodule`, `app_theme`, `typ`, `active`, `language`, `groups`, `default_group`, `client_id`) VALUES (1, 1, 0, 'riud', 'riud', '', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'dashboard,admin,client,mail,monitor,sites,dns,tools,help', 'dashboard', 'default', 'admin', 1, 'en', '1,2', 1, 0);
 
 -- --------------------------------------------------------
 

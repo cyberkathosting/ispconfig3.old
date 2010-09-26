@@ -1,5 +1,5 @@
 <?php
-$wb['list_head_txt'] = 'Email Whitelist';
+$wb['list_head_txt'] = 'E-Mail Whitelist';
 $wb['active_txt'] = 'Aktiv';
 $wb['server_id_txt'] = 'Server';
 $wb['source_txt'] = 'Whitelisted Adressen';

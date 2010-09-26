@@ -9,7 +9,7 @@ $wb['dl_ratio_txt'] = 'Downloadrate';
 $wb['ul_bandwidth_txt'] = 'Uploadbandbreite';
 $wb['dl_bandwidth_txt'] = 'Downloadbandbreite';
 $wb['server_id_txt'] = 'Server';
-$wb['parent_domain_id_txt'] = 'Website';
+$wb['parent_domain_id_txt'] = 'Domain';
 $wb['username_txt'] = 'Benutzername';
 $wb['password_txt'] = 'Passwort';
 $wb['quota_size_txt'] = 'Festplatten Quota';
@@ -23,5 +23,5 @@ $wb['uid_error_empty'] = 'GID ist leer.';
 $wb['directory_error_empty'] = 'Verzeichnis ist leer.';
 $wb['password_strength_txt'] = 'Passwortkomplexität';
 $wb['directory_error_notinweb'] = 'Das Verzeichnis befindet sich nicht innerhalb des Verzeichnisses der Website.';
-$wb['parent_domain_id_error_empty'] = 'Keine Website ausgewählt.';
+$wb['parent_domain_id_error_empty'] = 'Keine Domain ausgewählt.';
 ?>

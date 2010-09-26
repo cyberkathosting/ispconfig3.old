@@ -30,7 +30,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /*
 	This function returns a string that describes the installed
-	linux distribution. e.g. debian40 for Debian Linux 4.0
+	Linux distribution. e.g. debian40 for Debian GNU/Linux 4.0
 */
 
 
@@ -57,9 +57,8 @@ $FILE = realpath('../install.php');
 
 //** Get distribution identifier
 //** IMPORTANT!
-//   This is the same code as in /server/mods-available/monitor_core_module.inc.php
-//   So if you change it here, you also have to change it in
-//   /server/mods-available/monitor_core_module.inc.php!
+//   This is the same code as in server/mods-available/monitor_core_module.inc.php
+//   So if you change it here, you also have to change it in there!
 function get_distname() {
 	
 	$distname = '';
@@ -98,7 +97,7 @@ function get_distname() {
 	}
 	
 	//** OpenSuSE
-	elseif(file_exists("/etc/SuSE-release")) {
+	elseif(file_exists('/etc/SuSE-release')) {
 		if(stristr(file_get_contents('/etc/SuSE-release'),'11.0')) {
 			$distname = 'openSUSE';
 			$distver = '11.0';
@@ -128,7 +127,7 @@ function get_distname() {
 	
 	
 	//** Redhat
-	elseif(file_exists("/etc/redhat-release")) {
+	elseif(file_exists('/etc/redhat-release')) {
 		
 		$content = file_get_contents('/etc/redhat-release');
 		
@@ -172,7 +171,7 @@ function get_distname() {
 	}
 	
 	//** Gentoo
- 	elseif(file_exists("/etc/gentoo-release")) {
+ 	elseif(file_exists('/etc/gentoo-release')) {
  		
  		$content = file_get_contents('/etc/gentoo-release');
  
@@ -184,7 +183,7 @@ function get_distname() {
  		swriteln("Operating System: Gentoo $distver or compatible\n");
 		
 	} else {
-		die('unrecognized linux distribution');
+		die('Unrecognized GNU/Linux distribution');
 	}
 	
 	return array('name' => $distname, 'version' => $distver, 'id' => $distid, 'baseid' => $distbaseid);
@@ -204,7 +203,7 @@ function swriteln($text = '') {
 }
 
 function ilog($msg){
-  	exec("echo `date` \"- [ISPConfig] - \"".$msg." >> ".ISPC_LOG_FILE);
+  	exec("echo `date` \"- [ISPConfig] - \"".$msg.' >> '.ISPC_LOG_FILE);
 }
 
 function error($msg){
@@ -356,61 +355,6 @@ function no_comments($file, $comment = '#'){
 	}
 }
 
-function find_includes($file){
-  global $httpd_root;
-  clearstatcache();
-  if(is_file($file) && filesize($file) > 0){
-    $includes[] = $file;
-    $inhalt = unix_nl(no_comments($file));
-    $lines = explode("\n", $inhalt);
-    if(!empty($lines)){
-      foreach($lines as $line){
-        if(stristr($line, 'include ')){
-          $include_file = str_replace("\n", '', trim(shell_exec("echo \"$line\" | awk '{print \$2}'")));
-          if(substr($include_file,0,1) != '/'){
-            $include_file = $httpd_root.'/'.$include_file;
-          }
-          if(is_file($include_file)){
-            if($further_includes = find_includes($include_file)){
-              $includes = array_merge($includes, $further_includes);
-            }
-          } else {
-            if(strstr($include_file, '*')){
-              $more_files = explode("\n", shell_exec("ls -l $include_file | awk '{print \$9}'"));
-              if(!empty($more_files)){
-                foreach($more_files as $more_file){
-                  if(is_file($more_file)){
-                    if($further_includes = find_includes($more_file)){
-                      $includes = array_merge($includes, $further_includes);
-                    }
-                  }
-                }
-              }
-              unset($more_files);
-              $more_files = explode("\n", shell_exec("ls -l $include_file | awk '{print \$10}'"));
-              if(!empty($more_files)){
-                foreach($more_files as $more_file){
-                  if(is_file($more_file)){
-                    if($further_includes = find_includes($more_file)){
-                      $includes = array_merge($includes, $further_includes);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  if(is_array($includes)){
-    $includes = array_unique($includes);
-    return $includes;
-  } else {
-    return false;
-  }
-}
-
 function comment_out($file, $string){
 	$inhalt = no_comments($file);
 	$gesamt_inhalt = rf($file);
@@ -557,8 +501,8 @@ function is_user($user){
   $lines = explode("\n", $users);
   if(is_array($lines)){
     foreach($lines as $line){
-      if(trim($line) != ""){
-        list($f1, $f2, $f3, $f4, $f5, $f6, $f7) = explode(":", $line);
+      if(trim($line) != ''){
+        list($f1, $f2, $f3, $f4, $f5, $f6, $f7) = explode(':', $line);
         if($f1 == $user) return true;
       }
     }
@@ -573,8 +517,8 @@ function is_group($group){
   $lines = explode("\n", $groups);
   if(is_array($lines)){
     foreach($lines as $line){
-      if(trim($line) != ""){
-        list($f1, $f2, $f3, $f4) = explode(":", $line);
+      if(trim($line) != ''){
+        list($f1, $f2, $f3, $f4) = explode(':', $line);
         if($f1 == $group) return true;
       }
     }

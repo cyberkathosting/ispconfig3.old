@@ -28,7 +28,7 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-class ini_parser {
+class ini_parser{
 
 	var $config;
 
@@ -37,9 +37,8 @@ class ini_parser {
 		$lines = explode("\n",$ini);
 		
 		foreach($lines as $line) {
-			
+			$line = trim($line);
 			if($line != '') {
-				$line = trim($line);
 				if(preg_match("/^\[([\w\d_]+)\]$/", $line, $matches)) {
 					$section = strtolower($matches[1]);
 				} elseif(preg_match("/^([\w\d_]+)=(.*)$/", $line, $matches) && $section != null) {
@@ -58,7 +57,11 @@ class ini_parser {
 		foreach($this->config as $section => $data) {
 			$content .= "[$section]\n";
 			foreach($data as $item => $value) {
-				if($value != '') $content .= "$item=$value\n";
+				if($value != '') {
+					$value 	= trim($value);
+					$item 	= trim($item);
+					$content .= "$item=$value\n";
+				}
 			}
 		}
 		return $content;

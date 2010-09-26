@@ -34,7 +34,7 @@
 */
 
 $function_list = array();
-$function_list['mail_domain_get,mail_domain_add,mail_domain_update,mail_domain_delete'] = 'Mail domain functions';
+$function_list['mail_domain_get,mail_domain_add,mail_domain_update,mail_domain_delete,mail_domain_set_status,mail_domain_get_by_domain'] = 'Mail domain functions';
 $function_list['mail_user_get,mail_user_add,mail_user_update,mail_user_delete'] = 'Mail user functions';
 $function_list['mail_alias_get,mail_alias_add,mail_alias_update,mail_alias_delete'] = 'Mail alias functions';
 $function_list['mail_forward_get,mail_forward_add,mail_forward_update,mail_forward_delete'] = 'Mail forward functions';
@@ -45,20 +45,20 @@ $function_list['mail_blacklist_get,mail_blacklist_add,mail_blacklist_update,mail
 $function_list['mail_spamfilter_user_get,mail_spamfilter_user_add,mail_spamfilter_user_update,mail_spamfilter_user_delete'] = 'Mail spamfilter user functions';
 $function_list['mail_policy_get,mail_policy_add,mail_policy_update,mail_policy_delete'] = 'Mail spamfilter policy functions';
 $function_list['mail_fetchmail_get,mail_fetchmail_add,mail_fetchmail_update,mail_fetchmail_delete'] = 'Mail fetchmail functions';
-$function_list['mail_whitelist_get,mail_whitelist_add,mail_whitelist_update,mail_whitelist_delete'] = 'Mail whitelist functions';
-$function_list['mail_blacklist_get,mail_blacklist_add,mail_blacklist_update,mail_blacklist_delete'] = 'Mail blacklist functions';
+$function_list['mail_spamfilter_whitelist_get,mail_spamfilter_whitelist_add,mail_spamfilter_whitelist_update,mail_spamfilter_whitelist_delete'] = 'Mail spamfilter whitelist functions';
+$function_list['mail_spamfilter_blacklist_get,mail_spamfilter_blacklist_add,mail_spamfilter_blacklist_update,mail_spamfilter_blacklist_delete'] = 'Mail spamfilter blacklist functions';
 $function_list['mail_user_filter_get,mail_user_filter_add,mail_user_filter_update,mail_user_filter_delete'] = 'Mail user filter functions';
 $function_list['mail_filter_get,mail_filter_add,mail_filter_update,mail_filter_delete'] = 'Mail filter functions';
-$function_list['client_get,client_add,client_update,client_delete'] = 'Client functions';
-$function_list['server_get'] = 'Server functions';
+$function_list['client_get,client_add,client_update,client_delete,client_get_sites_by_user,client_get_by_username,client_change_password,client_get_id'] = 'Client functions';
+$function_list['server_get,get_function_list,client_templates_get_all'] = 'Server functions';
 $function_list['sites_cron_get,sites_cron_add,sites_cron_update,sites_cron_delete'] = 'Sites cron functions';
-$function_list['sites_database_get,sites_database_add,sites_database_update,sites_database_delete'] = 'Sites database functions';
+$function_list['sites_database_get,sites_database_add,sites_database_update,sites_database_delete, sites_database_get_all_by_user'] = 'Sites database functions';
 $function_list['sites_ftp_user_get,sites_ftp_user_add,sites_ftp_user_update,sites_ftp_user_delete'] = 'Sites FTP-User functions';
 $function_list['sites_shell_user_get,sites_shell_user_add,sites_shell_user_update,sites_shell_user_delete'] = 'Sites Shell-User functions';
-$function_list['sites_web_domain_get,sites_web_domain_add,sites_web_domain_update,sites_web_domain_delete'] = 'Sites Domain functions';
+$function_list['sites_web_domain_get,sites_web_domain_add,sites_web_domain_update,sites_web_domain_delete,sites_web_domain_set_status'] = 'Sites Domain functions';
 $function_list['sites_web_aliasdomain_get,sites_web_aliasdomain_add,sites_web_aliasdomain_update,sites_web_aliasdomain_delete'] = 'Sites Aliasdomain functions';
 $function_list['sites_web_subdomain_get,sites_web_subdomain_add,sites_web_subdomain_update,sites_web_subdomain_delete'] = 'Sites Subdomain functions';
-$function_list['dns_zone_get,dns_zone_add,dns_zone_update,dns_zone_delete'] = 'DNS zone functions';
+$function_list['dns_zone_get,dns_zone_add,dns_zone_update,dns_zone_delete,dns_zone_set_status'] = 'DNS zone functions';
 $function_list['dns_a_get,dns_a_add,dns_a_update,dns_a_delete'] = 'DNS a functions';
 $function_list['dns_aaaa_get,dns_aaaa_add,dns_aaaa_update,dns_aaaa_delete'] = 'DNS aaaa functions';
 $function_list['dns_alias_get,dns_alias_add,dns_alias_update,dns_alias_delete'] = 'DNS alias functions';

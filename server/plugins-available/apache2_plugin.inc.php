@@ -415,9 +415,9 @@ class apache2_plugin {
 				}
 				else {
 					exec("cp /usr/local/ispconfig/server/conf/index/standard_index.html_".substr(escapeshellcmd($conf["language"]),0,2)." ".escapeshellcmd($data["new"]["document_root"])."/web/index.html");
-					exec("cp /usr/local/ispconfig/server/conf/index/favicon.ico ".escapeshellcmd($data["new"]["document_root"])."/web/");
-					exec("cp /usr/local/ispconfig/server/conf/index/robots.txt ".escapeshellcmd($data["new"]["document_root"])."/web/");
-					exec("cp /usr/local/ispconfig/server/conf/index/.htaccess ".escapeshellcmd($data["new"]["document_root"])."/web/");
+					if(is_file('/usr/local/ispconfig/server/conf/index/favicon.ico')) exec("cp /usr/local/ispconfig/server/conf/index/favicon.ico ".escapeshellcmd($data["new"]["document_root"])."/web/");
+					if(is_file('/usr/local/ispconfig/server/conf/index/robots.txt')) exec("cp /usr/local/ispconfig/server/conf/index/robots.txt ".escapeshellcmd($data["new"]["document_root"])."/web/");
+					if(is_file('/usr/local/ispconfig/server/conf/index/.htaccess')) exec("cp /usr/local/ispconfig/server/conf/index/.htaccess ".escapeshellcmd($data["new"]["document_root"])."/web/");
 				}
 			}
 			exec("chmod -R a+r ".escapeshellcmd($data["new"]["document_root"])."/web/");
@@ -489,7 +489,7 @@ class apache2_plugin {
 			$this->_exec("chmod 751 ".escapeshellcmd($data["new"]["document_root"])."/*");
 			$this->_exec("chmod 710 ".escapeshellcmd($data["new"]["document_root"]."/web"));
 
-			// make temp direcory writable for the apache user and the website user
+			// make temp directory writable for the apache and website users
 			$this->_exec("chmod 777 ".escapeshellcmd($data["new"]["document_root"]."/tmp"));
 
 			$command = 'usermod';
@@ -534,7 +534,7 @@ class apache2_plugin {
 			$this->_exec("chmod 755 ".escapeshellcmd($data["new"]["document_root"]."/*"));
 			$this->_exec("chown root:root ".escapeshellcmd($data["new"]["document_root"]."/"));
 
-			// make temp direcory writable for the apache user and the website user
+			// make temp directory writable for the apache and website users
 			$this->_exec("chmod 777 ".escapeshellcmd($data["new"]["document_root"]."/tmp"));
 		}
 
@@ -1052,13 +1052,14 @@ class apache2_plugin {
 	 */
 	public function webdav($event_name,$data) {
 		global $app, $conf;
+		
+		/*
+		 * load the server configuration options
+		*/
+		$app->uses("getconf");
+		$web_config = $app->getconf->get_server_config($conf["server_id"], 'web');
 
 		if (($event_name == 'webdav_user_insert') || ($event_name == 'webdav_user_update')) {
-			/*
-			 * load the server configuration options
-			*/
-			$app->uses("getconf");
-			$web_config = $app->getconf->get_server_config($conf["server_id"], 'web');
 
 			/*
 			 * Get additional informations
@@ -1134,12 +1135,29 @@ class apache2_plugin {
 			*/
 			$sitedata = $app->db->queryOneRecord("SELECT document_root, domain FROM web_domain WHERE domain_id = " . $data['old']['parent_domain_id']);
 			$documentRoot = $sitedata['document_root'];
+			$domain = $sitedata['domain'];
 
 			/*
 			 * We dont't want to destroy any (transfer)-Data. So we do NOT delete any dir.
 			 * So the only thing, we have to do, is to delete the user from the password-file
 			*/
 			$this->_writeHtDigestFile( $documentRoot . '/webdav/' . $data['old']['dir'] . '.htdigest', $data['old']['username'], $data['old']['dir'], '');
+			
+			/*
+			 * Next step, patch the vhost - file
+			*/
+			$vhost_file = escapeshellcmd($web_config["vhost_conf_dir"] . '/' . $domain . '.vhost');
+			$this->_patchVhostWebdav($vhost_file, $documentRoot . '/webdav');
+			
+			/*
+			 * Last, restart apache
+			*/
+			if($apache_chrooted) {
+				$app->services->restartServiceDelayed('httpd','restart');
+			} else {
+				// request a httpd reload when all records have been processed
+				$app->services->restartServiceDelayed('httpd','reload');
+			}
 		}
 	}
 
@@ -1155,26 +1173,29 @@ class apache2_plugin {
 	 */
 	private function _writeHtDigestFile($filename, $username, $authname, $pwdhash ) {
 		$changed = false;
-		$in = fopen($filename, 'r');
-		$output = '';
-		/*
-		 * read line by line and search for the username and authname
-		*/
-		while (preg_match("/:/", $line = fgets($in))) {
-			$line = rtrim($line);
-			$tmp = explode(':', $line);
-			if ($tmp[0] == $username && $tmp[1] == $authname) {
-				/*
-				 * found the user. delete or change it?
-				*/
-				if ($pwdhash != '') {
-					$output .= $tmp[0] . ':' . $tmp[1] . ':' . $pwdhash . "\n";
-					}
-				$changed = true;
+		if(is_file($filename)) {
+			$in = fopen($filename, 'r');
+			$output = '';
+			/*
+			* read line by line and search for the username and authname
+			*/
+			while (preg_match("/:/", $line = fgets($in))) {
+				$line = rtrim($line);
+				$tmp = explode(':', $line);
+				if ($tmp[0] == $username && $tmp[1] == $authname) {
+					/*
+					* found the user. delete or change it?
+					*/
+					if ($pwdhash != '') {
+						$output .= $tmp[0] . ':' . $tmp[1] . ':' . $pwdhash . "\n";
+						}
+					$changed = true;
+				}
+				else {
+					$output .= $line . "\n";
+				}
 			}
-			else {
-				$output .= $line . "\n";
-			}
+			fclose($in);
 		}
 		/*
 		 * if we didn't change anything, we have to add the new user at the end of the file
@@ -1182,12 +1203,16 @@ class apache2_plugin {
 		if (!$changed) {
 			$output .= $username . ':' . $authname . ':' . $pwdhash . "\n";
 		}
-		fclose($in);
+		
 
 		/*
 		 * Now lets write the new file
 		*/
-		file_put_contents($filename, $output);
+		if(trim($output) == '') {
+			unlink($filename);
+		} else {
+			file_put_contents($filename, $output);
+		}
 	}
 
 	/**
