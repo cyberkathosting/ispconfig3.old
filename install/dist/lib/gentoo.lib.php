@@ -579,6 +579,13 @@ class installer extends installer_base
 		// Create the config file for ISPConfig server
 		$this->write_config_file("$install_dir/server/lib/$configfile", $content);
 		
+		//* Create the config file for remote-actions (but only, if it does not exist, because
+		//  the value is a autoinc-value and so changed by the remoteaction_core_module
+		if (!file_exists($install_dir.'/server/lib/remote_action.inc.php')) {
+			$content = '<?php' . "\n" . '$maxid_remote_action = 0;' . "\n" . '?>';
+			wf($install_dir.'/server/lib/remote_action.inc.php', $content);
+		}
+		
     	// Enable the server modules and plugins.
 		// TODO: Implement a selector which modules and plugins shall be enabled.
 		$dir = $install_dir.'/server/mods-available/';
