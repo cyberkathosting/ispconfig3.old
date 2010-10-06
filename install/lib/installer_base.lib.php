@@ -1052,7 +1052,7 @@ class installer_base {
 		$tcp_public_services = '';
 		$udp_public_services = '';
 
-		$row = $this->db->queryOneRecord('SELECT * FROM firewall WHERE server_id = '.intval($conf['server_id']));
+		$row = $this->db->queryOneRecord('SELECT * FROM '.$conf["mysql"]["database"].'.firewall WHERE server_id = '.intval($conf['server_id']));
 
 		if(trim($row['tcp_port']) != '' || trim($row['udp_port']) != '') {
 			$tcp_public_services = trim(str_replace(',',' ',$row['tcp_port']));
