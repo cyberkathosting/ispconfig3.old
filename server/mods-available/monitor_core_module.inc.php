@@ -53,7 +53,7 @@ class monitor_core_module {
 		/*
          * Do the monitor every n minutes and write the result to the db
 		*/
-		$min = date('i');
+		$min = @date('i');
 		if (($min % $this->interval) == 0) {
 			$this->doMonitor();
 		}
