@@ -705,11 +705,11 @@ class installer_base {
 		$config_dir = $conf['dovecot']['config_dir'];
 
 		//* Configure master.cf and add a line for deliver
-		if(is_file($config_dir.'/master.cf')) {
-			copy($config_dir.'/master.cf', $config_dir.'/master.cf~2');
+		if(is_file($conf['postfix']['config_dir'].'/master.cf')) {
+			copy($conf['postfix']['config_dir'].'/master.cf', $conf['postfix']['config_dir'].'/master.cf~2');
 		}
-		if(is_file($config_dir.'/master.cf~')) {
-			chmod($config_dir.'/master.cf~2', 0400);
+		if(is_file($conf['postfix']['config_dir'].'/master.cf~')) {
+			chmod($conf['postfix']['config_dir'].'/master.cf~2', 0400);
 		}
 		$content = rf($conf['postfix']['config_dir'].'/master.cf');
 		// Only add the content if we had not addded it before
