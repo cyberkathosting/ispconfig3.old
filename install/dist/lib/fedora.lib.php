@@ -345,7 +345,7 @@ class installer_dist extends installer_base {
 		
 		// amavisd user config file
 		$configfile = 'fedora_amavisd_conf';
-		if(is_file($conf["amavis"]["config_dir"].'/amavisd.conf')) copy($conf["amavis"]["config_dir"].'/amavisd.conf',$conf["courier"]["config_dir"].'/amavisd.conf~');
+		if(is_file($conf["amavis"]["config_dir"].'/amavisd.conf')) copy($conf["amavis"]["config_dir"].'/amavisd.conf',$conf["amavis"]["config_dir"].'/amavisd.conf~');
 		if(is_file($conf["amavis"]["config_dir"].'/amavisd.conf~')) exec('chmod 400 '.$conf["amavis"]["config_dir"].'/amavisd.conf~');
 		$content = rf("tpl/".$configfile.".master");
 		$content = str_replace('{mysql_server_ispconfig_user}',$conf['mysql']['ispconfig_user'],$content);
@@ -529,7 +529,7 @@ class installer_dist extends installer_base {
 		// copy('tpl/apache_ispconfig.conf.master',$vhost_conf_dir.'/ispconfig.conf');
 		$content = rf("tpl/apache_ispconfig.conf.master");
 		$records = $this->db->queryAllRecords("SELECT * FROM server_ip WHERE server_id = ".$conf["server_id"]." AND virtualhost = 'y'");
-		if(count($records) > 0) {
+		if(is_array($records) && count($records) > 0) {
 			foreach($records as $rec) {
 				$content .= "NameVirtualHost ".$rec["ip_address"].":80\n";
 				$content .= "NameVirtualHost ".$rec["ip_address"].":443\n";
