@@ -286,6 +286,8 @@ class installer_base {
 		 *   1) it is a single server
 		 *   2) it is the MASTER of n clients
 		*/
+		$hosts = array();
+		
 		if($conf['mysql']['master_slave_setup'] == 'y') {
 			/*
 			 * it is a master-slave - Setup so the slave has to grant its rights in the master
@@ -320,7 +322,7 @@ class installer_base {
 			}
 		}
 		
-		if(is_array($hosts)) {
+		if(count($hosts) > 0) {
 		foreach($hosts as $host => $value) {
 			/*
 			 * If a pwd exists, this means, we have to add the new user (and his pwd).
