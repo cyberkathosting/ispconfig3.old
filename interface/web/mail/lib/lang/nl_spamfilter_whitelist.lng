@@ -8,3 +8,4 @@ $wb["active_txt"] = 'Actief';
 $wb["limit_spamfilter_wblist_txt"] = 'Het max. aantal White- of Blacklist records voor uw account is bereikt.';
 ?>
 
+

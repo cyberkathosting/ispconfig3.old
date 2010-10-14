@@ -1,6 +1,6 @@
 <?php
 $wb["dashboard_atom_url_txt"] = 'Dashboard atom feed URL';
-$wb["warning"] = 'Edit these values carefully! Verwijder de voorvoegsels niet op systemen met meer dan ♪één klant.';
+$wb["warning"] = 'Edit these values carefully! Verwijder de voorvoegsels niet op systemen met meer dan â™ªÃ©Ã©n klant.';
 $wb["dbname_prefix_txt"] = 'Database naam voorvoegsel';
 $wb["dbuser_prefix_txt"] = 'Database gebruiker voorvoegsel';
 $wb["shelluser_prefix_txt"] = 'Shell gebruiker voorvoegsel';
@@ -20,5 +20,6 @@ $wb["use_domain_module_hint"] = 'Als u deze module gebruikt, kunnen uw klanten a
 $wb["new_domain_txt"] = 'HTML om een nieuw domein te maken';
 $wb["webftp_url_txt"] = 'WebFTP URL';
 ?>
+
 
 

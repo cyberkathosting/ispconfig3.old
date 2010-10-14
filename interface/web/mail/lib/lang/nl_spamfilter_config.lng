@@ -19,3 +19,4 @@ $wb["mailbox_size_limit_txt"] = 'Mailbox grootte Limiet';
 $wb["message_size_limit_txt"] = 'Bericht grootte Limiet';
 ?>
 
+

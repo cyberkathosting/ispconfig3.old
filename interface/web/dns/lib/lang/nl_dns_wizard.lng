@@ -29,3 +29,4 @@ $wb['error_ns2_regex'] = 'NS2 bevat ongeldige karakters.';
 $wb['error_email_regex'] = 'E-mail bevat geen geldig e-mailadres.';
 ?>
 
+

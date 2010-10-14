@@ -5,3 +5,4 @@ $wb['subject_txt'] = 'Onderwerp';
 $wb["add_new_record_txt"] = 'Maak een nieuw support bericht';
 ?>
 
+

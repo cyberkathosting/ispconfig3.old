@@ -62,7 +62,7 @@ $wb['monitor_logs_ispccron_txt'] = 'ISPConfig Cron - Log';
 $wb['monitor_logs_freshclam_txt'] = 'Freshclam - Log';
 $wb['monitor_logs_clamav_txt'] = 'Clamav - Log';
 $wb['monitor_logs_ispc_txt'] = 'ISPConfig - Log';
-$wb['monitor_norkhunter_txt'] = 'RKHunter is niet geïnstalleerd. Hierdoor is er geen informatie beschikbaar.';
+$wb['monitor_norkhunter_txt'] = 'RKHunter is niet geÃ¯nstalleerd. Hierdoor is er geen informatie beschikbaar.';
 $wb['monitor_serverstate_server_txt'] = 'Server';
 $wb['monitor_serverstate_state_txt'] = 'status';
 $wb['monitor_serverstate_unknown_txt'] = 'onbekend';
@@ -143,5 +143,6 @@ $wb['monitor_serverstate_beancountererror_txt'] = 'In de beancounter bevinden zi
 $wb['monitor_title_beancounter_txt'] = 'OpenVz VE BeanCounter';
 $wb['monitor_beancounter_nosupport_txt'] = 'Deze server is geen OpenVz VE en heeft daarom geen beancounter informatie';
 ?>
+
 
 

@@ -8,3 +8,4 @@ $wb["domain_error_regex"] = 'Ongeldige domeinnaam of domein bevat ongeldige kara
 $wb["limit_mailcatchall_txt"] = 'Het max. aantal e-mail catchall accounts voor uw account is bereikt.';
 ?>
 
+

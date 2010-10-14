@@ -9,3 +9,4 @@ $wb["add_new_record_wizard_txt"] = 'Toevoegen nieuw DNS Zone met wizard';
 $wb["add_new_record_txt"] = 'Toevoegen nieuwe DNS Zone (handmatig)';
 ?>
 
+

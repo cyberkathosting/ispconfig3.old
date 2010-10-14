@@ -20,3 +20,4 @@ $wb['command_error_format'] = 'Ongeldig commando formaat. Opmerking: in het geva
 $wb['unknown_fieldtype_error'] = 'Een onbekend veld type is gebruikt.';
 ?>
 
+

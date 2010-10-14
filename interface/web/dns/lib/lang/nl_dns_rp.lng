@@ -14,3 +14,4 @@ $wb["data_error_empty"] = 'Verantwoordelijke persoon veld is niet ingvuld';
 $wb["data_error_regex"] = 'Verantwoordelijke persoon veld formaat ongeldig';
 ?>
 
+

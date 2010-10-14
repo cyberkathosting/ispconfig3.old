@@ -5,7 +5,8 @@ $wb["remote_access_txt"] = 'Remote toegang';
 $wb["server_id_txt"] = 'Server';
 $wb["database_user_txt"] = 'Database gebruiker';
 $wb["database_name_txt"] = 'Database naam';
-$wb["add_new_record_txt"] = 'Add new database';
+$wb["add_new_record_txt"] = 'Toevoegen nieuwe database';
 $wb["sys_groupid_txt"] = 'Klant';
 ?>
+
 

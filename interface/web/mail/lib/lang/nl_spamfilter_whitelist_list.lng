@@ -8,3 +8,4 @@ $wb["email_txt"] = 'Whitelisted e-mail';
 $wb["add_new_record_txt"] = 'Toevoegen whitelist record';
 ?>
 
+

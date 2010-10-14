@@ -64,3 +64,4 @@ $wb["limit_trafficquota_error_notint"] = 'Traffic quota moet een numerieke waard
 $wb["template_del_aborted_txt"] = 'Verwijderen afgebroken. Er is een klant die deze template heeft geselecteerd.';
 ?>
 
+

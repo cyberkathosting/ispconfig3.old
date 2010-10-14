@@ -13,3 +13,4 @@ $wb["page_of_txt"] = 'van';
 $wb['delete_confirmation'] = 'Wilt u dit record echt verwijderen?';
 ?>
 
+
