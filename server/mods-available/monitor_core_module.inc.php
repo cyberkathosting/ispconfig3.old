@@ -1085,7 +1085,7 @@ class monitor_core_module {
 		/*
 		 * Check, if we have mpt-status installed (LSIsoftware-raid)
 		*/
-		if(is_file('/proc/mpt/summary')) {
+		if(file_exists('/proc/mpt/summary')) {
 			system('which mpt-status', $retval);
 			if($retval === 0) {
 				/*
