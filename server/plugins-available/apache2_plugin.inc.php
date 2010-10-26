@@ -1255,8 +1255,10 @@ class apache2_plugin {
 						*/
 						$fn = substr($file, 0, strlen($file) - strlen('.htdigest'));
 						$output .= "\n";
-						$output .= "      Alias /" . $fn . " " . $webdavRoot . "/" . $fn . "\n";
-						$output .= "      <Location /" . $fn . ">\n";
+						//$output .= "      Alias /" . $fn . " " . $webdavRoot . "/" . $fn . "\n";
+						//$output .= "      <Location /" . $fn . ">\n";
+						$output .= "      Alias /webdav/" . $fn . ' ' . substr($webdavRoot,0,-3) . '/' . $fn . "\n";
+						$output .= "      <Location /webdav/" . $fn . ">\n";
 						$output .= "        DAV On\n";
 						$output .= "        AuthType Digest\n";
 						$output .= "        AuthName \"" . $fn . "\"\n";
