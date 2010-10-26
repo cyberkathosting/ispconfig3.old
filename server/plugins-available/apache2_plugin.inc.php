@@ -553,7 +553,11 @@ class apache2_plugin {
 			if($data["new"]['php'] == 'mod') {
 				$master_php_ini_path = $web_config['php_ini_path_apache'];
 			} else {
-				$master_php_ini_path = $web_config['php_ini_path_cgi'];
+				if($data["new"]['php'] == 'fast-cgi' && file_exists($fastcgi_config["fastcgi_phpini_path"])) {
+					$master_php_ini_path = $fastcgi_config["fastcgi_phpini_path"];
+				} else {
+					$master_php_ini_path = $web_config['php_ini_path_cgi'];
+				}
 			}
 			if($master_php_ini_path != '' && substr($master_php_ini_path,-7) == 'php.ini' && is_file($master_php_ini_path)) {
 				$php_ini_content .= file_get_contents($master_php_ini_path)."\n";
