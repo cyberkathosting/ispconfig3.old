@@ -1030,6 +1030,10 @@ class installer_base {
 			replaceLine('/etc/webalizer/webalizer.conf','#Incremental','Incremental     yes',0,0);
 			replaceLine('/etc/webalizer/webalizer.conf','#HistoryName','HistoryName     webalizer.hist',0,0);
 		}
+		
+		// Check the awsatst script
+		if(!is_dir('/usr/share/awstats/tools')) mkdir('/usr/share/awstats/tools');
+		if(!file_exists('/usr/share/awstats/tools/awstats_buildstaticpages.pl') && file_exists('/usr/share/doc/awstats/examples/awstats_buildstaticpages.pl')) symlink('/usr/share/doc/awstats/examples/awstats_buildstaticpages.pl','/usr/share/awstats/tools/awstats_buildstaticpages.pl');
 
 		//* add a sshusers group
 		$command = 'groupadd sshusers';
