@@ -1209,7 +1209,7 @@ class system{
 		$maildirsubs = array('cur','new','tmp');
 
 		foreach ($maildirsubs as $mdsub) {
-			mkdir($dir.'/'.$mdsub, 0700, true);
+			if(!is_dir($dir.'/'.$mdsub)) mkdir($dir.'/'.$mdsub, 0700, true);
 			if ($chown_mdsub) {
 				chown($dir.'/'.$mdsub, $user);
 				chgrp($dir.'/'.$mdsub, $group);

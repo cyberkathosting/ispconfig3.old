@@ -915,7 +915,7 @@ class apache2_plugin {
 		}
 		
 		// Remove the backup copy of the config file.
-		unlink($vhost_file.'~');
+		if(@is_file($vhost_file.'~')) unlink($vhost_file.'~');
 		
 
 		//* Unset action to clean it for next processed vhost.
