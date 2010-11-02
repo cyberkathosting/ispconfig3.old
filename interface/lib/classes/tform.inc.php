@@ -362,7 +362,8 @@ class tform {
                                         // If Datasource is set, get the data from there
                                         if(isset($field['datasource']) && is_array($field['datasource'])) {
 												if(is_array($field["value"])) {
-													$field["value"] = array_merge($field["value"],$this->getDatasourceData($field, $record));
+													//$field["value"] = array_merge($field["value"],$this->getDatasourceData($field, $record));
+													$field["value"] = $field["value"]+$this->getDatasourceData($field, $record);
 												} else {
                                                 	$field["value"] = $this->getDatasourceData($field, $record);
 												}
@@ -379,6 +380,8 @@ class tform {
                                                 if(is_array($field['value'])) {
                                                         foreach($field['value'] as $k => $v) {
                                                                 $selected = ($k == $val)?' SELECTED':'';
+																if(!empty($this->wordbook[$v]))
+																	$v = $this->wordbook[$v];
                                                                 $out .= "<option value='$k'$selected>$v</option>\r\n";
                                                         }
                                                 }
@@ -492,6 +495,8 @@ class tform {
                                                 $out = '';
                                                 foreach($field['value'] as $k => $v) {
                                                     $selected = ($k == $field["default"])?' SELECTED':'';
+													if(!empty($this->wordbook[$v]))
+                                                                    $v = $this->wordbook[$v];
                                                     $out .= "<option value='$k'$selected>$v</option>\r\n";
                                                 }
                                         }
