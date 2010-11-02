@@ -894,6 +894,9 @@ class apache2_plugin {
 			$app->log("Apache status is: ".$apache_online_status_before_restart,LOGLEVEL_DEBUG);
 
 			$app->services->restartService('httpd','restart');
+			
+			// wait a few seconds, before we test the apache status again
+			sleep(2);
 		
 			//* Check if apache restarted successfully if it was online before
 			$apache_online_status_after_restart = $this->_checkTcp('localhost',80);
