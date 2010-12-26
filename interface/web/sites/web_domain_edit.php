@@ -330,10 +330,14 @@ class page_action extends tform_actions {
 				}
 
 			}
+			
 
 			// Clients may not set the client_group_id, so we unset them if user is not a admin and the client is not a reseller
 			if(!$app->auth->has_clients($_SESSION['s']['user']['userid'])) unset($this->dataRecord["client_group_id"]);
 		}
+		
+		//* make sure that the email domain is lowercase
+		if(isset($this->dataRecord["domain"])) $this->dataRecord["domain"] = strtolower($this->dataRecord["domain"]);
 
 
 		parent::onSubmit();
