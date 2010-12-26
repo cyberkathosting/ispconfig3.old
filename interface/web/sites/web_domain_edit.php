@@ -196,7 +196,8 @@ class page_action extends tform_actions {
 		}
 
 		$ssl_domain_select = '';
-		$ssl_domains = array($this->dataRecord["domain"],'www.'.$this->dataRecord["domain"]);
+		$tmp = $app->db->queryOneRecord("SELECT domain FROM web_domain WHERE domain_id = ".$this->id);
+		$ssl_domains = array($tmp["domain"],'www.'.$tmp["domain"]);
 		if(is_array($ssl_domains)) {
 			foreach( $ssl_domains as $ssl_domain) {
 				$selected = ($ssl_domain == $this->dataRecord['ssl_domain'])?'SELECTED':'';
