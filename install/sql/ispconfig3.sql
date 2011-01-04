@@ -948,8 +948,8 @@ CREATE TABLE `sys_datalog` (
   `action` char(1) NOT NULL default '',
   `tstamp` int(11) NOT NULL default '0',
   `user` varchar(255) NOT NULL default '',
-  `data` text NOT NULL,
-  `status` set('pending','ok','warning','error') NOT NULL default 'pending',
+  `data` longtext NOT NULL,
+  `status` set('pending','ok','warning','error') NOT NULL default 'ok',
   PRIMARY KEY  (`datalog_id`),
   KEY `server_id` (`server_id`,`status`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1;
