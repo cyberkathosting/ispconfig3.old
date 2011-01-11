@@ -3,9 +3,10 @@ $wb['source_txt'] = 'Origem';
 $wb['destination_txt'] = 'Destino';
 $wb['active_txt'] = 'Ativo';
 $wb['no_domain_perm'] = 'Você não tem permissão para este domínio.';
-$wb['limit_mailaliasdomain_txt'] = 'O número máximo de domínios aliases para sua conta foi atingido.';
+$wb['limit_mailaliasdomain_txt'] = 'Máximo de apelidos de domínio para está conta foi alcançado.';
 $wb['source_destination_identical_txt'] = 'Origem e Destino são os mesmos.';
 $wb['source_error_empty'] = 'Domínio de origem está em branco.';
 $wb['source_error_unique'] = 'Domínio de origem duplicado.';
-$wb['source_error_regex'] = 'Nome do domínio de origem inválido.';
+$wb['source_error_regex'] = 'Domínio de origem inválido.';
 ?>
+

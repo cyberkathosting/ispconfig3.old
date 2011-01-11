@@ -1,7 +1,8 @@
 <?php
-$wb['email_txt'] = 'Correio';
-$wb['destination_txt'] = 'Correio de Destino';
+$wb['email_txt'] = 'E-Mail';
+$wb['destination_txt'] = 'Destinatário';
 $wb['active_txt'] = 'Ativo';
-$wb['limit_mailforward_txt'] = 'O número máximo de encaminhamentos para sua conta foi atingido.';
-$wb['duplicate_mailbox_txt'] = 'Já existe uma caixa de correio com este endereço.';
+$wb['limit_mailforward_txt'] = 'Máximo de encaminhamentos para está conta foi alcançado.';
+$wb['duplicate_mailbox_txt'] = 'Já existe um e-mail com este endereço.';
 ?>
+

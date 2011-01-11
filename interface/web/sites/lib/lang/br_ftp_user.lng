@@ -12,16 +12,17 @@ $wb['server_id_txt'] = 'Servidor';
 $wb['parent_domain_id_txt'] = 'Website';
 $wb['username_txt'] = 'Usuário';
 $wb['password_txt'] = 'Senha';
-$wb['password_strength_txt'] = 'Tamanho da senha';
+$wb['password_strength_txt'] = 'Dificuldade da senha';
 $wb['quota_size_txt'] = 'Cota de Disco';
 $wb['active_txt'] = 'Ativo';
-$wb['limit_ftp_user_txt'] = 'O número máximo de usuários de FTP para sua conta foi atingido.';
-$wb['username_error_empty'] = 'Nome de usuário em branco.';
-$wb['username_error_unique'] = 'O nome de usuário deve ser único.';
-$wb['username_error_regex'] = 'O nome de usuário contém caracteres não permitidos.';
-$wb['quota_size_error_empty'] = 'Quota em branco.';
+$wb['limit_ftp_user_txt'] = 'Máximo de usuários FTP para esta conta foi alcançado.';
+$wb['username_error_empty'] = 'Usuário em branco.';
+$wb['username_error_unique'] = 'O usuário deve ser único.';
+$wb['username_error_regex'] = 'O usuário contêm caracteres não permitidos.';
+$wb['quota_size_error_empty'] = 'Cota em branco.';
 $wb['uid_error_empty'] = 'GID em branco.';
 $wb['directory_error_empty'] = 'Diretório vazio.';
-$wb['directory_error_notinweb'] = 'O diretório não esta dentro do diretório web principal.';
+$wb['directory_error_notinweb'] = 'O diretório não está dentro do diretório web principal.';
 $wb['parent_domain_id_error_empty'] = 'Nenhum website selecionado.';
 ?>
+

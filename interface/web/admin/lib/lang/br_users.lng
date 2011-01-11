@@ -1,10 +1,10 @@
 <?php
 $wb['username_txt'] = 'Usuário';
-$wb['username_err'] = 'O Nome do Usuário é muito longo ou contém caracteres inválidos!';
+$wb['username_err'] = 'O Nome do Usuário é muito longo ou contêm caracteres inválidos!';
 $wb['username_empty'] = 'Por favor, entre com o nome do Usuário.';
-$wb['username_unique'] = 'Já existe um Usuário com este nome!';
+$wb['username_unique'] = 'Já existe um usuário com este nome!';
 $wb['passwort_txt'] = 'Senha';
-$wb['password_strength_txt'] = 'Segurança da Senha';
+$wb['password_strength_txt'] = 'Dificuldade da Senha';
 $wb['modules_txt'] = 'Módulos';
 $wb['startmodule_txt'] = 'Módulo Inicial';
 $wb['app_theme_txt'] = 'Tema';
@@ -26,3 +26,4 @@ $wb['groups_txt'] = 'Grupos';
 $wb['default_group_txt'] = 'Grupo Padrão';
 $wb['startmodule_err'] = 'O módulo inicial não está contido nos módulos.';
 ?>
+

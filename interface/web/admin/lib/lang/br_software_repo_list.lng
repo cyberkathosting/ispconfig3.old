@@ -1,6 +1,7 @@
 <?php
-$wb['list_head_txt'] = 'Repositório';
+$wb['list_head_txt'] = 'Repositórios';
 $wb['active_txt'] = 'Ativo';
 $wb['repo_name_txt'] = 'Repositório';
 $wb['repo_url_txt'] = 'URL';
 ?>
+

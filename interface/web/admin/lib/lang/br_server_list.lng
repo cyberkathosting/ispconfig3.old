@@ -1,7 +1,7 @@
 <?php
 $wb['list_head_txt'] = 'Servidor';
 $wb['server_name_txt'] = 'Nome';
-$wb['mail_server_txt'] = 'Mail';
+$wb['mail_server_txt'] = 'E-Mail';
 $wb['web_server_txt'] = 'Web';
 $wb['dns_server_txt'] = 'DNS';
 $wb['file_server_txt'] = 'Arquivo';
@@ -9,3 +9,4 @@ $wb['db_server_txt'] = 'Banco de Dados';
 $wb['vserver_server_txt'] = 'VServer';
 $wb['add_new_record_txt'] = 'Adicionar novo Servidor';
 ?>
+

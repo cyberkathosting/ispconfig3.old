@@ -2,6 +2,7 @@
 $wb['list_head_txt'] = 'Caixa de Correio';
 $wb['email_txt'] = 'Correio';
 $wb['autoresponder_txt'] = 'Autoresponder';
-$wb['add_new_record_txt'] = 'Adcionar nova caixa de correio';
-$wb['name_txt'] = 'Realname';
+$wb['add_new_record_txt'] = 'Adicionar nova caixa postal';
+$wb['name_txt'] = 'Nome Real';
 ?>
+

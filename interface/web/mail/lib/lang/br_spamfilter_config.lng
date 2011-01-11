@@ -1,20 +1,21 @@
 <?php
-$wb['getmail_config_dir_txt'] = 'Caminho de Configuração Getmail ';
+$wb['getmail_config_dir_txt'] = 'Configuração da Busca de E-Mail (GetMail)';
 $wb['ip_address_txt'] = 'Endereço IP';
-$wb['netmask_txt'] = 'Mascara de Rede';
+$wb['netmask_txt'] = 'Máscara de Rede';
 $wb['gateway_txt'] = 'Gateway';
 $wb['hostname_txt'] = 'Hostname';
 $wb['nameservers_txt'] = 'Servidor de Nomes';
-$wb['module_txt'] = 'Server Module';
+$wb['module_txt'] = 'Módulo do Servidor';
 $wb['maildir_path_txt'] = 'Caminho do Maildir';
 $wb['homedir_path_txt'] = 'Caminho do Homedir';
-$wb['mailuser_uid_txt'] = 'Usuário de Correio UID';
-$wb['mailuser_gid_txt'] = 'Usuário de Correio GID';
-$wb['mailuser_name_txt'] = 'Nome do Usuário de Correio';
-$wb['mailuser_group_txt'] = 'Grupo do Usuário de Correio';
+$wb['mailuser_uid_txt'] = 'UID do Usuário de E-Mail';
+$wb['mailuser_gid_txt'] = 'GID do Usuário de E-Mail';
+$wb['mailuser_name_txt'] = 'Nomde do Usuário de E-Mail';
+$wb['mailuser_group_txt'] = 'Grupo do Usuário de E-Mail';
 $wb['relayhost_txt'] = 'Host Relay';
 $wb['relayhost_user_txt'] = 'Usuário Host Relay';
 $wb['relayhost_password_txt'] = 'Senha Host Relay';
-$wb['mailbox_size_limit_txt'] = 'Tamanho Caixa de Correio';
+$wb['mailbox_size_limit_txt'] = 'Tamanho Caixa Postal';
 $wb['message_size_limit_txt'] = 'Tamanho da Mensagem';
 ?>
+

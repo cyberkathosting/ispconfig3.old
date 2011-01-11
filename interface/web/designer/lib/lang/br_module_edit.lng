@@ -17,6 +17,6 @@ $wb['description_txt'] = '
 <b>Frame de Navegação:</b> Se modulo_tree.tpl.htm foi selecionado como arquivo de gabarito, insira aqui o caminho do script para o frame a esquerda.<br>
 <b>Página Padrão:</b> Esta página será exibida quando o módulo for aberto.<br>
 <b>Tamanho da Aba:</b> Tamanho das abas na navegação principal. Este campo fica em branco por padrão. Você pode informar valores absolutos em pixels (ex.: 20) ou valores relativos (ex.: 20%).<br>
-<b>Dica:</b> Todos os caminhos são relativos ao diretório web.
-';
+<b>Dica:</b> Todos os caminhos são relativos ao diretório web.';
 ?>
+

@@ -3,7 +3,7 @@ $wb['1001'] = 'Por favor, preencha o nome do usuário e senha!';
 $wb['1002'] = 'Nome do usuário ou senha incorretos!';
 $wb['Firewall'] = 'Firewall';
 $wb['Groups'] = 'Grupos';
-$wb['groups_description'] = 'Formulário para edição dos Grupos de usuários do sistema.';
+$wb['groups_description'] = 'Formulário para edição dos grupos de usuários do sistema.';
 $wb['Server'] = 'Servidor';
 $wb['Services'] = 'Serviços';
 $wb['Config'] = 'Configuração';
@@ -34,10 +34,11 @@ $wb['Repositories'] = 'Repositórios';
 $wb['Server Services'] = 'Serviços do Servidor';
 $wb['Interface Config'] = 'Configuração da Interface';
 $wb['Packages'] = 'Pacotes';
-$wb['Updates'] = 'Updates';
+$wb['Updates'] = 'Atualizações';
 $wb['Merge'] = 'Mesclar';
 $wb['Remote Users'] = 'Usuários Remotos';
 $wb['Remote Actions'] = 'Ações Remotas';
-$wb['Do OS-Update'] = 'Faça uma Atualização-de-SO';
-$wb['Do ISPConfig-Update'] = 'Do ISPConfig-Update';
+$wb['Do OS-Update'] = 'Atualizar SO';
+$wb['Do ISPConfig-Update'] = 'Atualizar ISPConfig';
 ?>
+

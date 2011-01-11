@@ -1,10 +1,11 @@
 <?php
 $wb['list_head_txt'] = 'Pacotes de Software';
-$wb['installed_txt'] = 'Status';
+$wb['installed_txt'] = 'Estado';
 $wb['package_title_txt'] = 'Pacote';
 $wb['package_description_txt'] = 'Descrição';
-$wb['action_txt'] = 'Acão';
-$wb['toolsarea_head_txt'] = 'Packages';
-$wb['repoupdate_txt'] = 'Update package list';
-$wb['package_id_txt'] = 'local App-ID';
+$wb['action_txt'] = 'Ação';
+$wb['toolsarea_head_txt'] = 'Pacotes';
+$wb['repoupdate_txt'] = 'Atualizar lista de pacotes';
+$wb['package_id_txt'] = 'ID App Local';
 ?>
+
