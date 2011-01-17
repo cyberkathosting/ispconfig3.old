@@ -15,7 +15,7 @@ $wb['mailuser_group_txt'] = 'Grupo do Usuário de E-Mail';
 $wb['relayhost_txt'] = 'Host Relay';
 $wb['relayhost_user_txt'] = 'Usuário Host Relay';
 $wb['relayhost_password_txt'] = 'Senha Host Relay';
-$wb['mailbox_size_limit_txt'] = 'Tamanho Caixa Postal';
+$wb['mailbox_size_limit_txt'] = 'Tamanho da Caixa Postal';
 $wb['message_size_limit_txt'] = 'Tamanho da Mensagem';
 ?>
 

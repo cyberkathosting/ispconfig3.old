@@ -2,7 +2,7 @@
 $wb['email_txt'] = 'E-Mail';
 $wb['destination_txt'] = 'Destinatário';
 $wb['active_txt'] = 'Ativo';
-$wb['limit_mailforward_txt'] = 'Máximo de encaminhamentos para está conta foi alcançado.';
+$wb['limit_mailforward_txt'] = 'Máximo de encaminhamentos para esta conta foi alcançado.';
 $wb['duplicate_mailbox_txt'] = 'Já existe um e-mail com este endereço.';
 ?>
 

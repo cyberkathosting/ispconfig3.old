@@ -25,6 +25,6 @@ $wb['error_email_empty'] = 'E-Mail vazio.';
 $wb['error_domain_regex'] = 'Domí­nio contêm caracteres inválidos.';
 $wb['error_ns1_regex'] = 'NS1 contêm caracteres inválidos.';
 $wb['error_ns2_regex'] = 'NS2 contêm caracteres inválidos.';
-$wb['error_email_regex'] = 'E-Mail não contém um endereço válido.';
+$wb['error_email_regex'] = 'E-Mail não contêm um endereço válido.';
 ?>
 

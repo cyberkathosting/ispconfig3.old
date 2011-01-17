@@ -4,6 +4,6 @@ $wb['active_txt'] = 'Ativo';
 $wb['server_id_txt'] = 'Servidor';
 $wb['pattern_txt'] = 'Padrão';
 $wb['action_txt'] = 'Ação';
-$wb['add_new_record_txt'] = 'Adicionar um novo filtro de conteúdo';
+$wb['add_new_record_txt'] = 'Adicionar novo Filtro de Conteúdo';
 ?>
 

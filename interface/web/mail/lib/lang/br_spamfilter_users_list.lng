@@ -6,6 +6,6 @@ $wb['priority_txt'] = 'Prioridade';
 $wb['policy_id_txt'] = 'Polí­ticas';
 $wb['fullname_txt'] = 'Nome';
 $wb['email_txt'] = 'E-Mail';
-$wb['add_new_record_txt'] = 'Adicionar Usuário';
+$wb['add_new_record_txt'] = 'Adicionar novo Usuário';
 ?>
 

@@ -2,7 +2,7 @@
 $wb['server_id_txt'] = 'Servidor';
 $wb['zone_txt'] = 'Zona';
 $wb['name_txt'] = 'Hostname';
-$wb['type_txt'] = 'tipo';
+$wb['type_txt'] = 'Tipo';
 $wb['data_txt'] = 'Registro do Servidor';
 $wb['ttl_txt'] = 'TTL';
 $wb['active_txt'] = 'Ativo';

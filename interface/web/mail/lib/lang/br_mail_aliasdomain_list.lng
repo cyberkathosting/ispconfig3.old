@@ -3,6 +3,6 @@ $wb['list_head_txt'] = 'Apelido de Domínio';
 $wb['active_txt'] = 'Ativo';
 $wb['source_txt'] = 'Origem';
 $wb['destination_txt'] = 'Destino';
-$wb['add_new_record_txt'] = 'Adicionar novo apelido de domínio';
+$wb['add_new_record_txt'] = 'Adicionar novo Apelido de Domínio';
 ?>
 
