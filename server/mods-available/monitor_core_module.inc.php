@@ -865,7 +865,7 @@ class monitor_core_module {
 		/*
          *  This monitoring is expensive, so do it only once an hour
 		*/
-		$min = date('i');
+		$min = @date('i');
 		if ($min != 0) return;
 
 		/*
@@ -1174,8 +1174,8 @@ class monitor_core_module {
 		/*
          *  This monitoring is expensive, so do it only once a day
 		*/
-		$min = date('i');
-		$hour = date('H');
+		$min = @date('i');
+		$hour = @date('H');
 		if (!($min == 0 && $hour == 23)) return;
 
 		global $app;
