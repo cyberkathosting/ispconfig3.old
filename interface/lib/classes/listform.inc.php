@@ -329,7 +329,7 @@ class listform {
                         break;
 
                     case 'CURRENCY':
-                        $record[$key] = number_format($record[$key], 2, ',', '');
+                        $record[$key] = number_format($record[$key], $conf['number_format_decimals'], $conf['number_format_dec_point'], $conf['number_format_thousands_sep']);
                         break;
 
                     default:

@@ -133,6 +133,11 @@ $conf['logo'] = 'themes/default/images/ispc_logo.png';
 $conf['language'] = 'en';
 $conf['debug_language'] = false;
 
+//** Currency formatting
+$conf['number_format_decimals'] = 2;
+$conf['number_format_dec_point'] = ',';
+$conf['number_format_thousands_sep'] = '';
+
 
 //** Misc.
 $conf['interface_logout_url'] = ''; // example: http://www.domain.tld/
