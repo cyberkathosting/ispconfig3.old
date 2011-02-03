@@ -145,6 +145,18 @@ class remoting {
         }
     }
 	
+	public function server_get_serverid_by_ip($session_id, $ipaddress)
+    {
+        global $app;
+		if(!$this->checkPerm($session_id, 'server_get_serverid_by_ip')) {
+        	$this->server->fault('permission_denied', 'You do not have the permissions to access this function.');
+            return false;
+		}
+        $sql = "SELECT server_id FROM server_ip WHERE ip_address  = '$ipaddress' LIMIT 1 ";
+        $all = $app->db->queryAllRecords($sql);
+        return $all;
+	}
+	
 	//* Get mail domain details
 	public function mail_domain_get($session_id, $primary_id)
     {
