@@ -183,7 +183,7 @@ class app {
 		$filename = ISPC_ROOT_PATH.'/'.$filename;
 		if(substr($filename,-4) != '.lng') $this->error('Language file has wrong extension.');
 		if(file_exists($filename)) {
-			@include_once($filename);
+			@include($filename);
 			if(is_array($wb)) {
 				if(is_array($this->_wb)) {
 					$this->_wb = array_merge($this->_wb,$wb);
