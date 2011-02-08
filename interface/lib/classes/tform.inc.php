@@ -163,7 +163,7 @@ class tform {
         * @return record
         */
         function decode($record,$tab) {
-                global $conf;
+                global $conf, $app;
 				if(!is_array($this->formDef['tabs'][$tab])) $app->error("Tab does not exist or the tab is empty (TAB: $tab).");
                 $new_record = '';
 				if(is_array($record)) {
@@ -199,7 +199,7 @@ class tform {
                                 break;
 
                                 case 'CURRENCY':
-                                        $new_record[$key] = number_format((double)$record[$key], $conf['number_format_decimals'], $conf['number_format_dec_point'], $conf['number_format_thousands_sep']);
+                                        $new_record[$key] = number_format((double)$record[$key], (int)$app->lng('number_format_decimals'), $app->lng('number_format_dec_point'), $app->lng('number_format_thousands_sep'));
                                 break;
 
                                 default:

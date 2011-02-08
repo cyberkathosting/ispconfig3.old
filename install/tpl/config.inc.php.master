@@ -143,15 +143,9 @@ $conf['theme'] = 'default';
 $conf['html_content_encoding'] = 'utf-8'; // example: utf-8, iso-8859-1, ...
 $conf['logo'] = 'themes/default/images/ispc_logo.png';
 
-
 //** Default Language
 $conf['language'] = '{language}';
 $conf['debug_language'] = false;
-
-//** Currency format
-$conf['number_format_decimals'] = 2;
-$conf['number_format_dec_point'] = ',';
-$conf['number_format_thousands_sep'] = '';
 
 
 //** Misc.

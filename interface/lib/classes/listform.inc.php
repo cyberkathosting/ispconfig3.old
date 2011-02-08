@@ -277,7 +277,7 @@ class listform {
 
     public function decode($record) 
     {
-        global $conf;
+        global $conf, $app;
         if(is_array($record)) {
             foreach($this->listDef['item'] as $field){
                 $key = $field['field'];
@@ -329,7 +329,7 @@ class listform {
                         break;
 
                     case 'CURRENCY':
-                        $record[$key] = number_format($record[$key], $conf['number_format_decimals'], $conf['number_format_dec_point'], $conf['number_format_thousands_sep']);
+                        $record[$key] = number_format($record[$key], (int)$app->lng('number_format_decimals'), $app->lng('number_format_dec_point'), $app->lng('number_format_thousands_sep'));
                         break;
 
                     default:
