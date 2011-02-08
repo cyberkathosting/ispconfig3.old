@@ -199,7 +199,7 @@ class tform {
                                 break;
 
                                 case 'CURRENCY':
-                                        $new_record[$key] = number_format((double)$record[$key], (int)$app->lng('number_format_decimals'), $app->lng('number_format_dec_point'), $app->lng('number_format_thousands_sep'));
+                                        $new_record[$key] = $app->functions->currency_format($record[$key]);
                                 break;
 
                                 default:
