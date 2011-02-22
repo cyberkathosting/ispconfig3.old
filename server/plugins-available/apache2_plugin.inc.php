@@ -491,6 +491,9 @@ class apache2_plugin {
 
 			// make temp directory writable for the apache and website users
 			$this->_exec("chmod 777 ".escapeshellcmd($data["new"]["document_root"]."/tmp"));
+			
+			// Set Log symlink to 755 to make the logs accessible by the FTP user
+			$this->_exec("chmod 755 ".escapeshellcmd($data["new"]["document_root"])."/log");
 
 			$command = 'usermod';
 			$command .= ' --groups sshusers';
