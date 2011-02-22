@@ -184,7 +184,7 @@ HostAliases="www.'.$domain.' localhost 127.0.0.1"';
 	}
 	
 	if(!@is_dir($statsdir)) mkdir($statsdir);
-	if(is_file('/var/log/ispconfig/httpd/'.$domain.'/yesterday-access.log')) unlink('/var/log/ispconfig/httpd/'.$domain.'/yesterday-access.log');
+	if(is_link('/var/log/ispconfig/httpd/'.$domain.'/yesterday-access.log')) unlink('/var/log/ispconfig/httpd/'.$domain.'/yesterday-access.log');
 	symlink($logfile,'/var/log/ispconfig/httpd/'.$domain.'/yesterday-access.log');
 	
 	// awstats_buildstaticpages.pl -update -config=mydomain.com -lang=en -dir=/var/www/domain.com/web/stats -awstatsprog=/path/to/awstats.pl
