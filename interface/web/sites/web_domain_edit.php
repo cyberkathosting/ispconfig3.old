@@ -283,7 +283,7 @@ class page_action extends tform_actions {
 				$tmp = $app->db->queryOneRecord("SELECT sum(hd_quota) as webquota FROM web_domain WHERE domain_id != ".intval($this->id)." AND ".$app->tform->getAuthSQL('u'));
 				$webquota = $tmp["webquota"];
 				$new_web_quota = intval($this->dataRecord["hd_quota"]);
-				if(($webquota + $new_web_quota > $client["limit_web_quota"]) || ($new_web_quota == -1 && $client["limit_web_quota"] != -1)) {
+				if(($webquota + $new_web_quota > $client["limit_web_quota"]) || ($new_web_quota < 0 && $client["limit_web_quota"] >= 0)) {
 					$max_free_quota = floor($client["limit_web_quota"] - $webquota);
 					if($max_free_quota < 0) $max_free_quota = 0;
 					$app->tform->errorMessage .= $app->tform->lng("limit_web_quota_free_txt").": ".$max_free_quota." MB<br>";
@@ -299,7 +299,7 @@ class page_action extends tform_actions {
 				$tmp = $app->db->queryOneRecord("SELECT sum(traffic_quota) as trafficquota FROM web_domain WHERE domain_id != ".intval($this->id)." AND ".$app->tform->getAuthSQL('u'));
 				$trafficquota = $tmp["trafficquota"];
 				$new_traffic_quota = intval($this->dataRecord["traffic_quota"]);
-				if(($trafficquota + $new_traffic_quota > $client["limit_traffic_quota"]) || ($new_traffic_quota == -1 && $client["limit_traffic_quota"] != -1)) {
+				if(($trafficquota + $new_traffic_quota > $client["limit_traffic_quota"]) || ($new_traffic_quota < 0 && $client["limit_traffic_quota"] >= 0)) {
 					$max_free_quota = floor($client["limit_traffic_quota"] - $trafficquota);
 					if($max_free_quota < 0) $max_free_quota = 0;
 					$app->tform->errorMessage .= $app->tform->lng("limit_traffic_quota_free_txt").": ".$max_free_quota." MB<br>";
