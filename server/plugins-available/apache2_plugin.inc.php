@@ -469,7 +469,7 @@ class apache2_plugin {
 			exec("setquota -T -u $username 604800 604800 -a &> /dev/null");
 		}
 
-		if($this->action == 'insert') {
+		if($this->action == 'insert' || $data["new"]["system_user"] != $data["old"]["system_user"]) {
 			// Chown and chmod the directories below the document root
 			$this->_exec("chown -R $username:$groupname ".escapeshellcmd($data["new"]["document_root"]));
 			// The document root itself has to be owned by root in normal level and by the web owner in security level 20

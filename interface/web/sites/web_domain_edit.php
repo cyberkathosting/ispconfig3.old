@@ -491,7 +491,7 @@ class page_action extends tform_actions {
 			// Update the FTP user(s) too
 			$records = $app->db->queryAllRecords("SELECT ftp_user_id FROM ftp_user WHERE parent_domain_id = ".$this->id);
 			foreach($records as $rec) {
-				$app->db->datalogUpdate('ftp_user', "uid = '$system_user', gid = '$system_group', dir = '$document_root'", 'ftp_user_id', $rec['ftp_user_id']);
+				$app->db->datalogUpdate('ftp_user', "sys_userid = '".$web_rec['sys_userid']."', sys_groupid = '".$web_rec['sys_groupid']."', uid = '$system_user', gid = '$system_group', dir = '$document_root'", 'ftp_user_id', $rec['ftp_user_id']);
 			}
 			unset($records);
 			unset($rec);
@@ -499,7 +499,7 @@ class page_action extends tform_actions {
 			// Update the Shell user(s) too
 			$records = $app->db->queryAllRecords("SELECT shell_user_id FROM shell_user WHERE parent_domain_id = ".$this->id);
 			foreach($records as $rec) {
-				$app->db->datalogUpdate('shell_user', "puser = '$system_user', pgroup = '$system_group', dir = '$document_root'", 'shell_user_id', $rec['shell_user_id']);
+				$app->db->datalogUpdate('shell_user', "sys_userid = '".$web_rec['sys_userid']."', sys_groupid = '".$web_rec['sys_groupid']."', puser = '$system_user', pgroup = '$system_group', dir = '$document_root'", 'shell_user_id', $rec['shell_user_id']);
 			}
 			unset($records);
 			unset($rec);
@@ -523,7 +523,7 @@ class page_action extends tform_actions {
 			$sql = "UPDATE web_domain SET allow_override = '".$app->db->quote($web_config["htaccess_allow_override"])."' WHERE domain_id = ".$this->id;
 			$app->db->query($sql);
 		}
-		if($web_rec['php_open_basedir'] == '') {
+		if($web_rec['php_open_basedir'] == '' || (isset($this->dataRecord["client_group_id"]) && $this->dataRecord["client_group_id"] != $this->oldDataRecord["sys_groupid"])) {
 			$document_root = $app->db->quote(str_replace("[client_id]",$client_id,$document_root));
 			$php_open_basedir = str_replace("[website_path]",$document_root,$web_config["php_open_basedir"]);
 			$php_open_basedir = $app->db->quote(str_replace("[website_domain]",$web_rec['domain'],$php_open_basedir));
