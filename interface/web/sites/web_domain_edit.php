@@ -503,6 +503,14 @@ class page_action extends tform_actions {
 			}
 			unset($records);
 			unset($rec);
+			
+			//* Update all subdomains and alias domains
+			$records = $app->db->queryAllRecords("SELECT domain_id FROM web_domain WHERE parent_domain_id = ".$this->id);
+			foreach($records as $rec) {
+				$app->db->datalogUpdate('web_domain', "sys_userid = '".$web_rec['sys_userid']."', sys_groupid = '".$web_rec['sys_groupid']."'", 'domain_id', $rec['domain_id']);
+			}
+			unset($records);
+			unset($rec);
 
 		}
 
