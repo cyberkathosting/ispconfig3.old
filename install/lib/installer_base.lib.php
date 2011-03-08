@@ -115,7 +115,7 @@ class installer_base {
 		if(is_installed('postfix')) $conf['postfix']['installed'] = true;
 		if(is_installed('apache') || is_installed('apache2') || is_installed('httpd')) $conf['apache']['installed'] = true;
 		if(is_installed('getmail')) $conf['getmail']['installed'] = true;
-		if(is_installed('couriertcpd')) $conf['courier']['installed'] = true;
+		if(is_installed('couriertcpd') || file_exists('/usr/lib/courier-imap/libexec/couriertcpd')) $conf['courier']['installed'] = true;
 		if(is_installed('dovecot')) $conf['dovecot']['installed'] = true;
 		if(is_installed('saslsauthd')) $conf['saslauthd']['installed'] = true;
 		if(is_installed('amavisd-new')) $conf['amavis']['installed'] = true;
