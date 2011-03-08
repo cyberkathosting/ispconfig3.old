@@ -1034,7 +1034,8 @@ class installer_base {
 		// Check the awsatst script
 		if(!is_dir('/usr/share/awstats/tools')) exec('mkdir -p /usr/share/awstats/tools');
 		if(!file_exists('/usr/share/awstats/tools/awstats_buildstaticpages.pl') && file_exists('/usr/share/doc/awstats/examples/awstats_buildstaticpages.pl')) symlink('/usr/share/doc/awstats/examples/awstats_buildstaticpages.pl','/usr/share/awstats/tools/awstats_buildstaticpages.pl');
-
+		if(file_exists('/etc/awstats/awstats.conf.local')) replaceLine('/etc/awstats/awstats.conf.local','LogFormat=4','LogFormat=1',0,1);
+		
 		//* add a sshusers group
 		$command = 'groupadd sshusers';
 		if(!is_group('sshusers')) caselog($command.' &> /dev/null 2> /dev/null', __FILE__, __LINE__, "EXECUTED: $command", "Failed to execute the command $command");
