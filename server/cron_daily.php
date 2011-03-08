@@ -418,7 +418,7 @@ if($backup_dir != '') {
 				$web_group = $rec['system_group'];
 				$web_id = $rec['domain_id'];
 				$web_backup_dir = $backup_dir.'/web'.$web_id;
-				if(!is_dir($web_backup_dir)) mkdir($web_backup_dir, 0750);
+				if(!is_dir($web_backup_dir)) mkdir($web_backup_dir, 0755);
 				
 				chmod($web_backup_dir, 0755);
 				chown($web_backup_dir, 'root');
@@ -441,6 +441,7 @@ if($backup_dir != '') {
 				// Create backupdir symlink
 				if(is_link($web_path.'/backup')) unlink($web_path.'/backup');
 				symlink($web_backup_dir,$web_path.'/backup');
+				chmod($web_path.'/backup', 0755);
 				
 			}
 			
