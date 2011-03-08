@@ -75,11 +75,16 @@ class apache2_plugin {
 		$app->plugins->registerEvent('webdav_user_insert',$this->plugin_name,'webdav');
 		$app->plugins->registerEvent('webdav_user_update',$this->plugin_name,'webdav');
 		$app->plugins->registerEvent('webdav_user_delete',$this->plugin_name,'webdav');
+		
+		$app->plugins->registerEvent('client_delete',$this->plugin_name,'client_delete');
 	}
 
 	// Handle the creation of SSL certificates
 	function ssl($event_name,$data) {
 		global $app, $conf;
+		
+		//* Only vhosts can have a ssl cert
+		if($data["new"]["type"] != "vhost") return;
 
 		if(!is_dir($data["new"]["document_root"]."/ssl")) exec("mkdir -p ".$data["new"]["document_root"]."/ssl");
 		$ssl_dir = $data["new"]["document_root"]."/ssl";
@@ -215,7 +220,7 @@ class apache2_plugin {
 			$old_parent_domain_id = intval($data["old"]["parent_domain_id"]);
 			$new_parent_domain_id = intval($data["new"]["parent_domain_id"]);
 
-			// If the parent_domain_id has been chenged, we will have to update the old site as well.
+			// If the parent_domain_id has been changed, we will have to update the old site as well.
 			if($this->action == 'update' && $data["new"]["parent_domain_id"] != $data["old"]["parent_domain_id"]) {
 				$tmp = $app->db->queryOneRecord("SELECT * FROM web_domain WHERE domain_id = ".$old_parent_domain_id." AND active = 'y'");
 				$data["new"] = $tmp;
@@ -1338,6 +1343,27 @@ class apache2_plugin {
 			unlink($awstats_conf_dir."/awstats.".$data["old"]["domain"].".conf");
 			$app->log("Removed awstats config file: ".$awstats_conf_dir.'/awstats.'.$data["old"]["domain"].'.conf',LOGLEVEL_DEBUG);
 		}
+	}
+	
+	function client_delete($event_name,$data) {
+		global $app, $conf;
+		
+		$app->uses("getconf");
+		$web_config = $app->getconf->get_server_config($conf["server_id"], 'web');
+		
+		$client_id = intval($data['old']['client_id']);
+		if($client_id > 0) {
+			
+			$client_dir = $web_config['website_basedir'].'/clients/client'.$client_id;
+			if(is_dir($client_dir) && !stristr($client_dir,'..')) {
+				@rmdir($client_dir);
+				$app->log('Removed client directory: '.$client_dir,LOGLEVEL_DEBUG);
+			}
+			
+			$this->_exec('groupdel client'.$client_id);
+			$app->log('Removed group client'.$client_id,LOGLEVEL_DEBUG);
+		}
+		
 	}
 
 	//* Wrapper for exec function for easier debugging
