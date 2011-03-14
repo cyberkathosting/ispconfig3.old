@@ -685,6 +685,14 @@ class remoting_lib {
 			$language = $app->db->quote($params["language"]);
 			$groupid = $app->db->datalogInsert('sys_group', "(name,description,client_id) VALUES ('$username','','$insert_id')", 'groupid');
 			$groups = $groupid;
+			
+			$salt="$1$";
+			$base64_alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+			for ($n=0;$n<8;$n++) {
+				$salt.=$base64_alphabet[mt_rand(0,63)];
+			}
+			$salt.="$";
+			$password = crypt(stripslashes($password),$salt);
 			$sql1 = "INSERT INTO sys_user (username,passwort,modules,startmodule,app_theme,typ,active,language,groups,default_group,client_id)
 			VALUES ('$username',md5('$password'),'$modules','$startmodule','$usertheme','$type','$active','$language',$groups,$groupid,$insert_id)";
 			$app->db->query($sql1);
