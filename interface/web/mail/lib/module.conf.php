@@ -8,6 +8,9 @@ $module['template'] 	= 'module.tpl.htm';
 $module['startpage'] 	= 'mail/mail_domain_list.php';
 $module['tab_width']    = '';
 
+$app->uses('getconf');
+$mail_config = $app->getconf->get_server_config(1,'mail');
+
 
 //**** Email accounts menu
 $items = array();
@@ -134,13 +137,10 @@ if($app->auth->get_client_limit($userid,'fetchmail') != 0)
 
 //**** Statistics menu
 $items = array();
-
 $items[] = array( 'title' 	=> 'Mailbox traffic',
 				  'target' 	=> 'content',
 				  'link'	=> 'mail/mail_user_stats.php',
 				  'html_id' => 'mail_user_stats');
-
-
 
 $module['nav'][] = array(	'title'	=> 'Statistics',
 							'open' 	=> 1,
