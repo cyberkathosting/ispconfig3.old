@@ -76,6 +76,8 @@ class installer_dist extends installer_base {
 		caselog('chgrp '.$cf['group'].' '.$config_dir.'/mysql-virtual_*.cf* &> /dev/null', 
                 __FILE__, __LINE__, 'chgrp on mysql-virtual_*.cf*', 'chgrp on mysql-virtual_*.cf* failed');
 		
+		if(!is_dir($cf['vmail_mailbox_base'])) mkdir($cf['vmail_mailbox_base']);
+		
 		//* Creating virtual mail user and group
 		if(is_group($cf['vmail_groupname'])) {
 			$command = 'groupmod -g '.$cf['vmail_groupid'].' '.$cf['vmail_groupname'];
