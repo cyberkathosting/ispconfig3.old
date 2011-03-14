@@ -61,4 +61,3 @@ $wb['template_del_aborted_txt'] = 'Remoção abortada. Ainda existem clientes co
 $wb['limit_webdav_user_txt'] = 'Máximo de usuários Webdav';
 $wb['limit_webdav_user_error_notint'] = 'O limite de usuários Webdav deve ser numérico.';
 ?>
-

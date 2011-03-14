@@ -7,4 +7,3 @@ $wb['error_domain_in webuse'] = 'Este domínio não pode ser removido. O mesmo �
 $wb['error_client_can_not_add_domain'] = 'Você não pode adicionar um novo domínio';
 $wb['error_client_group_id_empty'] = 'Você deve selecionar um cliente<br>';
 ?>
-

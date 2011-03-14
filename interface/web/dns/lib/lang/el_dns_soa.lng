@@ -24,5 +24,3 @@ $wb['mbox_error_regex'] = 'Email με μη έγκυρη μορφοποίηση.'
 $wb['also_notify_txt'] = 'Also Notify';
 $wb['update_acl_txt'] = 'Update ACL';
 ?>
-
-

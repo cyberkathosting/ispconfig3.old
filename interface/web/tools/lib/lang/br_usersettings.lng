@@ -6,4 +6,3 @@ $wb['password_mismatch'] = 'As senhas não coincidem';
 $wb['Form to edit the user password and language.'] = 'Formulário para alterar senha e idioma';
 $wb['Settings'] = 'Configurações';
 ?>
-

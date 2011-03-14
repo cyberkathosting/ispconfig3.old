@@ -6,4 +6,3 @@ $wb['used_txt'] = 'Espaço Utilizado';
 $wb['hard_txt'] = 'Limite de Hardware';
 $wb['soft_txt'] = 'Limite de Software';
 ?>
-

@@ -7,4 +7,5 @@ $wb['rulename_error_empty'] = 'A név üres';
 $wb['searchterm_is_empty'] = 'Keresési feltétel üres';
 $wb['source_txt'] = 'Forrás';
 $wb['target_error_regex'] = 'The target may only contain these characters: a-z, 0-9, -, ., _, and {space}';
+$wb['limit_mailfilter_txt'] = 'The max. number of mailfilters is reached.';
 ?>

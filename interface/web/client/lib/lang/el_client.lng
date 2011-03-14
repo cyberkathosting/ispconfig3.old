@@ -99,5 +99,3 @@ $wb['customer_no_txt'] = 'Κωδ. Πελάτη';
 $wb['vat_id_txt'] = 'Α.Φ.Μ';
 $wb['required_fields_txt'] = '* Υποχρεωτικά Πεδία';
 ?>
-
-

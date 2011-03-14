@@ -75,5 +75,3 @@ $wb['php_ini_path_cgi_txt'] = 'Διαδρομή του php.ini για CGI';
 $wb['php_ini_path_apache_txt'] = 'Διαδρομή του php.ini για Apache';
 $wb['check_apache_config_txt'] = 'Έλεγχος των ρυθμίσεων του apache ή επαννεκίνηση';
 ?>
-
-

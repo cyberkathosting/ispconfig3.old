@@ -65,6 +65,6 @@ $wb['ruby_txt'] = 'Ruby';
 $wb['stats_user_txt'] = 'Όνομα Χρήστη Στατιστικών Web';
 $wb['stats_type_txt'] = 'Πρόγραμμα Στατιστικών Web';
 $wb['custom_php_ini_txt'] = 'Προσαρμοσμένες ρυθμίσεις php.ini';
+$wb['hd_quota_error_regex'] = 'Harddisk quota: enter a -1 for unlimited or a number > 0';
+$wb['traffic_quota_error_regex'] = 'Traffic quota: enter a -1 for unlimited or a number > 0';
 ?>
-
-

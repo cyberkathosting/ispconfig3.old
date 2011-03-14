@@ -20,4 +20,3 @@ $wb['parent_domain_id_error_empty'] = 'Nenhum website selecionado.';
 $wb['puser_txt'] = 'Usuário Web';
 $wb['pgroup_txt'] = 'Grupo Web';
 ?>
-

@@ -20,5 +20,3 @@ $wb['use_domain_module_hint'] = 'Αν χρησιμοποιήσετε αυτό τ
 $wb['new_domain_txt'] = 'HTML για την δημιουργία domain';
 $wb['webftp_url_txt'] = 'URL του WebFTP';
 ?>
-
-

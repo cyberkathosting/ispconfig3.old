@@ -9,5 +9,3 @@ $wb['domain_error_empty'] = 'Το Domain δεν έχει οριστεί.';
 $wb['domain_error_unique'] = 'Το Domain πρέπει να είναι μοναδικό.';
 $wb['domain_error_regex'] = 'Το όνομα Domain δεν είναι έγκυρο.';
 ?>
-
-

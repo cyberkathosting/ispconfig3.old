@@ -40,5 +40,3 @@ $wb['DNS rp functions'] = 'Ενέργειες εγγραφών rp του DNS';
 $wb['DNS srv functions'] = 'Ενέργειες εγγραφών srv του DNS';
 $wb['DNS txt functions'] = 'Ενέργειες εγγραφών txt του DNS';
 ?>
-
-

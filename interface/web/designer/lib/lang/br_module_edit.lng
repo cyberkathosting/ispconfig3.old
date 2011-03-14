@@ -19,4 +19,3 @@ $wb['description_txt'] = '
 <b>Tamanho da Aba:</b> Tamanho das abas na navegação principal. Este campo fica em branco por padrão. Você pode informar valores absolutos em pixels (ex.: 20) ou valores relativos (ex.: 20%).<br>
 <b>Dica:</b> Todos os caminhos são relativos ao diretório web.';
 ?>
-

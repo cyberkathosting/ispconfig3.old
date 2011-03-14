@@ -9,4 +9,3 @@ $wb['destination_error_isemail'] = 'Destino inválido';
 $wb['limit_mailalias_txt'] = 'Máximo de apelidos para esta conta foi alcançado.';
 $wb['duplicate_mailbox_txt'] = 'Já existe uma caixa postal com este endereço.';
 ?>
-

@@ -14,4 +14,3 @@ $wb['source_password_error_isempty'] = 'Senha em branco.';
 $wb['destination_error_isemail'] = 'Destino não selecionado.';
 $wb['source_server_error_regex'] = 'Servidor POP3/IMAP não é um domínio válido.';
 ?>
-

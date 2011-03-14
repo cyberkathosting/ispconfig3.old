@@ -96,6 +96,6 @@ $wb['limit_trafficquota_error_notint'] = 'Το Όριο ταχύτητας πρ�
 $wb['customer_no_txt'] = 'Α/Α Πελάτη';
 $wb['vat_id_txt'] = 'Α.Φ.Μ.';
 $wb['required_fields_txt'] = '* Υποχρεωτικά Πεδία';
+$wb['limit_webdav_user_txt'] = 'Max. number of Webdav users';
+$wb['limit_webdav_user_error_notint'] = 'The webdav user limit must be a number.';
 ?>
-
-

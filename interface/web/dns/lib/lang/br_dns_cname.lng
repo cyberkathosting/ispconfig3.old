@@ -14,4 +14,3 @@ $wb['data_error_empty'] = 'Hostname de destino está em branco';
 $wb['data_error_regex'] = 'O hostname de destino possui formato inválido.';
 $wb['data_error_duplicate'] = 'Registro A ou CNAME duplicado.';
 ?>
-

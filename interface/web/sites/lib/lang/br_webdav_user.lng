@@ -13,4 +13,3 @@ $wb['username_error_regex'] = 'O usuário contêm caracteres não permitidos.';
 $wb['directory_error_empty'] = 'Diretório vazio.';
 $wb['parent_domain_id_error_empty'] = 'Nenhum website selecionado.';
 ?>
-

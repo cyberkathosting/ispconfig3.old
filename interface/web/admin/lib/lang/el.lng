@@ -41,5 +41,3 @@ $wb['Remote Actions'] = 'Απομακρυσμένες Ενέργειες';
 $wb['Do OS-Update'] = 'Αναβάθμιση λειτουργικού συστήματος';
 $wb['Do ISPConfig-Update'] = 'Αναβάθμιση ISPConfig';
 ?>
-
-

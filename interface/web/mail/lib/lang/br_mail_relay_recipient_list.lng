@@ -7,4 +7,3 @@ $wb['recipient_txt'] = 'Recipiente';
 $wb['add_new_record_txt'] = 'Adicionar novo recipiente de transmissão';
 $wb['access_txt'] = 'Acesso';
 ?>
-

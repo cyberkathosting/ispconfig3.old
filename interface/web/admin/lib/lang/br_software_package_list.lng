@@ -8,4 +8,3 @@ $wb['toolsarea_head_txt'] = 'Pacotes';
 $wb['repoupdate_txt'] = 'Atualizar lista de pacotes';
 $wb['package_id_txt'] = 'ID App Local';
 ?>
-

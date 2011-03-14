@@ -143,5 +143,3 @@ $wb['monitor_title_beancounter_txt'] = 'OpenVz VE BeanCounter';
 $wb['monitor_updates_nosupport_txt'] = 'Αυτή η εποπτεία δεν υποστηρίζεται για τη διανομή σας ';
 $wb['monitor_beancounter_nosupport_txt'] = 'Αυτός ο server δεν είναι ένας OpenVz VE και δεν έχει πληροφορίες για τον beancounter';
 ?>
-
-

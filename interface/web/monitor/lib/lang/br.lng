@@ -143,4 +143,3 @@ $wb['monitor_serverstate_beancountererror_txt'] = 'Existem diversas falhas na be
 $wb['monitor_title_beancounter_txt'] = 'BeanCounter OpenVz VE';
 $wb['monitor_beancounter_nosupport_txt'] = 'Este servidor não é um um conteiner openVZ e não contêm informações de beancounter';
 ?>
-

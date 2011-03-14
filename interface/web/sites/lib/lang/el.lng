@@ -21,6 +21,5 @@ $wb['Cron'] = 'Cron';
 $wb['Cron Jobs'] = 'Εργασίες Cron';
 $wb['Statistics'] = 'Στατιστικά';
 $wb['Web traffic'] = 'Κίνηση Web';
+$wb['Website quota (Harddisk)'] = 'Website quota (Harddisk)';
 ?>
-
-

@@ -8,4 +8,3 @@ $wb['do_ispcupdate_desc'] = 'Esta ação fará uma atualização do ISPConfig 3 
 $wb['action_scheduled'] = 'Ação agendada para execução';
 $wb['select_all_server'] = 'Todos os servidores';
 ?>
-

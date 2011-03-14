@@ -8,4 +8,3 @@ $wb['database_name_txt'] = 'Nome do Banco de Dados';
 $wb['add_new_record_txt'] = 'Adicionar novo Banco de Dados';
 $wb['sys_groupid_txt'] = 'Cliente';
 ?>
-

@@ -7,5 +7,3 @@ $wb['Support'] = 'Υποστήριξη';
 $wb['About ISPConfig'] = 'Πληροφορίες για το ISPConfig';
 $wb['Version'] = 'Έκδοση';
 ?>
-
-

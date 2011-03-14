@@ -4,7 +4,7 @@ $wb['conf_format_datelong'] = 'l dS de F Y';
 $wb['conf_format_timeshort'] = 'H:i';
 $wb['conf_format_timelong'] = 'H:i:s';
 $wb['conf_format_datetime'] = 'd/m/Y H:i';
-$wb['number_format_decimals'] = 2;
+$wb['number_format_decimals'] = '2';
 $wb['number_format_dec_point'] = '.';
 $wb['number_format_thousands_sep'] = '';
 $wb['301'] = 'Módulo não permitido para o usuário corrente.';
@@ -39,4 +39,3 @@ $wb['top_menu_domain'] = 'Domí­nios';
 $wb['top_menu_dashboard'] = 'Iní­cio';
 $wb['latest_news_txt'] = 'Novidades';
 ?>
-

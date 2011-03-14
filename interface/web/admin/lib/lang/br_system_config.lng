@@ -20,4 +20,3 @@ $wb['webdavuser_prefix_txt'] = 'Prefixo Usuário Webdav';
 $wb['webdavuser_prefix_error_regex'] = 'Caracter não permitido para o prefixo do usuário Webdav.';
 $wb['webftp_url_txt'] = 'WebFTP URL';
 ?>
-

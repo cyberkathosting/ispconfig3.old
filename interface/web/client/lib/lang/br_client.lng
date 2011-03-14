@@ -99,4 +99,3 @@ $wb['customer_no_txt'] = 'Código do Cliente';
 $wb['vat_id_txt'] = 'ID VAT';
 $wb['required_fields_txt'] = '* Campos Obrigatórios';
 ?>
-

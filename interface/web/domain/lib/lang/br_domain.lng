@@ -4,4 +4,3 @@ $wb['domain_error_unique'] = 'Este domínio já existe';
 $wb['domain_error_regex'] = 'Este domínio não é permitido';
 $wb['Domain'] = 'Domínio';
 ?>
-

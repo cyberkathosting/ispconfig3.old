@@ -40,4 +40,3 @@ $wb['autoresponder_active'] = 'Habilitar autoresponder';
 $wb['cc_txt'] = 'Enviar cópia para';
 $wb['cc_error_isemail'] = 'O campo -Enviar Cópia Para- não possui um e-mail válido';
 ?>
-

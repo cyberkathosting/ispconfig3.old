@@ -75,4 +75,3 @@ $wb['php_ini_path_cgi_txt'] = 'Caminho do CGI php.ini';
 $wb['php_ini_path_apache_txt'] = 'Apache php.ini path';
 $wb['check_apache_config_txt'] = 'Testar configuração do Apache na reinicialização';
 ?>
-

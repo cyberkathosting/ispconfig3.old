@@ -96,5 +96,6 @@ $wb['limit_trafficquota_error_notint'] = 'A cota de tráfego deve ser numérico.
 $wb['customer_no_txt'] = 'Código do Cliente';
 $wb['vat_id_txt'] = 'ID VAT';
 $wb['required_fields_txt'] = '* Campos Obrigatórios';
+$wb['limit_webdav_user_txt'] = 'Max. number of Webdav users';
+$wb['limit_webdav_user_error_notint'] = 'The webdav user limit must be a number.';
 ?>
-
