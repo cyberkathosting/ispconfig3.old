@@ -720,6 +720,8 @@ class remoting_lib {
 			$client_id = intval($client_id);
 			$sql = "DELETE FROM sys_user WHERE client_id = $client_id";
 			$app->db->query($sql);
+			$sql = "DELETE FROM sys_group WHERE client_id = $client_id";
+			$app->db->query($sql);
 		}
 
         function datalogSave($action,$primary_id, $record_old, $record_new) {
