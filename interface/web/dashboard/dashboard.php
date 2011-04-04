@@ -126,7 +126,7 @@ while ($file = @readdir ($handle)) {
 
 /* Which dashlets in which column */
 /******************************************************************************/
-$leftcol_dashlets = array('modules');
+$leftcol_dashlets = array('modules','invoices');
 $rightcol_dashlets = array('limits');
 /******************************************************************************/
 
