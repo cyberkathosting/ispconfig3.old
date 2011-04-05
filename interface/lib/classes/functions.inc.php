@@ -98,7 +98,7 @@ class functions {
 	
 	public function get_ispconfig_url() {
 		$url = (stristr($_SERVER['SERVER_PROTOCOL'],'HTTPS'))?'https':'http';
-		$url .= '//'.$_SERVER['SERVER_NAME'];
+		$url .= '://'.$_SERVER['SERVER_NAME'];
 		if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
 			$url .= ':'.$_SERVER['SERVER_PORT'];
 		}
