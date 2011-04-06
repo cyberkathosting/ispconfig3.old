@@ -36,8 +36,5 @@ $wb['domain_error_empty'] = 'A Domain üres';
 $wb['domain_error_unique'] = 'A Domain már foglalt.';
 $wb['domain_error_regex'] = 'A Domain név érvénytelen';
 $wb['host_txt'] = 'Állomás';
-$wb['no_redirect_txt'] = 'Nincs átirányítás';
-$wb['no_flag_txt'] = 'No flag';
 $wb['redirect_error_regex'] = 'Invalid redirect path. Valid redirects are for example: /test/ or http://www.domain.tld/test/';
 ?>
-

@@ -19,4 +19,5 @@ $wb['dashboard_atom_url_txt'] = 'Dashboard atom feed URL';
 $wb['webdavuser_prefix_txt'] = 'Prefiks użytkownika webdav';
 $wb['webdavuser_prefix_error_regex'] = 'Niedozwolony znak w prefiksie użytkownika webdav.';
 $wb['webftp_url_txt'] = 'WebFTP URL';
+$wb['monitor_key_txt'] = 'Monitor keyword';
 ?>

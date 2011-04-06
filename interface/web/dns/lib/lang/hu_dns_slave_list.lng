@@ -5,6 +5,4 @@ $wb['server_id_txt'] = 'Szerver';
 $wb['origin_txt'] = 'ORIGIN';
 $wb['ns_txt'] = 'NS';
 $wb['add_new_record_txt'] = 'Add new secondary DNS Zone';
-$wb['eg_domain_tld'] = 'e.g. domain.tld.';
 ?>
-

@@ -19,4 +19,5 @@ $wb['use_domain_module_txt'] = 'Gebruik de domein-module om nieuwe domeinen toe 
 $wb['use_domain_module_hint'] = 'Als u deze module gebruikt, kunnen uw klanten alleen de domeinen selecteren die de administrator heeft aangemaakt. klanten kunnen het domein-veld zelf niet wijzigen. Na opnieuw ingelogd te zijn zullen de wijzigingen zichtbaar zijn.';
 $wb['new_domain_txt'] = 'HTML om een nieuw domein te maken';
 $wb['webftp_url_txt'] = 'WebFTP URL';
+$wb['monitor_key_txt'] = 'Monitor keyword';
 ?>

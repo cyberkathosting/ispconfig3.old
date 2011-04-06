@@ -28,7 +28,6 @@ $wb['errordocs_txt'] = 'Saját hibaoldal';
 $wb['ssl_txt'] = 'SSL';
 $wb['suexec_txt'] = 'SuEXEC';
 $wb['php_txt'] = 'PHP';
-$wb['disabled_txt'] = 'Letiltva';
 $wb['client_txt'] = 'Ügyfél';
 $wb['limit_web_domain_txt'] = 'Nincs több weboldal lehetőség.';
 $wb['limit_web_aliasdomain_txt'] = 'Nincs több aliasdomain lehetőség.';
@@ -62,15 +61,10 @@ $wb['traffic_quota_exceeded_txt'] = 'Traffic quota exceeded';
 $wb['backup_interval_txt'] = 'Mentés időpont';
 $wb['backup_copies_txt'] = 'Mentések száma';
 $wb['ruby_txt'] = 'Ruby';
-$wb['no_redirect_txt'] = 'Nincs átirányítás';
-$wb['no_flag_txt'] = 'No flag';
-$wb['none_txt'] = 'Nincs';
-$wb['save_certificate_txt'] = 'Save Certificate';
-$wb['create_certificate_txt'] = 'Create Certificate';
-$wb['delete_certificate_txt'] = 'Delete Certificate';
 $wb['stats_user_txt'] = 'Webstatistika felhasználónév';
 $wb['stats_type_txt'] = 'Webstatistika program';
 $wb['custom_php_ini_txt'] = 'Custom php.ini settings';
 $wb['error_ssl_cert_empty'] = 'SSL Certificate field is empty';
+$wb['hd_quota_error_regex'] = 'Harddisk quota: enter a -1 for unlimited or a number > 0';
+$wb['traffic_quota_error_regex'] = 'Traffic quota: enter a -1 for unlimited or a number > 0';
 ?>
-
