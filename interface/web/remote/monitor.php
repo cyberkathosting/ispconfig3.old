@@ -54,10 +54,6 @@ if($token == '' or $secret == '' or $token != $secret) {
 	}
 }
 $out['type'] = $type;
-$out['hostname'] = $_SERVER['SERVER_NAME'];
-$out['token'] = $token;
-$out['port'] = $_SERVER['SERVER_PORT'];
-$out['serverid'] = $server_id;
 
 echo json_encode($out);
 exit;
