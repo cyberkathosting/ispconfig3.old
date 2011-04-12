@@ -2,6 +2,7 @@
 $wb["limit_maildomain_txt"] = 'Max. number of email domains';
 $wb["limit_mailbox_txt"] = 'Max. number of mailboxes';
 $wb["limit_mailalias_txt"] = 'Max. number of email aliases';
+$wb["limit_mailaliasdomain_txt"] = 'Max. number of domain aliases';
 $wb["limit_mailforward_txt"] = 'Max. number of email forwarders';
 $wb["limit_mailcatchall_txt"] = 'Max. number of email catchall accounts';
 $wb["limit_mailrouting_txt"] = 'Max. number of email routes';
