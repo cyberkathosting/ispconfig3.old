@@ -70,3 +70,4 @@ $wb['limit_openvz_vm_error_notint'] = 'The virtual server limit must be a number
 $wb['ssh_chroot_txt'] = 'SSH-Chroot Options';
 $wb['web_php_options_txt'] = 'PHP Options';
 ?>
+

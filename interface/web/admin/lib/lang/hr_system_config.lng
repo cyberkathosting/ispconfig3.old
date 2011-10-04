@@ -28,3 +28,4 @@ $wb['mailmailinglist_url_txt'] = 'Mailing list URL';
 $wb['admin_mail_txt'] = 'Administrators e-mail';
 $wb['admin_name_txt'] = 'Administrators name';
 ?>
+

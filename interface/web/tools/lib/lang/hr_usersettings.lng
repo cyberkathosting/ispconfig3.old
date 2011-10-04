@@ -6,3 +6,4 @@ $wb['password_mismatch'] = 'Šifra u drugom polju ne odgovara šifri iz prvog po
 $wb['Form to edit the user password and language.'] = 'Formular za izmjenu šifre i jezika.';
 $wb['Settings'] = 'Postavke';
 ?>
+

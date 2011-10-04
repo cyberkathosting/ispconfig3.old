@@ -40,3 +40,4 @@ $wb['redirect_error_regex'] = 'Invalid redirect path. Valid redirects are for ex
 $wb['no_redirect_txt'] = 'No redirect';
 $wb['no_flag_txt'] = 'No flag';
 ?>
+
