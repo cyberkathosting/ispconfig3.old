@@ -38,7 +38,8 @@ server {
                        try_files $uri =404;
                        root /usr/share/;
                        include /etc/nginx/fastcgi_params;
-                       fastcgi_pass unix:{fpm_socket};
+					   # To access phpMyAdmin, the default user (like www-data on Debin/Ubuntu) must be used
+                       fastcgi_pass 127.0.0.1:9000;
                        fastcgi_index index.php;
                        fastcgi_param SCRIPT_FILENAME $request_filename;
                }
@@ -57,7 +58,8 @@ server {
                        try_files $uri =404;
                        root /usr/share/;
                        include /etc/nginx/fastcgi_params;
-                       fastcgi_pass unix:{fpm_socket};
+                       # To access SquirrelMail, the default user (like www-data on Debin/Ubuntu) must be used
+                       fastcgi_pass 127.0.0.1:9000;
                        fastcgi_index index.php;
                        fastcgi_param SCRIPT_FILENAME $request_filename;
                }
