@@ -1282,7 +1282,7 @@ class apache2_plugin {
 		if(!is_file($folder_path.'.htpasswd')) {
 			touch($folder_path.'.htpasswd');
 			chmod($folder_path.'.htpasswd',0755);
-			$app->log('Created file'.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
+			$app->log('Created file '.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
 		}
 		
 		if($data['new']['username'] != $data['old']['username'] || $data['new']['active'] == 'n') {
@@ -1306,7 +1306,7 @@ class apache2_plugin {
 			$ht_file = "AuthType Basic\nAuthName \"Members Only\"\nAuthUserFile ".$folder_path.".htpasswd\nrequire valid-user";
 			file_put_contents($folder_path.'.htaccess',$ht_file);
 			chmod($folder_path.'.htpasswd',0755);
-			$app->log('Created file'.$folder_path.'.htaccess',LOGLEVEL_DEBUG);
+			$app->log('Created file '.$folder_path.'.htaccess',LOGLEVEL_DEBUG);
 		}
 		
 	}
@@ -1338,13 +1338,13 @@ class apache2_plugin {
 		//* Remove .htpasswd file
 		if(is_file($folder_path.'.htpasswd')) {
 			unlink($folder_path.'.htpasswd');
-			$app->log('Removed file'.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
+			$app->log('Removed file '.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
 		}
 		
 		//* Remove .htaccess file
 		if(is_file($folder_path.'.htaccess')) {
 			unlink($folder_path.'.htaccess');
-			$app->log('Removed file'.$folder_path.'.htaccess',LOGLEVEL_DEBUG);
+			$app->log('Removed file '.$folder_path.'.htaccess',LOGLEVEL_DEBUG);
 		}
 	}
 	
@@ -1395,13 +1395,13 @@ class apache2_plugin {
 			//* move .htpasswd file
 			if(is_file($old_folder_path.'.htpasswd')) {
 				rename($old_folder_path.'.htpasswd',$new_folder_path.'.htpasswd');
-				$app->log('Moved file'.$new_folder_path.'.htpasswd',LOGLEVEL_DEBUG);
+				$app->log('Moved file '.$new_folder_path.'.htpasswd',LOGLEVEL_DEBUG);
 			}
 			
-			//* move .htpasswd file
+			//* move .htaccess file
 			if(is_file($old_folder_path.'.htaccess')) {
 				rename($old_folder_path.'.htaccess',$new_folder_path.'.htaccess');
-				$app->log('Moved file'.$new_folder_path.'.htaccess',LOGLEVEL_DEBUG);
+				$app->log('Moved file '.$new_folder_path.'.htaccess',LOGLEVEL_DEBUG);
 			}
 		
 		}
@@ -1411,13 +1411,13 @@ class apache2_plugin {
 			$ht_file = "AuthType Basic\nAuthName \"Members Only\"\nAuthUserFile ".$folder_path.".htpasswd\nrequire valid-user";
 			file_put_contents($new_folder_path.'.htaccess',$ht_file);
 			chmod($new_folder_path.'.htpasswd',0755);
-			$app->log('Created file'.$new_folder_path.'.htaccess',LOGLEVEL_DEBUG);
+			$app->log('Created file '.$new_folder_path.'.htaccess',LOGLEVEL_DEBUG);
 		}
 		
 		//* Remove .htaccess file
 		if($data['new']['active'] == 'n' && is_file($new_folder_path.'.htaccess')) {
 			unlink($new_folder_path.'.htaccess');
-			$app->log('Removed file'.$new_folder_path.'.htaccess',LOGLEVEL_DEBUG);
+			$app->log('Removed file '.$new_folder_path.'.htaccess',LOGLEVEL_DEBUG);
 		}
 		
 		

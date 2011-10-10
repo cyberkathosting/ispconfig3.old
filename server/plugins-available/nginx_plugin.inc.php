@@ -79,6 +79,13 @@ class nginx_plugin {
 		*/
 		
 		$app->plugins->registerEvent('client_delete',$this->plugin_name,'client_delete');
+		
+		$app->plugins->registerEvent('web_folder_user_insert',$this->plugin_name,'web_folder_user');
+		$app->plugins->registerEvent('web_folder_user_update',$this->plugin_name,'web_folder_user');
+		$app->plugins->registerEvent('web_folder_user_delete',$this->plugin_name,'web_folder_user');
+		
+		$app->plugins->registerEvent('web_folder_update',$this->plugin_name,'web_folder_update');
+		$app->plugins->registerEvent('web_folder_delete',$this->plugin_name,'web_folder_delete');
 	}
 
 	// Handle the creation of SSL certificates
@@ -819,6 +826,11 @@ class nginx_plugin {
 		
 		//* Create basic http auth for website statistics
 		$tpl->setVar('stats_auth_passwd_file', $data['new']['document_root']."/.htpasswd_stats");
+		
+		// include file for basic http auth
+		$basic_auth_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$data['new']['domain'].'.auth');
+		@touch($basic_auth_file);
+		$tpl->setVar('include_basic_auth', 'include '.$basic_auth_file.';');
 
 		$vhost_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$data['new']['domain'].'.vhost');
 		//* Make a backup copy of vhost file
@@ -965,6 +977,11 @@ class nginx_plugin {
 			$vhost_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$data['old']['domain'].'.vhost');
 			unlink($vhost_file);
 			$app->log('Removing vhost file: '.$vhost_file,LOGLEVEL_DEBUG);
+			
+			// delete file for basic http authentication
+			$basic_auth_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$data['old']['domain'].'.auth');
+			unlink($basic_auth_file);
+			$app->log('Removing auth file: '.$basic_auth_file,LOGLEVEL_DEBUG);
 
 			$docroot = escapeshellcmd($data['old']['document_root']);
 			if($docroot != '' && !stristr($docroot,'..')) exec('rm -rf '.$docroot);
@@ -1057,6 +1074,237 @@ class nginx_plugin {
 		$app->log('Writing the conf file: '.$vhost_file,LOGLEVEL_DEBUG);
 		unset($tpl);
 
+	}
+	
+	//* Create or update the .htaccess folder protection
+	function web_folder_user($event_name,$data) {
+		global $app, $conf;
+
+		$app->uses('system');
+		
+		if($event_name == 'web_folder_user_delete') {
+			$folder_id = $data['old']['web_folder_id'];
+		} else {
+			$folder_id = $data['new']['web_folder_id'];
+		}
+		
+		$folder = $app->db->queryOneRecord("SELECT * FROM web_folder WHERE web_folder_id = ".intval($folder_id));
+		$website = $app->db->queryOneRecord("SELECT * FROM web_domain WHERE domain_id = ".intval($folder['parent_domain_id']));
+		
+		if(!is_array($folder) or !is_array($website)) {
+			$app->log('Not able to retrieve folder or website record.',LOGLEVEL_DEBUG);
+			return false;
+		}
+		
+		//* Get the folder path.
+		if(substr($folder['path'],0,1) == '/') $folder['path'] = substr($folder['path'],1);
+		if(substr($folder['path'],-1) == '/') $folder['path'] = substr($folder['path'],0,-1);
+		$folder_path = escapeshellcmd($website['document_root'].'/web/'.$folder['path']);
+		if(substr($folder_path,-1 != '/')) $folder_path .= '/';
+		
+		//* Check if the resulting path is inside the docroot
+		if(stristr($folder_path,'..') || stristr($folder_path,'./') || stristr($folder_path,'\\')) {
+			$app->log('Folder path "'.$folder_path.'" contains .. or ./.',LOGLEVEL_DEBUG);
+			return false;
+		}
+		
+		//* Create the folder path, if it does not exist
+		if(!is_dir($folder_path)) exec('mkdir -p '.$folder_path);
+		
+		//* Create empty .htpasswd file, if it does not exist
+		if(!is_file($folder_path.'.htpasswd')) {
+			touch($folder_path.'.htpasswd');
+			chmod($folder_path.'.htpasswd',0755);
+			$app->log('Created file'.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
+		}
+		
+		$auth_users = $app->db->queryAllRecords("SELECT * FROM web_folder_user WHERE active = 'y' AND web_folder_id = ".intval($folder_id));
+		$htpasswd_content = '';
+		if(is_array($auth_users) && !empty($auth_users)){
+			foreach($auth_users as $auth_user){
+				$htpasswd_content .= $auth_user['username'].':'.$auth_user['password']."\n";
+			}
+		}
+		$htpasswd_content = trim($htpasswd_content);
+		@file_put_contents($folder_path.'.htpasswd', $htpasswd_content);
+		$app->log('Changed .htpasswd file: '.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
+		
+		/*
+		if($data['new']['username'] != $data['old']['username'] || $data['new']['active'] == 'n') {
+			$app->system->removeLine($folder_path.'.htpasswd',$data['old']['username'].':');
+			$app->log('Removed user: '.$data['old']['username'],LOGLEVEL_DEBUG);
+		}
+		
+		//* Add or remove the user from .htpasswd file
+		if($event_name == 'web_folder_user_delete') {
+			$app->system->removeLine($folder_path.'.htpasswd',$data['old']['username'].':');
+			$app->log('Removed user: '.$data['old']['username'],LOGLEVEL_DEBUG);
+		} else {
+			if($data['new']['active'] == 'y') {
+				$app->system->replaceLine($folder_path.'.htpasswd',$data['new']['username'].':',$data['new']['username'].':'.$data['new']['password'],0,1);
+				$app->log('Added or updated user: '.$data['new']['username'],LOGLEVEL_DEBUG);
+			}
+		}
+		*/
+		
+		//* Create the domain.auth file which is included in the vhost configuration file
+		$app->uses('getconf');
+		$web_config = $app->getconf->get_server_config($conf['server_id'], 'web');
+		$basic_auth_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$website['domain'].'.auth');
+		$app->load('tpl');
+		$tpl = new tpl();
+		$tpl->newTemplate('nginx_http_authentication.auth.master');
+		$website_auth_locations = $app->db->queryAllRecords("SELECT * FROM web_folder WHERE active = 'y' AND parent_domain_id = ".intval($website['domain_id']));
+		$basic_auth_locations = array();
+		if(is_array($website_auth_locations) && !empty($website_auth_locations)){
+			foreach($website_auth_locations as $website_auth_location){
+				if(substr($website_auth_location['path'],0,1) == '/') $website_auth_location['path'] = substr($website_auth_location['path'],1);
+				if(substr($website_auth_location['path'],-1) == '/') $website_auth_location['path'] = substr($website_auth_location['path'],0,-1);
+				$basic_auth_locations[] = array('htpasswd_location' => $website_auth_location['path'],
+												'htpasswd_path' => $website['document_root'].'/web/'.$website_auth_location['path']);
+			}
+		}
+		$tpl->setLoop('basic_auth_locations', $basic_auth_locations);
+		file_put_contents($basic_auth_file,$tpl->grab());
+		$app->log('Writing the http basic authentication file: '.$basic_auth_file,LOGLEVEL_DEBUG);
+		unset($tpl);
+		$app->services->restartServiceDelayed('httpd','reload');
+	}
+	
+	//* Remove .htpasswd file, when folder protection is removed
+	function web_folder_delete($event_name,$data) {
+		global $app, $conf;
+		
+		$folder_id = $data['old']['web_folder_id'];
+		
+		$folder = $app->db->queryOneRecord("SELECT * FROM web_folder WHERE web_folder_id = ".intval($folder_id));
+		$website = $app->db->queryOneRecord("SELECT * FROM web_domain WHERE domain_id = ".intval($folder['parent_domain_id']));
+		
+		if(!is_array($folder) or !is_array($website)) {
+			$app->log('Not able to retrieve folder or website record.',LOGLEVEL_DEBUG);
+			return false;
+		}
+		
+		//* Get the folder path.
+		if(substr($folder['path'],0,1) == '/') $folder['path'] = substr($folder['path'],1);
+		if(substr($folder['path'],-1) == '/') $folder['path'] = substr($folder['path'],0,-1);
+		$folder_path = realpath($website['document_root'].'/web/'.$folder['path']);
+		if(substr($folder_path,-1 != '/')) $folder_path .= '/';
+		
+		//* Check if the resulting path is inside the docroot
+		if(substr($folder_path,0,strlen($website['document_root'])) != $website['document_root']) {
+			$app->log('Folder path is outside of docroot.',LOGLEVEL_DEBUG);
+			return false;
+		}
+		
+		//* Remove .htpasswd file
+		if(is_file($folder_path.'.htpasswd')) {
+			unlink($folder_path.'.htpasswd');
+			$app->log('Removed file '.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
+		}
+		
+		//* Create the domain.auth file which is included in the vhost configuration file
+		$app->uses('getconf');
+		$web_config = $app->getconf->get_server_config($conf['server_id'], 'web');
+		$basic_auth_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$website['domain'].'.auth');
+		$app->load('tpl');
+		$tpl = new tpl();
+		$tpl->newTemplate('nginx_http_authentication.auth.master');
+		$website_auth_locations = $app->db->queryAllRecords("SELECT * FROM web_folder WHERE active = 'y' AND parent_domain_id = ".intval($website['domain_id']));
+		$basic_auth_locations = array();
+		if(is_array($website_auth_locations) && !empty($website_auth_locations)){
+			foreach($website_auth_locations as $website_auth_location){
+				if(substr($website_auth_location['path'],0,1) == '/') $website_auth_location['path'] = substr($website_auth_location['path'],1);
+				if(substr($website_auth_location['path'],-1) == '/') $website_auth_location['path'] = substr($website_auth_location['path'],0,-1);
+				$basic_auth_locations[] = array('htpasswd_location' => $website_auth_location['path'],
+												'htpasswd_path' => $website['document_root'].'/web/'.$website_auth_location['path']);
+			}
+		}
+		$tpl->setLoop('basic_auth_locations', $basic_auth_locations);
+		file_put_contents($basic_auth_file,$tpl->grab());
+		$app->log('Writing the http basic authentication file: '.$basic_auth_file,LOGLEVEL_DEBUG);
+		unset($tpl);
+		$app->services->restartServiceDelayed('httpd','reload');
+	}
+	
+	//* Update folder protection, when path has been changed
+	function web_folder_update($event_name,$data) {
+		global $app, $conf;
+		
+		$website = $app->db->queryOneRecord("SELECT * FROM web_domain WHERE domain_id = ".intval($data['new']['parent_domain_id']));
+	
+		if(!is_array($website)) {
+			$app->log('Not able to retrieve folder or website record.',LOGLEVEL_DEBUG);
+			return false;
+		}
+		
+		//* Get the folder path.
+		if(substr($data['old']['path'],0,1) == '/') $data['old']['path'] = substr($data['old']['path'],1);
+		if(substr($data['old']['path'],-1) == '/') $data['old']['path'] = substr($data['old']['path'],0,-1);
+		$old_folder_path = escapeshellcmd($website['document_root'].'/web/'.$data['old']['path']);
+		if(substr($old_folder_path,-1 != '/')) $old_folder_path .= '/';
+			
+		if(substr($data['new']['path'],0,1) == '/') $data['new']['path'] = substr($data['new']['path'],1);
+		if(substr($data['new']['path'],-1) == '/') $data['new']['path'] = substr($data['new']['path'],0,-1);
+		$new_folder_path = escapeshellcmd($website['document_root'].'/web/'.$data['new']['path']);
+		if(substr($new_folder_path,-1 != '/')) $new_folder_path .= '/';
+		
+		//* Check if the resulting path is inside the docroot
+		if(stristr($new_folder_path,'..') || stristr($new_folder_path,'./') || stristr($new_folder_path,'\\')) {
+			$app->log('Folder path "'.$new_folder_path.'" contains .. or ./.',LOGLEVEL_DEBUG);
+			return false;
+		}
+		if(stristr($old_folder_path,'..') || stristr($old_folder_path,'./') || stristr($old_folder_path,'\\')) {
+			$app->log('Folder path "'.$old_folder_path.'" contains .. or ./.',LOGLEVEL_DEBUG);
+			return false;
+		}
+		
+		//* Check if the resulting path is inside the docroot
+		if(substr($old_folder_path,0,strlen($website['document_root'])) != $website['document_root']) {
+			$app->log('Old folder path '.$old_folder_path.' is outside of docroot.',LOGLEVEL_DEBUG);
+			return false;
+		}
+		if(substr($new_folder_path,0,strlen($website['document_root'])) != $website['document_root']) {
+			$app->log('New folder path '.$new_folder_path.' is outside of docroot.',LOGLEVEL_DEBUG);
+			return false;
+		}
+			
+		//* Create the folder path, if it does not exist
+		if(!is_dir($new_folder_path)) exec('mkdir -p '.$new_folder_path);
+		
+		if($data['old']['path'] != $data['new']['path']) {
+
+		
+			//* move .htpasswd file
+			if(is_file($old_folder_path.'.htpasswd')) {
+				rename($old_folder_path.'.htpasswd',$new_folder_path.'.htpasswd');
+				$app->log('Moved file '.$new_folder_path.'.htpasswd',LOGLEVEL_DEBUG);
+			}
+		
+		}
+
+		//* Create the domain.auth file which is included in the vhost configuration file
+		$app->uses('getconf');
+		$web_config = $app->getconf->get_server_config($conf['server_id'], 'web');
+		$basic_auth_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$website['domain'].'.auth');
+		$app->load('tpl');
+		$tpl = new tpl();
+		$tpl->newTemplate('nginx_http_authentication.auth.master');
+		$website_auth_locations = $app->db->queryAllRecords("SELECT * FROM web_folder WHERE active = 'y' AND parent_domain_id = ".intval($website['domain_id']));
+		$basic_auth_locations = array();
+		if(is_array($website_auth_locations) && !empty($website_auth_locations)){
+			foreach($website_auth_locations as $website_auth_location){
+				if(substr($website_auth_location['path'],0,1) == '/') $website_auth_location['path'] = substr($website_auth_location['path'],1);
+				if(substr($website_auth_location['path'],-1) == '/') $website_auth_location['path'] = substr($website_auth_location['path'],0,-1);
+				$basic_auth_locations[] = array('htpasswd_location' => $website_auth_location['path'],
+												'htpasswd_path' => $website['document_root'].'/web/'.$website_auth_location['path']);
+			}
+		}
+		$tpl->setLoop('basic_auth_locations', $basic_auth_locations);
+		file_put_contents($basic_auth_file,$tpl->grab());
+		$app->log('Writing the http basic authentication file: '.$basic_auth_file,LOGLEVEL_DEBUG);
+		unset($tpl);
+		$app->services->restartServiceDelayed('httpd','reload');		
 	}
 	
 	//* Update the awstats configuration file

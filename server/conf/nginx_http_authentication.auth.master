@@ -1,0 +1,6 @@
+<tmpl_loop name="basic_auth_locations">
+        location ^~ /<tmpl_var name='htpasswd_location'>/ {
+                auth_basic "Restricted";
+                auth_basic_user_file <tmpl_var name='htpasswd_path'>/.htpasswd;
+        }
+</tmpl_loop>

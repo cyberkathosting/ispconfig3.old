@@ -111,5 +111,7 @@ server {
 
 <tmpl_loop name="nginx_directives">
         <tmpl_var name='nginx_directive'>
-</tmpl_loop>	
+</tmpl_loop>
+
+        <tmpl_var name='include_basic_auth'> 	
 }
