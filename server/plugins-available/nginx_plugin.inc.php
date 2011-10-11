@@ -950,9 +950,9 @@ class nginx_plugin {
 
 		//* Check if this is a chrooted setup
 		if($web_config['website_basedir'] != '' && @is_file($web_config['website_basedir'].'/etc/passwd')) {
-			$apache_chrooted = true;
+			$nginx_chrooted = true;
 		} else {
-			$apache_chrooted = false;
+			$nginx_chrooted = false;
 		}
 
 		if($data['old']['type'] != 'vhost' && $data['old']['parent_domain_id'] > 0) {
@@ -967,26 +967,34 @@ class nginx_plugin {
 
 		} else {
 			//* This is a website
-			// Deleting the vhost file, symlink and the data directory
-			$vhost_symlink = escapeshellcmd($web_config['nginx_vhost_conf_enabled_dir'].'/'.$data['old']['domain'].'.vhost');
-			unlink($vhost_symlink);
-			$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
-
+			// Deleting the vhost file, symlink and the data directory			
 			$vhost_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$data['old']['domain'].'.vhost');
+			
+			$vhost_symlink = escapeshellcmd($web_config['nginx_vhost_conf_enabled_dir'].'/'.$data['old']['domain'].'.vhost');
+			if(is_link($vhost_symlink)){
+				unlink($vhost_symlink);
+				$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
+			}
+			$vhost_symlink = escapeshellcmd($web_config['nginx_vhost_conf_enabled_dir'].'/900-'.$data['old']['domain'].'.vhost');
+			if(is_link($vhost_symlink)){
+				unlink($vhost_symlink);
+				$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
+			}
+			$vhost_symlink = escapeshellcmd($web_config['nginx_vhost_conf_enabled_dir'].'/100-'.$data['old']['domain'].'.vhost');
+			if(is_link($vhost_symlink)){
+				unlink($vhost_symlink);
+				$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
+			}
+			
 			unlink($vhost_file);
 			$app->log('Removing vhost file: '.$vhost_file,LOGLEVEL_DEBUG);
-			
-			// delete file for basic http authentication
-			$basic_auth_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$data['old']['domain'].'.auth');
-			unlink($basic_auth_file);
-			$app->log('Removing auth file: '.$basic_auth_file,LOGLEVEL_DEBUG);
 
 			$docroot = escapeshellcmd($data['old']['document_root']);
 			if($docroot != '' && !stristr($docroot,'..')) exec('rm -rf '.$docroot);
 
-
-			//remove the php fastgi starter script if available
+			//remove the php fastgi starter script and PHP-FPM pool definition if available
 			if ($data['old']['php'] == 'fast-cgi') {
+				$this->php_fpm_pool_delete($data,$web_config);
 				$fastcgi_starter_path = str_replace('[system_user]',$data['old']['system_user'],$web_config['fastcgi_starter_path']);
 				if (is_dir($fastcgi_starter_path)) {
 					exec('rm -rf '.$fastcgi_starter_path);
@@ -1035,16 +1043,14 @@ class nginx_plugin {
 			$command = 'userdel';
 			$command .= ' '.$data['old']['system_user'];
 			exec($command);
-			if($apache_chrooted) $this->_exec('chroot '.escapeshellcmd($web_config['website_basedir']).' '.$command);
+			if($nginx_chrooted) $this->_exec('chroot '.escapeshellcmd($web_config['website_basedir']).' '.$command);
 			
 			//* Remove the awstats configuration file
 			if($data['old']['stats_type'] == 'awstats') {
 				$this->awstats_delete($data,$web_config);
 			}
 			
-			if($data['old']['php'] == 'fast-cgi') {
-				$this->php_fpm_pool_delete($data,$web_config);
-			}
+			$app->services->restartServiceDelayed('httpd','reload');
 
 		}
 	}
@@ -1145,6 +1151,7 @@ class nginx_plugin {
 		}
 		*/
 		
+		// write basic auth configuration to vhost file because nginx does not support .htaccess
 		$webdata['new'] = $webdata['old'] = $website;
 		$this->update('web_domain_update', $webdata);
 	}
@@ -1181,6 +1188,7 @@ class nginx_plugin {
 			$app->log('Removed file '.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
 		}
 		
+		// write basic auth configuration to vhost file because nginx does not support .htaccess
 		$webdata['new'] = $webdata['old'] = $website;
 		$this->update('web_domain_update', $webdata);
 	}
@@ -1241,6 +1249,7 @@ class nginx_plugin {
 		
 		}
 
+		// write basic auth configuration to vhost file because nginx does not support .htaccess
 		$webdata['new'] = $webdata['old'] = $website;
 		$this->update('web_domain_update', $webdata);
 	}
@@ -1413,7 +1422,7 @@ class nginx_plugin {
 		
 		$pool_dir = escapeshellcmd($web_config['php_fpm_pool_dir']);
 		if(substr($pool_dir,-1) != '/') $pool_dir .= '/';
-		$pool_name = 'web'.$data['new']['domain_id'];
+		$pool_name = 'web'.$data['old']['domain_id'];
 		
 		if ( @is_file($pool_dir.$pool_name.'.conf') ) {
 			unlink($pool_dir.$pool_name.'.conf');

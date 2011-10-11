@@ -1125,11 +1125,24 @@ class apache2_plugin {
 		} else {
 			//* This is a website
 			// Deleting the vhost file, symlink and the data directory
-			$vhost_symlink = escapeshellcmd($web_config['vhost_conf_enabled_dir'].'/'.$data['old']['domain'].'.vhost');
-			unlink($vhost_symlink);
-			$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
-
 			$vhost_file = escapeshellcmd($web_config['vhost_conf_dir'].'/'.$data['old']['domain'].'.vhost');
+			
+			$vhost_symlink = escapeshellcmd($web_config['vhost_conf_enabled_dir'].'/'.$data['old']['domain'].'.vhost');
+			if(is_link($vhost_symlink)){
+				unlink($vhost_symlink);
+				$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
+			}
+			$vhost_symlink = escapeshellcmd($web_config['vhost_conf_enabled_dir'].'/900-'.$data['old']['domain'].'.vhost');
+			if(is_link($vhost_symlink)){
+				unlink($vhost_symlink);
+				$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
+			}
+			$vhost_symlink = escapeshellcmd($web_config['vhost_conf_enabled_dir'].'/100-'.$data['old']['domain'].'.vhost');
+			if(is_link($vhost_symlink)){
+				unlink($vhost_symlink);
+				$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
+			}
+			
 			unlink($vhost_file);
 			$app->log('Removing vhost file: '.$vhost_file,LOGLEVEL_DEBUG);
 
@@ -1192,6 +1205,13 @@ class apache2_plugin {
 			//* Remove the awstats configuration file
 			if($data['old']['stats_type'] == 'awstats') {
 				$this->awstats_delete($data,$web_config);
+			}
+			
+			if($apache_chrooted) {
+				$app->services->restartServiceDelayed('httpd','restart');
+			} else {
+				// request a httpd reload when all records have been processed
+				$app->services->restartServiceDelayed('httpd','reload');
 			}
 
 		}
