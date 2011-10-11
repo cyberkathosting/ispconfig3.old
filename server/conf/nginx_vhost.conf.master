@@ -113,5 +113,11 @@ server {
         <tmpl_var name='nginx_directive'>
 </tmpl_loop>
 
-        <tmpl_var name='include_basic_auth'> 	
+<tmpl_loop name="basic_auth_locations">
+        location ^~ <tmpl_var name='htpasswd_location'> {
+                auth_basic "Members Only";
+                auth_basic_user_file <tmpl_var name='htpasswd_path'>.htpasswd;
+        }
+</tmpl_loop>
+	
 }

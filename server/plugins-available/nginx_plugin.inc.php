@@ -827,10 +827,8 @@ class nginx_plugin {
 		//* Create basic http auth for website statistics
 		$tpl->setVar('stats_auth_passwd_file', $data['new']['document_root']."/.htpasswd_stats");
 		
-		// include file for basic http auth
-		$basic_auth_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$data['new']['domain'].'.auth');
-		@touch($basic_auth_file);
-		$tpl->setVar('include_basic_auth', 'include '.$basic_auth_file.';');
+		// Create basic http auth for other directories
+		$tpl->setLoop('basic_auth_locations', $this->_create_web_folder_auth_configuration($data['new']));
 
 		$vhost_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$data['new']['domain'].'.vhost');
 		//* Make a backup copy of vhost file
@@ -1147,7 +1145,8 @@ class nginx_plugin {
 		}
 		*/
 		
-		$this->_create_web_folder_auth_configuration($website);
+		$webdata['new'] = $webdata['old'] = $website;
+		$this->update('web_domain_update', $webdata);
 	}
 	
 	//* Remove .htpasswd file, when folder protection is removed
@@ -1182,7 +1181,8 @@ class nginx_plugin {
 			$app->log('Removed file '.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
 		}
 		
-		$this->_create_web_folder_auth_configuration($website);
+		$webdata['new'] = $webdata['old'] = $website;
+		$this->update('web_domain_update', $webdata);
 	}
 	
 	//* Update folder protection, when path has been changed
@@ -1241,7 +1241,8 @@ class nginx_plugin {
 		
 		}
 
-		$this->_create_web_folder_auth_configuration($website);
+		$webdata['new'] = $webdata['old'] = $website;
+		$this->update('web_domain_update', $webdata);
 	}
 	
 	function _create_web_folder_auth_configuration($website){
@@ -1250,24 +1251,28 @@ class nginx_plugin {
 		$app->uses('getconf');
 		$web_config = $app->getconf->get_server_config($conf['server_id'], 'web');
 		$basic_auth_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$website['domain'].'.auth');
-		$app->load('tpl');
-		$tpl = new tpl();
-		$tpl->newTemplate('nginx_http_authentication.auth.master');
+		//$app->load('tpl');
+		//$tpl = new tpl();
+		//$tpl->newTemplate('nginx_http_authentication.auth.master');
 		$website_auth_locations = $app->db->queryAllRecords("SELECT * FROM web_folder WHERE active = 'y' AND parent_domain_id = ".intval($website['domain_id']));
 		$basic_auth_locations = array();
 		if(is_array($website_auth_locations) && !empty($website_auth_locations)){
 			foreach($website_auth_locations as $website_auth_location){
 				if(substr($website_auth_location['path'],0,1) == '/') $website_auth_location['path'] = substr($website_auth_location['path'],1);
 				if(substr($website_auth_location['path'],-1) == '/') $website_auth_location['path'] = substr($website_auth_location['path'],0,-1);
-				$basic_auth_locations[] = array('htpasswd_location' => $website_auth_location['path'],
+				if($website_auth_location['path'] != ''){
+					$website_auth_location['path'] .= '/';
+				}
+				$basic_auth_locations[] = array('htpasswd_location' => '/'.$website_auth_location['path'],
 												'htpasswd_path' => $website['document_root'].'/web/'.$website_auth_location['path']);
 			}
 		}
-		$tpl->setLoop('basic_auth_locations', $basic_auth_locations);
-		file_put_contents($basic_auth_file,$tpl->grab());
-		$app->log('Writing the http basic authentication file: '.$basic_auth_file,LOGLEVEL_DEBUG);
-		unset($tpl);
-		$app->services->restartServiceDelayed('httpd','reload');
+		return $basic_auth_locations;
+		//$tpl->setLoop('basic_auth_locations', $basic_auth_locations);
+		//file_put_contents($basic_auth_file,$tpl->grab());
+		//$app->log('Writing the http basic authentication file: '.$basic_auth_file,LOGLEVEL_DEBUG);
+		//unset($tpl);
+		//$app->services->restartServiceDelayed('httpd','reload');
 	}
 	
 	//* Update the awstats configuration file
