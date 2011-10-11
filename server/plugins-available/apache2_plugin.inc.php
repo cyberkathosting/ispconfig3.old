@@ -1287,7 +1287,7 @@ class apache2_plugin {
 		if(substr($folder['path'],0,1) == '/') $folder['path'] = substr($folder['path'],1);
 		if(substr($folder['path'],-1) == '/') $folder['path'] = substr($folder['path'],0,-1);
 		$folder_path = escapeshellcmd($website['document_root'].'/web/'.$folder['path']);
-		if(substr($folder_path,-1 != '/')) $folder_path .= '/';
+		if(substr($folder_path,-1) != '/' && $folder['path'] != '') $folder_path .= '/';
 		
 		//* Check if the resulting path is inside the docroot
 		if(stristr($folder_path,'..') || stristr($folder_path,'./') || stristr($folder_path,'\\')) {
@@ -1305,7 +1305,20 @@ class apache2_plugin {
 			$app->log('Created file '.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
 		}
 		
-		if($data['new']['username'] != $data['old']['username'] || $data['new']['active'] == 'n') {
+		/*
+		$auth_users = $app->db->queryAllRecords("SELECT * FROM web_folder_user WHERE active = 'y' AND web_folder_id = ".intval($folder_id));
+		$htpasswd_content = '';
+		if(is_array($auth_users) && !empty($auth_users)){
+			foreach($auth_users as $auth_user){
+				$htpasswd_content .= $auth_user['username'].':'.$auth_user['password']."\n";
+			}
+		}
+		$htpasswd_content = trim($htpasswd_content);
+		@file_put_contents($folder_path.'.htpasswd', $htpasswd_content);
+		$app->log('Changed .htpasswd file: '.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
+		*/
+		
+		if(($data['new']['username'] != $data['old']['username'] || $data['new']['active'] == 'n') && $data['old']['username'] != '') {
 			$app->system->removeLine($folder_path.'.htpasswd',$data['old']['username'].':');
 			$app->log('Removed user: '.$data['old']['username'],LOGLEVEL_DEBUG);
 		}
@@ -1321,13 +1334,14 @@ class apache2_plugin {
 			}
 		}
 		
+		
 		//* Create the .htaccess file
-		if(!is_file($folder_path.'.htaccess')) {
+		//if(!is_file($folder_path.'.htaccess')) {
 			$ht_file = "AuthType Basic\nAuthName \"Members Only\"\nAuthUserFile ".$folder_path.".htpasswd\nrequire valid-user";
 			file_put_contents($folder_path.'.htaccess',$ht_file);
 			chmod($folder_path.'.htpasswd',0755);
 			$app->log('Created file '.$folder_path.'.htaccess',LOGLEVEL_DEBUG);
-		}
+		//}
 		
 	}
 	
@@ -1346,8 +1360,10 @@ class apache2_plugin {
 		}
 		
 		//* Get the folder path.
+		if(substr($folder['path'],0,1) == '/') $folder['path'] = substr($folder['path'],1);
+		if(substr($folder['path'],-1) == '/') $folder['path'] = substr($folder['path'],0,-1);
 		$folder_path = realpath($website['document_root'].'/web/'.$folder['path']);
-		if(substr($folder_path,-1 != '/')) $folder_path .= '/';
+		if(substr($folder_path,-1) != '/' && $folder['path'] != '') $folder_path .= '/';
 		
 		//* Check if the resulting path is inside the docroot
 		if(substr($folder_path,0,strlen($website['document_root'])) != $website['document_root']) {
@@ -1380,11 +1396,15 @@ class apache2_plugin {
 		}
 		
 		//* Get the folder path.
+		if(substr($data['old']['path'],0,1) == '/') $data['old']['path'] = substr($data['old']['path'],1);
+		if(substr($data['old']['path'],-1) == '/') $data['old']['path'] = substr($data['old']['path'],0,-1);
 		$old_folder_path = realpath($website['document_root'].'/web/'.$data['old']['path']);
-		if(substr($old_folder_path,-1 != '/')) $old_folder_path .= '/';
+		if(substr($old_folder_path,-1) != '/' && $data['old']['path'] != '') $old_folder_path .= '/';
 			
+		if(substr($data['new']['path'],0,1) == '/') $data['new']['path'] = substr($data['new']['path'],1);
+		if(substr($data['new']['path'],-1) == '/') $data['new']['path'] = substr($data['new']['path'],0,-1);
 		$new_folder_path = escapeshellcmd($website['document_root'].'/web/'.$data['new']['path']);
-		if(substr($new_folder_path,-1 != '/')) $new_folder_path .= '/';
+		if(substr($new_folder_path,-1) != '/' && $data['new']['path'] != '') $new_folder_path .= '/';
 		
 		//* Check if the resulting path is inside the docroot
 		if(stristr($new_folder_path,'..') || stristr($new_folder_path,'./') || stristr($new_folder_path,'\\')) {
@@ -1415,20 +1435,20 @@ class apache2_plugin {
 			//* move .htpasswd file
 			if(is_file($old_folder_path.'.htpasswd')) {
 				rename($old_folder_path.'.htpasswd',$new_folder_path.'.htpasswd');
-				$app->log('Moved file '.$new_folder_path.'.htpasswd',LOGLEVEL_DEBUG);
+				$app->log('Moved file '.$old_folder_path.'.htpasswd to '.$new_folder_path.'.htpasswd',LOGLEVEL_DEBUG);
 			}
 			
-			//* move .htaccess file
+			//* delete old .htaccess file
 			if(is_file($old_folder_path.'.htaccess')) {
-				rename($old_folder_path.'.htaccess',$new_folder_path.'.htaccess');
-				$app->log('Moved file '.$new_folder_path.'.htaccess',LOGLEVEL_DEBUG);
+				unlink($old_folder_path.'.htaccess');
+				$app->log('Deleted file '.$old_folder_path.'.htaccess',LOGLEVEL_DEBUG);
 			}
 		
 		}
 		
 		//* Create the .htaccess file
-		if($data['new']['active'] == 'y' && !is_file($new_folder_path.'.htaccess')) {
-			$ht_file = "AuthType Basic\nAuthName \"Members Only\"\nAuthUserFile ".$folder_path.".htpasswd\nrequire valid-user";
+		if($data['new']['active'] == 'y') {
+			$ht_file = "AuthType Basic\nAuthName \"Members Only\"\nAuthUserFile ".$new_folder_path.".htpasswd\nrequire valid-user";
 			file_put_contents($new_folder_path.'.htaccess',$ht_file);
 			chmod($new_folder_path.'.htpasswd',0755);
 			$app->log('Created file '.$new_folder_path.'.htaccess',LOGLEVEL_DEBUG);
