@@ -51,12 +51,12 @@ $module['nav'][] = array( 'title' => 'Support',
 $itemsfaq = array();
 //* admin's tools
 if($_SESSION['s']['user']['typ'] == 'admin') {
-	$itemsfaq[] = array( 	'title'		=> 'Manage Questions',
-							'target'	=> 'content',
-							'link'		=> 'help/faq_manage_questions_list.php');
 	$itemsfaq[] = array( 	'title'		=> 'Manage Sections',
 							'target'	=> 'content',
 							'link'		=> 'help/faq_sections_list.php');
+	$itemsfaq[] = array( 	'title'		=> 'Manage Questions',
+							'target'	=> 'content',
+							'link'		=> 'help/faq_manage_questions_list.php');
 							
 	$module['nav'][] = array( 	'title'	=> 'FAQ',
 								'open'	=> 1,
