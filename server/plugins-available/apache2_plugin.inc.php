@@ -827,12 +827,13 @@ class apache2_plugin {
 			$tpl->setVar('alias','');
 		}
 
-		if(count($rewrite_rules) > 0) {
+		if(count($rewrite_rules) > 0 || $vhost_data['seo_redirect_enabled'] > 0) {
 			$tpl->setVar('rewrite_enabled',1);
 		} else {
 			$tpl->setVar('rewrite_enabled',0);
 		}
-		$tpl->setLoop('redirects',$rewrite_rules);
+
+		//$tpl->setLoop('redirects',$rewrite_rules);
 
 		/**
 		 * install fast-cgi starter script and add script aliasd config
@@ -957,22 +958,39 @@ class apache2_plugin {
 		//* create empty vhost array
 		$vhosts = array();
 		
-		//* Add vhost for ipv4 IP
-		$vhosts[] = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 0, 'port' => 80 );
+		//* Add vhost for ipv4 IP	
+		if(count($rewrite_rules) > 0){
+			$vhosts[] = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 0, 'port' => 80, 'redirects' => $rewrite_rules);
+		} else {
+			$vhosts[] = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 0, 'port' => 80);
+		}
 		
 		//* Add vhost for ipv4 IP with SSL
 		if($data['new']['ssl_domain'] != '' && $data['new']['ssl'] == 'y' && @is_file($crt_file) && @is_file($key_file) && (@filesize($crt_file)>0)  && (@filesize($key_file)>0)) {
-			$vhosts[] = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 1, 'port' => '443' );
+			if(count($rewrite_rules) > 0){
+				$vhosts[] = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 1, 'port' => '443', 'redirects' => $rewrite_rules);
+			} else {
+				$vhosts[] = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 1, 'port' => '443');
+			}
 			$app->log('Enable SSL for: '.$domain,LOGLEVEL_DEBUG);
 		}
 		
 		//* Add vhost for IPv6 IP
 		if($data['new']['ipv6_address'] != '') {
-			$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 0, 'port' => 80 );
+			if(count($rewrite_rules) > 0){
+				$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 0, 'port' => 80, 'redirects' => $rewrite_rules);
+			} else {
+				$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 0, 'port' => 80);
+			}
 		
 			//* Add vhost for ipv6 IP with SSL
 			if($data['new']['ssl_domain'] != '' && $data['new']['ssl'] == 'y' && @is_file($crt_file) && @is_file($key_file) && (@filesize($crt_file)>0)  && (@filesize($key_file)>0)) {
-				$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 1, 'port' => '443' );
+				
+				if(count($rewrite_rules) > 0){
+					$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 1, 'port' => '443', 'redirects' => $rewrite_rules);
+				} else {
+					$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 1, 'port' => '443');
+				}
 				$app->log('Enable SSL for IPv6: '.$domain,LOGLEVEL_DEBUG);
 			}
 		}
