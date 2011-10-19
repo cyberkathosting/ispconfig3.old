@@ -28,7 +28,8 @@
 	        <input name="domain" id="domain" value="{tmpl_var name='domain'}" size="30" maxlength="255" type="text" class="textInput" onkeydown="keydown(event.which);" />
 				</div>
 
-      <div class="ctrlHolder" style="margin-left:0px;left:0px;padding-left:0px;">
+      <div class="ctrlHolder"">
+			<label for="file">{tmpl_var name='zonefile_to_import_txt'}</label>
 	      <input name="file" id="file" size="30" type="file" class="fileUpload" />
       </div>
 

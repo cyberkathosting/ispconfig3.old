@@ -522,6 +522,7 @@ $app->tpl->setVar('msg',$msg);
 $app->tpl->setVar('error',$error);
 
 $app->tpl->setVar("title",'Import Zone Files');
+$app->tpl->setVar("zonefile_to_import_txt",$app->lng('zonefile_to_import_txt'));
 
 $lng_file = 'lib/lang/'.$_SESSION['s']['language'].'_dns_wizard.lng';
 include($lng_file);
