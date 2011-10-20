@@ -1369,7 +1369,7 @@ class apache2_plugin {
 		
 		$folder_id = $data['old']['web_folder_id'];
 		
-		$folder = $app->db->queryOneRecord("SELECT * FROM web_folder WHERE web_folder_id = ".intval($folder_id));
+		$folder = $data['old'];
 		$website = $app->db->queryOneRecord("SELECT * FROM web_domain WHERE domain_id = ".intval($folder['parent_domain_id']));
 		
 		if(!is_array($folder) or !is_array($website)) {
