@@ -78,6 +78,29 @@ class page_action extends tform_actions {
         foreach($records as $rec) {
             $app->db->datalogDelete('cron','id',$rec['id']);
         }
+		
+		// Delete all records that belog to this zone.
+        $records = $app->db->queryAllRecords("SELECT id FROM cron WHERE parent_domain_id = '".intval($this->id)."'");
+        foreach($records as $rec) {
+            $app->db->datalogDelete('cron','id',$rec['id']);
+        }
+		
+		// Delete all records that belog to this zone.
+        $records = $app->db->queryAllRecords("SELECT webdav_user_id FROM webdav_user WHERE parent_domain_id = '".intval($this->id)."'");
+        foreach($records as $rec) {
+            $app->db->datalogDelete('webdav_user','webdav_user_id',$rec['webdav_user_id']);
+        }
+		
+		//* Delete all web folders
+        $records = $app->db->queryAllRecords("SELECT web_folder_id FROM web_folder WHERE parent_domain_id = '".intval($this->id)."'");
+        foreach($records as $rec) {
+            //* Delete all web folder users
+			$records2 = $app->db->queryAllRecords("SELECT web_folder_user_id FROM web_folder_user WHERE web_folder_id = '".$rec['web_folder_id']."'");
+			foreach($records2 as $rec2) {
+				$app->db->datalogDelete('web_folder_user','web_folder_user_id',$rec2['web_folder_user_id']);
+        }
+			$app->db->datalogDelete('web_folder','web_folder_id',$rec['web_folder_id']);
+        }
 	}
 }
 
