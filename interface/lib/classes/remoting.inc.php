@@ -1353,6 +1353,12 @@ class remoting {
 		if($params['system_user'] == '') $params['system_user'] = '-';
 		if($params['system_group'] == '') $params['system_group'] = '-';
 		
+		//* Set a few defaults for nginx servers
+		if($params['pm_max_children'] == '') $params['pm_max_children'] = 1;
+		if($params['pm_start_servers'] == '') $params['pm_start_servers'] = 1;
+		if($params['pm_min_spare_servers'] == '') $params['pm_min_spare_servers'] = 1;
+		if($params['pm_max_spare_servers'] == '') $params['pm_max_spare_servers'] = 1;
+		
 		$domain_id = $this->insertQuery('../sites/form/web_domain.tform.php',$client_id,$params, 'sites:web_domain:on_after_insert');
 		if ($readonly === true)
 			$app->db->query("UPDATE web_domain SET `sys_userid` = '1' WHERE domain_id = ".$domain_id);
