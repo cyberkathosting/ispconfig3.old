@@ -2527,8 +2527,8 @@ class remoting {
             return false;
 		}
         $client_id = intval($client_id);
-        $sql = "SELECT database_id, database_name, database_user, database_password FROM web_database WHERE sys_userid  = $client_id ";
-        $all = $app->db->queryAllRecords($sql);
+        $sql = "SELECT d.database_id, d.database_name, d.database_user, d.database_password FROM web_database d INNER JOIN sys_user s on(d.sys_groupid = s.default_group) WHERE client_id = $client_id";
+		$all = $app->db->queryAllRecords($sql);
         return $all;
 	}
 	
