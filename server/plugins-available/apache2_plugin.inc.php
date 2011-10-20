@@ -1305,7 +1305,7 @@ class apache2_plugin {
 		if(substr($folder['path'],0,1) == '/') $folder['path'] = substr($folder['path'],1);
 		if(substr($folder['path'],-1) == '/') $folder['path'] = substr($folder['path'],0,-1);
 		$folder_path = escapeshellcmd($website['document_root'].'/web/'.$folder['path']);
-		if(substr($folder_path,-1) != '/' && $folder['path'] != '') $folder_path .= '/';
+		if(substr($folder_path,-1) != '/') $folder_path .= '/';
 		
 		//* Check if the resulting path is inside the docroot
 		if(stristr($folder_path,'..') || stristr($folder_path,'./') || stristr($folder_path,'\\')) {
@@ -1381,7 +1381,7 @@ class apache2_plugin {
 		if(substr($folder['path'],0,1) == '/') $folder['path'] = substr($folder['path'],1);
 		if(substr($folder['path'],-1) == '/') $folder['path'] = substr($folder['path'],0,-1);
 		$folder_path = realpath($website['document_root'].'/web/'.$folder['path']);
-		if(substr($folder_path,-1) != '/' && $folder['path'] != '') $folder_path .= '/';
+		if(substr($folder_path,-1) != '/') $folder_path .= '/';
 		
 		//* Check if the resulting path is inside the docroot
 		if(substr($folder_path,0,strlen($website['document_root'])) != $website['document_root']) {
@@ -1417,12 +1417,12 @@ class apache2_plugin {
 		if(substr($data['old']['path'],0,1) == '/') $data['old']['path'] = substr($data['old']['path'],1);
 		if(substr($data['old']['path'],-1) == '/') $data['old']['path'] = substr($data['old']['path'],0,-1);
 		$old_folder_path = realpath($website['document_root'].'/web/'.$data['old']['path']);
-		if(substr($old_folder_path,-1) != '/' && $data['old']['path'] != '') $old_folder_path .= '/';
+		if(substr($old_folder_path,-1) != '/') $old_folder_path .= '/';
 			
 		if(substr($data['new']['path'],0,1) == '/') $data['new']['path'] = substr($data['new']['path'],1);
 		if(substr($data['new']['path'],-1) == '/') $data['new']['path'] = substr($data['new']['path'],0,-1);
 		$new_folder_path = escapeshellcmd($website['document_root'].'/web/'.$data['new']['path']);
-		if(substr($new_folder_path,-1) != '/' && $data['new']['path'] != '') $new_folder_path .= '/';
+		if(substr($new_folder_path,-1) != '/') $new_folder_path .= '/';
 		
 		//* Check if the resulting path is inside the docroot
 		if(stristr($new_folder_path,'..') || stristr($new_folder_path,'./') || stristr($new_folder_path,'\\')) {
