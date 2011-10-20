@@ -828,7 +828,8 @@ class nginx_plugin {
 		$tpl->setVar('stats_auth_passwd_file', $data['new']['document_root']."/.htpasswd_stats");
 		
 		// Create basic http auth for other directories
-		$tpl->setLoop('basic_auth_locations', $this->_create_web_folder_auth_configuration($data['new']));
+		$basic_auth_locations = $this->_create_web_folder_auth_configuration($data['new']);
+		if(is_array($basic_auth_locations) && !empty($basic_auth_locations)) $tpl->setLoop('basic_auth_locations', $basic_auth_locations);
 
 		$vhost_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$data['new']['domain'].'.vhost');
 		//* Make a backup copy of vhost file
