@@ -23,4 +23,3 @@ $wb['Statistics'] = 'Statistike';
 $wb['Web traffic'] = 'Promet web stranice';
 $wb['Website quota (Harddisk)'] = 'Kvota web stranice (tvrdi disk)';
 ?>
-

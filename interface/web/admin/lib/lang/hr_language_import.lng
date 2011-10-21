@@ -6,4 +6,3 @@ $wb['language_overwrite_txt'] = 'Overwrite file, if exists.';
 $wb['btn_cancel_txt'] = 'Back';
 $wb['ignore_version_txt'] = 'Skip ISPConfig version check';
 ?>
-

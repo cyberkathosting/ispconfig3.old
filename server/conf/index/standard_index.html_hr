@@ -45,7 +45,7 @@
 <body>
     <div id="page">
         <div id="header" class="header">
-            <h1Dobrodošli na <!--ADRESSE//-->vašu web stranicu!<!--ADRESSE//--></h1>
+            <h1>Dobrodošli na <!--ADRESSE//-->vašu web stranicu!<!--ADRESSE//--></h1>
         </div>
         <div id="content">
             <h2>Ovo je standardna index stranica vaše web stranice.</h2>

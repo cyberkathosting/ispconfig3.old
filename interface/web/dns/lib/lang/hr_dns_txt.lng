@@ -1,16 +1,15 @@
 <?php
-$wb['server_id_txt'] = "Server";
-$wb['zone_txt'] = "Zona";
-$wb['name_txt'] = "Ime hosta";
-$wb['type_txt'] = "vrsta";
-$wb['data_txt'] = "Tekst";
-$wb['ttl_txt'] = "TTL";
-$wb['active_txt'] = "Aktivno";
-$wb['limit_dns_record_txt'] = "Iskorišten je maksimalan broj DNS zapisa za vaš račun.";
-$wb['no_zone_perm'] = "Nemate dozvolu za dodavanja zapisa ovoj domenu.";
-$wb['name_error_empty'] = "Ime hosta je prazno.";
-$wb['name_error_regex'] = "Ime hosta je u pogrešnom formatu.";
-$wb['data_error_empty'] = "Prazan tekst";
-$wb['data_error_regex'] = "Neispravan tekst format";
+$wb['server_id_txt'] = 'Server';
+$wb['zone_txt'] = 'Zona';
+$wb['name_txt'] = 'Ime hosta';
+$wb['type_txt'] = 'vrsta';
+$wb['data_txt'] = 'Tekst';
+$wb['ttl_txt'] = 'TTL';
+$wb['active_txt'] = 'Aktivno';
+$wb['limit_dns_record_txt'] = 'Iskorišten je maksimalan broj DNS zapisa za vaš račun.';
+$wb['no_zone_perm'] = 'Nemate dozvolu za dodavanja zapisa ovoj domenu.';
+$wb['name_error_empty'] = 'Ime hosta je prazno.';
+$wb['name_error_regex'] = 'Ime hosta je u pogrešnom formatu.';
+$wb['data_error_empty'] = 'Prazan tekst';
+$wb['data_error_regex'] = 'Neispravan tekst format';
 ?>
-
