@@ -8,7 +8,7 @@ function load_content(url)
 
 <?php
 $aw['aw_jump_text'] = 'Jump to previous stats: ';
-$aw['aw_renamed_index'] = 'fixedindex.html';
+$aw['aw_renamed_index'] = 'awsindex.html';
 
 if ($handle = opendir('.'))
 {
