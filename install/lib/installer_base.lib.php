@@ -888,7 +888,7 @@ class installer_base {
 		if(is_file($config_dir.'/'.$configfile)) {
 			copy($config_dir.'/'.$configfile, $config_dir.'/'.$configfile.'~');
 		}
-		chmod($config_dir.'/'.$configfile.'~', 0400);
+		if(is_file($config_dir.'/'.$configfile.'~')) chmod($config_dir.'/'.$configfile.'~', 0400);
 		$content = rf('tpl/debian_dovecot-sql.conf.master');
 		$content = str_replace('{mysql_server_ispconfig_user}',$conf['mysql']['ispconfig_user'],$content);
 		$content = str_replace('{mysql_server_ispconfig_password}',$conf['mysql']['ispconfig_password'], $content);
