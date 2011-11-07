@@ -113,7 +113,7 @@ function updateDbAndIni() {
 	$ini_array = ini_to_array(stripslashes($tmp['config']));
 	$current_db_version = (isset($tmp['dbversion']))?intval($tmp['dbversion']):0;
 
-	if(count($ini_array) == 0) die('Unable to read server configuration from database.');
+	if(!is_array($ini_array) or count($ini_array) == 0) die('Unable to read server configuration from database.');
 
 	$conf['services']['mail'] = ($tmp['mail_server'] == 1)?true:false;
 	$conf['services']['web'] = ($tmp['web_server'] == 1)?true:false;
