@@ -176,7 +176,7 @@
 <tmpl_if name='fastcgi_config_syntax' op='==' value='2'>
         FcgidIdleTimeout 300
         FcgidProcessLifeTime 3600
-        FcgidMaxProcesses 1000
+        # FcgidMaxProcesses 1000
         FcgidMinProcessesPerClass 0
         FcgidMaxProcessesPerClass 100
         FcgidConnectTimeout 3

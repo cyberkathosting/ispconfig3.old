@@ -78,9 +78,6 @@ unset($conf);
 
 if($dist['id'] == '') die('Linux distribution or version not recognized.');
 
-//** Check version
-// if(compare_ispconfig_version('3.0.3',ISPC_APP_VERSION) < 0) die("This updater is for ISPConfig versions > 3.0.3.0. Please Update to ISPConfig 3.0.3.3 first before you update to the current ISPConfig version.\n");
-
 //** Include the distribution-specific installer class library and configuration
 if(is_file('dist/lib/'.$dist['baseid'].'.lib.php')) include_once('dist/lib/'.$dist['baseid'].'.lib.php');
 include_once('dist/lib/'.$dist['id'].'.lib.php');
@@ -155,7 +152,6 @@ prepareDBDump();
 
 //* initialize the database
 $inst->db = new db();
-// $inst->db->dbName = $conf["mysql"]["database"];
 
 //* initialize the master DB, if we have a multiserver setup
 if($conf['mysql']['master_slave_setup'] == 'y') {
