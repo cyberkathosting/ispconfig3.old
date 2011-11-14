@@ -190,7 +190,7 @@ class apache2_plugin {
 		//* Save a SSL certificate to disk
 		if($data["new"]["ssl_action"] == 'save') {
 			$ssl_dir = $data["new"]["document_root"]."/ssl";
-			$domain = $data["new"]["ssl_domain"];
+			$domain = ($data["new"]["ssl_domain"] != '')?$data["new"]["ssl_domain"]:$data["new"]["domain"];
 			$csr_file = $ssl_dir.'/'.$domain.".csr";
 			$crt_file = $ssl_dir.'/'.$domain.".crt";
 			$bundle_file = $ssl_dir.'/'.$domain.".bundle";
@@ -207,7 +207,7 @@ class apache2_plugin {
 		//* Delete a SSL certificate
 		if($data['new']['ssl_action'] == 'del') {
 			$ssl_dir = $data['new']['document_root'].'/ssl';
-			$domain = $data['new']['ssl_domain'];
+			$domain = ($data["new"]["ssl_domain"] != '')?$data["new"]["ssl_domain"]:$data["new"]["domain"];
 			$csr_file = $ssl_dir.'/'.$domain.'.csr';
 			$crt_file = $ssl_dir.'/'.$domain.'.crt';
 			$bundle_file = $ssl_dir.'/'.$domain.'.bundle';
@@ -227,7 +227,6 @@ class apache2_plugin {
 			$app->dbmaster->query("UPDATE web_domain SET ssl_action = '' WHERE domain = '".$data['new']['domain']."'");
 			$app->log('Deleting SSL Cert for: '.$domain,LOGLEVEL_DEBUG);
 		}
-
 
 	}
 
