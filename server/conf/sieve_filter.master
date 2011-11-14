@@ -30,7 +30,7 @@ if header :contains "X-Spam-Flag" "YES" {
   stop;
 }
 
-if allof(currentdate :value "ge" "date" "<tmpl_var name='start_date'>", currentdate :value "le" "date" "<tmpl_var name='end_date'>") {
+if allof(currentdate :value "ge" "iso8601" "<tmpl_var name='start_date'>", currentdate :value "le" "iso8601" "<tmpl_var name='end_date'>") {
 vacation  :days 1
   :subject "Out of office reply"
   <tmpl_var name='addresses'>

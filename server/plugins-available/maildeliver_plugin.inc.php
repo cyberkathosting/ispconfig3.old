@@ -114,9 +114,11 @@ class maildeliver_plugin {
 			$tpl->setVar('move_junk',$data["new"]["move_junk"]);
 
 			// Set autoresponder start date
+			$data["new"]["autoresponder_start_date"] = str_replace (" ", "T", $data["new"]["autoresponder_start_date"]);
 			$tpl->setVar('start_date',$data["new"]["autoresponder_start_date"]);
 
 			// Set autoresponder end date
+			$data["new"]["autoresponder_end_date"] = str_replace (" ", "T", $data["new"]["autoresponder_end_date"]);
 			$tpl->setVar('end_date',$data["new"]["autoresponder_end_date"]);
 
 			// Autoresponder

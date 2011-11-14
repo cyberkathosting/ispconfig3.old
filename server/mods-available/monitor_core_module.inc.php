@@ -406,6 +406,9 @@ class monitor_core_module {
 		 * First we get the Monitoring-data from the tools
 		 */
 		$res = $this->_tools->monitorSystemUpdate();
+		
+		//* Ensure that output is encoded so that it does not break the serialize
+		$res['data']['output'] = htmlentities($res['data']['output']);
 
 		/*
 		 * Insert the data into the database
@@ -692,6 +695,9 @@ class monitor_core_module {
 		 * First we get the Monitoring-data from the tools
 		 */
 		$res = $this->_tools->monitorISPCCronLog();
+		
+		//* Ensure that output is encoded so that it does not break the serialize
+		$res['data']['output'] = htmlentities($res['data']['output']);
 
 		/*
 		 * Insert the data into the database
