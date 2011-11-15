@@ -404,7 +404,7 @@ class shelluser_jailkit_plugin {
 		if (!file_exists($sshkeys)){
 			// add root's key
 			$app->file->mkdirs($sshdir, '0755');
-			file_put_contents($sshkeys, file_get_contents('/root/.ssh/authorized_keys'));
+			if(is_file('/root/.ssh/authorized_keys')) file_put_contents($sshkeys, file_get_contents('/root/.ssh/authorized_keys'));
 		
 			// Remove duplicate keys
 			$existing_keys = file($sshkeys);
@@ -442,7 +442,7 @@ class shelluser_jailkit_plugin {
 			$this->app->log("ssh-rsa key updated in ".$sshkeys,LOGLEVEL_DEBUG);
 		}
 		// set proper file permissions
-		exec("chown -R ".escapeshellcmd($this->data['new']['puser']).":".escapeshellcmd($this->data['new']['pgroup'])." ".$usrdir);
+		// exec("chown -R ".escapeshellcmd($this->data['new']['puser']).":".escapeshellcmd($this->data['new']['pgroup'])." ".$usrdir);
 		exec("chmod 600 '$sshkeys'");
 		
 	}

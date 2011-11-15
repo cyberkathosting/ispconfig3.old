@@ -514,6 +514,10 @@ class installer_base {
 			copy('tpl/'.$jk_init.'.master', $config_dir.'/'.$jk_init);
 			copy('tpl/'.$jk_chrootsh.'.master', $config_dir.'/'.$jk_chrootsh);
 		}
+		
+		//* help jailkit fo find its ini files
+		if(!is_link('/usr/jk_socketd.ini')) exec('ln -s /etc/jailkit/jk_socketd.ini /usr/jk_socketd.ini');
+		if(!is_link('/usr/jk_init.ini')) exec('ln -s /etc/jailkit/jk_init.ini /usr/jk_init.ini');
 
 	}
 	
@@ -1938,6 +1942,12 @@ class installer_base {
 		chmod($install_dir.'/server/lib/mysql_clientdb.conf', 0600);
 		chown($install_dir.'/server/lib/mysql_clientdb.conf', 'root');
 		chgrp($install_dir.'/server/lib/mysql_clientdb.conf', 'root');
+		
+		if(is_file($install_dir.'/interface/invoices')) {
+			chmod($install_dir.'/interface/invoices', 0770);
+			chown($install_dir.'/interface/invoices', 'ispconfig');
+			chgrp($install_dir.'/interface/invoices', 'ispconfig');
+		}		
 
 	}
 

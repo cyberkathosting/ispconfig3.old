@@ -235,7 +235,7 @@ class shelluser_base_plugin {
 		if (!file_exists($sshkeys)){
 			// add root's key
 			$app->file->mkdirs($sshdir, '0755');
-			file_put_contents($sshkeys, file_get_contents('/root/.ssh/authorized_keys'));
+			if(is_file('/root/.ssh/authorized_keys')) file_put_contents($sshkeys, file_get_contents('/root/.ssh/authorized_keys'));
 		
 			// Remove duplicate keys
 			$existing_keys = file($sshkeys);
