@@ -273,7 +273,7 @@ class shelluser_base_plugin {
 			$this->app->log("ssh-rsa key updated in ".$sshkeys,LOGLEVEL_DEBUG);
 		}
 		// set proper file permissions
-		exec("chown -R ".escapeshellcmd($this->data['new']['puser']).":".escapeshellcmd($this->data['new']['pgroup'])." ".$usrdir);
+		// exec("chown -R ".escapeshellcmd($this->data['new']['puser']).":".escapeshellcmd($this->data['new']['pgroup'])." ".$usrdir);
 		exec("chmod 600 '$sshkeys'");
 		
 	}
