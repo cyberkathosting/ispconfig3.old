@@ -176,7 +176,7 @@ class monitor_tools {
 					$data[$email]['used'] = trim($quotafile['1']);
 					unset($quotafile);
 				} else {
-					exec('du -s '.escapeshellcmd($filename),$out);
+					exec('du -s '.escapeshellcmd('/var/vmail/'.$email_parts[1].'/'.$email_parts[0]),$out);
 					$parts = explode(' ',$out[0]);
 					$data[$email]['used'] = intval($parts[0])*1024;
 					unset($out);
