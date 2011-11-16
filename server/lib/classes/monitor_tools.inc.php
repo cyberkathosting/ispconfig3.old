@@ -177,7 +177,7 @@ class monitor_tools {
 					unset($quotafile);
 				} else {
 					exec('du -s '.escapeshellcmd($filename),$out);
-					$parts = explode(' ',$out);
+					$parts = explode(' ',$out[0]);
 					$data[$email]['used'] = intval($parts[0])*1024;
 					unset($out);
 					unset($parts);

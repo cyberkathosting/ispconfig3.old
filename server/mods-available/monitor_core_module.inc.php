@@ -120,6 +120,13 @@ class monitor_core_module {
         global $app;
 
         /*
+		 *  This monitoring is expensive, so do it only every 15 minutes
+		 */
+		$min = @date('i');
+		if ($min % 15 != 0) return;
+		
+		
+		/*
          * First we get the Monitoring-data from the tools
          */
         $res = $this->_tools->monitorEmailQuota();
