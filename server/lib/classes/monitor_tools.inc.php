@@ -175,7 +175,13 @@ class monitor_tools {
 					$quotafile = file($filename);
 					$data[$email]['used'] = trim($quotafile['1']);
 					unset($quotafile);
-				}   
+				} else {
+					exec('du -s '.escapeshellcmd($filename),$out);
+					$parts = explode(' ',$out);
+					$data[$email]['used'] = intval($parts[0])*1024;
+					unset($out);
+					unset($parts);
+				}
 			}
 		}
 		
