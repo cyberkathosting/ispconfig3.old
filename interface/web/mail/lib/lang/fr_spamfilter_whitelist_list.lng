@@ -8,3 +8,4 @@ $wb['email_txt'] = 'Email en liste blanche';
 $wb['add_new_record_txt'] = 'Ajouter des enregistrements en liste blanche';
 ?>
 
+

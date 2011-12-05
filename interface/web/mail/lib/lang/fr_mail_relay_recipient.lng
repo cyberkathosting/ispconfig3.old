@@ -8,3 +8,4 @@ $wb['type_txt'] = 'Type';
 $wb['limit_mailfilter_txt'] = 'Le nombre maximal de filtres pour votre compte est atteint.';
 ?>
 
+

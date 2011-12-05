@@ -148,3 +148,4 @@ $wb['monitor_updates_nosupport_txt'] = "Votre distribution nest pas supportée p
 $wb['monitor_beancounter_nosupport_txt'] = "Ce serveur n'est pas un VE OpenVz et n'a pas d'information de compteur";
 ?>
 
+

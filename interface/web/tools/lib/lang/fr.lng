@@ -6,3 +6,4 @@ $wb['Password and Language'] = 'Mot de passe et Langue';
 $wb['ispconfig_tools_note'] = 'Ce module vous permet de changer le mot de passe utilisateur et la langue et de démarrer une resynchronisation des enregistrement DNS.';
 ?>
 
+

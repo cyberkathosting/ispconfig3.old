@@ -24,3 +24,4 @@ $wb["database_name_error_len"] = 'Nom de base de données - {db} - trop long. La
 $wb["database_user_error_len"] = 'Nom d\'utilisateur de base de données - {user}- trop long. La longueur maximale incluant le préfixe est de 16 caractères.';
 ?>
 
+

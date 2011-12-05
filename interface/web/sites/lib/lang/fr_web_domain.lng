@@ -91,3 +91,4 @@ $wb['pm_min_spare_servers_error_regex'] = 'PHP-FPM pm.min_spare_servers must be 
 $wb['pm_max_spare_servers_error_regex'] = 'PHP-FPM pm.max_spare_servers must be a positive integer value.';
 ?>
 
+

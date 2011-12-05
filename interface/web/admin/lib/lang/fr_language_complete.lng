@@ -6,3 +6,4 @@ $wb['btn_cancel_txt'] = 'Précédent';
 $wb['list_desc_txt'] = 'Fusionne le langage sélectionné avec le langage principal anglais. <br />Ceci ajoute les élements manquants en anglais au fichier sélectionné.';
 ?>
 
+

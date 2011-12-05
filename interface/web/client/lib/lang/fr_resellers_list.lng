@@ -8,3 +8,4 @@ $wb['country_txt'] = 'Pays';
 $wb['add_new_record_txt'] = 'Ajouter un nouveau client';
 ?>
 
+

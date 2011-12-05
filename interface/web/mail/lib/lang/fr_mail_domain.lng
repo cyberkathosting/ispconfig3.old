@@ -12,3 +12,4 @@ $wb['policy_txt'] = 'Filtre antispam';
 $wb['no_policy'] = '- inactif -';
 ?>
 
+

@@ -9,3 +9,4 @@ $wb['repoupdate_txt'] = 'Mettre à jour la liste des paquets';
 $wb['package_id_txt'] = 'App-ID locale';
 ?>
 
+

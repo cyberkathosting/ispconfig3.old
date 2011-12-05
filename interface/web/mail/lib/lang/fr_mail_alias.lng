@@ -11,3 +11,4 @@ $wb['duplicate_mailbox_txt'] = 'Il y a déja une boîte mail avec cette adresse 
 $wb['domain_txt'] = 'Domaine';
 ?>
 
+

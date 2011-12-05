@@ -20,3 +20,4 @@ $wb['command_error_format'] = 'Format de la commande invalide.';
 $wb['unknown_fieldtype_error'] = 'Un champ inconnu a été utilisé';
 ?>
 
+

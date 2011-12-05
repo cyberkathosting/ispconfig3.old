@@ -43,3 +43,4 @@ $wb['login_txt'] = 'Nom d\'utilisateur (optinnel)';
 $wb['error_login_email_txt'] = 'Ce nom d\'utilisaeur n'est pas autorisé. Veuilez entrer un nom différent ou utiliser l\'adresse email comme nom d\'utilisateur.';
 ?>
 
+

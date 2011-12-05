@@ -8,3 +8,4 @@ $wb['error_client_can_not_add_domain'] = 'Vous ne pouvez créer un nouveau domai
 $wb['error_client_group_id_empty'] = 'Vous devez choisir un client<br />';
 ?>
 
+
