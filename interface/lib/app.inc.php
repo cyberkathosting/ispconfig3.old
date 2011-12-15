@@ -28,12 +28,17 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+//* Enable gzip compression for the interface
+ob_start('ob_gzhandler');
+
+//* Set error reporting level when we are not on a developer system
+if(DEVSYSTEM == 0) {
+	@ini_set('error_reporting', E_ALL & ~E_NOTICE);
+}
+
 /*
     Application Class
 */
-
-ob_start('ob_gzhandler');
-
 class app {
 
 	private $_language_inc = 0;
