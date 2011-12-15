@@ -229,7 +229,7 @@ HostAliases="www.'.$domain.' localhost 127.0.0.1"'.$aliasdomain;
 		mkdir($statsdirold);
 		$files = scandir($statsdir);
 		foreach ($files as $file) {
-			if (substr($file,0,1) != "." && !is_dir($file) && substr($file,0,1) != "w" && substr($file,0,1) != "i") copy("$statsdir"."/"."$file","$statsdirold"."$file");
+			if (substr($file,0,1) != "." && !is_dir("$statsdir"."/"."$file") && substr($file,0,1) != "w" && substr($file,0,1) != "i") copy("$statsdir"."/"."$file","$statsdirold"."$file");
 		}
 	}
 	
