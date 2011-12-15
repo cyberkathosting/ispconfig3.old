@@ -1051,6 +1051,11 @@ class apache2_plugin {
 				unlink($vhost_symlink);
 				$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
 			}
+			$vhost_symlink = escapeshellcmd($web_config['vhost_conf_enabled_dir'].'/'.$data['old']['domain'].'.vhost');
+			if(is_link($vhost_symlink)) {
+				unlink($vhost_symlink);
+				$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
+			}
 			$vhost_file = escapeshellcmd($web_config['vhost_conf_dir'].'/'.$data['old']['domain'].'.vhost');
 			unlink($vhost_file);
 			$app->log('Removing file: '.$vhost_file,LOGLEVEL_DEBUG);
