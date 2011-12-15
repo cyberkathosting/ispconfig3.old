@@ -730,7 +730,7 @@ class apache2_plugin {
 							'rewrite_target_ssl' => $rewrite_target_ssl);
 					break;
 				case '*':
-					$rewrite_rules[] = array(	'rewrite_domain' 	=> $data['new']['domain'],
+					$rewrite_rules[] = array(	'rewrite_domain' 	=> '(^|\.)'.$data['new']['domain'],
 						'rewrite_type' 		=> ($data['new']['redirect_type'] == 'no')?'':'['.$data['new']['redirect_type'].']',
 						'rewrite_target' 	=> $rewrite_target,
 						'rewrite_target_ssl' => $rewrite_target_ssl);
@@ -796,7 +796,7 @@ class apache2_plugin {
 									'rewrite_target_ssl' => $rewrite_target_ssl);
 							break;
 						case '*':
-							$rewrite_rules[] = array(	'rewrite_domain' 	=> $alias['domain'],
+							$rewrite_rules[] = array(	'rewrite_domain' 	=> '(^|\.)'.$alias['domain'],
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':'['.$alias['redirect_type'].']',
 								'rewrite_target' 	=> $rewrite_target,
 								'rewrite_target_ssl' => $rewrite_target_ssl);
