@@ -637,7 +637,7 @@ class apache2_plugin {
 			if($master_php_ini_path != '' && substr($master_php_ini_path,-7) == 'php.ini' && is_file($master_php_ini_path)) {
 				$php_ini_content .= file_get_contents($master_php_ini_path)."\n";
 			}
-			$php_ini_content .= trim($data['new']['custom_php_ini']);
+			$php_ini_content .= str_replace("\r",'',trim($data['new']['custom_php_ini']));
 			file_put_contents($custom_php_ini_dir.'/php.ini',$php_ini_content);
 		} else {
 			$has_custom_php_ini = false;
