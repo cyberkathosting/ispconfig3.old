@@ -168,7 +168,7 @@ class nginx_plugin {
 					$app->log("Creating CA-signed SSL Cert for: $domain",LOGLEVEL_DEBUG);
 					if (filesize($crt_file)==0 || !file_exists($crt_file)) $app->log("CA-Certificate signing failed.  openssl ca -out $crt_file -config ".$web_config['CA_path']."/openssl.cnf -passin pass:".$web_config['CA_pass']." -in $csr_file",LOGLEVEL_ERROR);
 				};
-				if (filesize($crt_file)==0 || !file_exists($crt_file)){
+				if (@filesize($crt_file)==0 || !file_exists($crt_file)){
 					exec("openssl req -x509 -passin pass:$ssl_password -passout pass:$ssl_password -key $key_file -in $csr_file -out $crt_file -days $ssl_days -config $config_file ");
 					$app->log("Creating self-signed SSL Cert for: $domain",LOGLEVEL_DEBUG);
 				};
@@ -191,7 +191,7 @@ class nginx_plugin {
 		//* Save a SSL certificate to disk
 		if($data["new"]["ssl_action"] == 'save') {
 			$ssl_dir = $data["new"]["document_root"]."/ssl";
-			$domain = $data["new"]["ssl_domain"];
+			$domain = ($data["new"]["ssl_domain"] != '')?$data["new"]["ssl_domain"]:$data["new"]["domain"];
 			$csr_file = $ssl_dir.'/'.$domain.".csr";
 			$crt_file = $ssl_dir.'/'.$domain.".crt";
 			//$bundle_file = $ssl_dir.'/'.$domain.".bundle";
@@ -209,7 +209,7 @@ class nginx_plugin {
 		//* Delete a SSL certificate
 		if($data['new']['ssl_action'] == 'del') {
 			$ssl_dir = $data['new']['document_root'].'/ssl';
-			$domain = $data['new']['ssl_domain'];
+			$domain = ($data["new"]["ssl_domain"] != '')?$data["new"]["ssl_domain"]:$data["new"]["domain"];
 			$csr_file = $ssl_dir.'/'.$domain.'.csr';
 			$crt_file = $ssl_dir.'/'.$domain.'.crt';
 			//$bundle_file = $ssl_dir.'/'.$domain.'.bundle';
@@ -229,7 +229,6 @@ class nginx_plugin {
 			$app->dbmaster->query("UPDATE web_domain SET ssl_action = '' WHERE domain = '".$data['new']['domain']."'");
 			$app->log('Deleting SSL Cert for: '.$domain,LOGLEVEL_DEBUG);
 		}
-
 
 	}
 
@@ -882,6 +881,11 @@ class nginx_plugin {
 				unlink($vhost_symlink);
 				$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
 			}
+			$vhost_symlink = escapeshellcmd($web_config['nginx_vhost_conf_enabled_dir'].'/'.$data['old']['domain'].'.vhost');
+			if(is_link($vhost_symlink)) {
+				unlink($vhost_symlink);
+				$app->log('Removing symlink: '.$vhost_symlink.'->'.$vhost_file,LOGLEVEL_DEBUG);
+			}
 			$vhost_file = escapeshellcmd($web_config['nginx_vhost_conf_dir'].'/'.$data['old']['domain'].'.vhost');
 			unlink($vhost_file);
 			$app->log('Removing file: '.$vhost_file,LOGLEVEL_DEBUG);
@@ -1305,6 +1309,9 @@ class nginx_plugin {
 			file_put_contents($awstats_conf_dir.'/awstats.'.$data['new']['domain'].'.conf',$content);
 			$app->log('Created AWStats config file: '.$awstats_conf_dir.'/awstats.'.$data['new']['domain'].'.conf',LOGLEVEL_DEBUG);
 		}
+		
+		if(is_file($data['new']['document_root']."/web/stats/index.html")) unlink($data['new']['document_root']."/web/stats/index.html");
+		copy("/usr/local/ispconfig/server/conf/awstats_index.php.master",$data['new']['document_root']."/web/stats/index.php");
 	}
 	
 	//* Delete the awstats configuration file
