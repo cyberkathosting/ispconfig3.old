@@ -33,7 +33,7 @@ ob_start('ob_gzhandler');
 
 //* Set error reporting level when we are not on a developer system
 if(DEVSYSTEM == 0) {
-	@ini_set('error_reporting', E_ALL & ~E_NOTICE);
+	@ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 }
 
 /*

@@ -586,7 +586,7 @@ class apache2_plugin {
 				//* add the Apache user to the client group
 				$app->system->add_user_to_group($groupname, escapeshellcmd($web_config['user']));
 
-				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']));
+				$this->_exec('chown -R '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']));
 
 				/*
 				* Workaround for jailkit: If jailkit is enabled for the site, the 
