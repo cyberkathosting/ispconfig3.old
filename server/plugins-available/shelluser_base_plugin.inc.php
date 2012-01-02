@@ -274,6 +274,7 @@ class shelluser_base_plugin {
 		}
 		// set proper file permissions
 		// exec("chown -R ".escapeshellcmd($this->data['new']['puser']).":".escapeshellcmd($this->data['new']['pgroup'])." ".$usrdir);
+		exec("chown -R ".escapeshellcmd($this->data['new']['puser']).":".escapeshellcmd($this->data['new']['pgroup'])." ".$sshdir);
 		exec("chmod 600 '$sshkeys'");
 		
 	}
