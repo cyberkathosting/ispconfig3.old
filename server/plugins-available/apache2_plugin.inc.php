@@ -553,7 +553,7 @@ class apache2_plugin {
 
 
 		//* If the security level is set to high
-		if($this->action == 'insert' && $data['new']['type'] == 'vhost') {
+		if(($this->action == 'insert' && $data['new']['type'] == 'vhost') or ($web_config['set_folder_permissions_on_update'] == 'y' && $data['new']['type'] == 'vhost')) {
 			if($web_config['security_level'] == 20) {
 
 				$this->_exec('chmod 751 '.escapeshellcmd($data['new']['document_root']));
@@ -585,8 +585,13 @@ class apache2_plugin {
 
 				//* add the Apache user to the client group
 				$app->system->add_user_to_group($groupname, escapeshellcmd($web_config['user']));
-
-				$this->_exec('chown -R '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']));
+				
+				//* Chown all default directories
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/cgi-bin'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/log'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/ssl'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/tmp'));
+				$this->_exec('chown -R '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/web'));
 
 				/*
 				* Workaround for jailkit: If jailkit is enabled for the site, the 
