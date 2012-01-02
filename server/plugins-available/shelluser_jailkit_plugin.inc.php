@@ -245,6 +245,8 @@ class shelluser_jailkit_plugin {
 	
 	function _add_jailkit_user()
 	{
+			global $app;
+			
 			//add the user to the chroot
 			$jailkit_chroot_userhome = $this->_get_home_dir($this->data['new']['username']);
 			$jailkit_chroot_puserhome = $this->_get_home_dir($this->data['new']['puser']);
@@ -264,6 +266,28 @@ class shelluser_jailkit_plugin {
 			$command .= ' '.$this->data['new']['puser'];
 			$command .= ' '.$jailkit_chroot_puserhome;
 			exec($command);
+			
+			//* Change the homedir of the shell user and parent user
+			//* We have to do this manually as the usermod command fails 
+			//* when the user is logged in or a command is running under that user
+			$passwd_file_array = file('/etc/passwd');
+			$passwd_out = '';
+			if(is_array($passwd_file_array)) {
+				foreach($passwd_file_array as $line) {
+					$line = trim($line);
+					$parts = explode(':',$line);
+					if($parts[0] == $this->data['new']['username']) {
+						$parts[5] = escapeshellcmd($this->data['new']['dir'].'/.'.$jailkit_chroot_userhome);
+						$parts[6] = escapeshellcmd('/usr/sbin/jk_chrootsh');
+						$new_line = implode(':',$parts);
+						copy('/etc/passwd','/etc/passwd~');
+						chmod('/etc/passwd~',0600);
+						$app->uses('system');
+						$app->system->replaceLine('/etc/passwd',$line,$new_line,1,0);
+					}
+				}
+			}
+			
 				
 			$this->app->log("Added jailkit user to chroot with command: ".$command,LOGLEVEL_DEBUG);
 						
@@ -277,64 +301,9 @@ class shelluser_jailkit_plugin {
 			chown(escapeshellcmd($this->data['new']['dir'].$jailkit_chroot_puserhome), $this->data['new']['puser']);
 			chgrp(escapeshellcmd($this->data['new']['dir'].$jailkit_chroot_puserhome), $this->data['new']['pgroup']);
 				
-			$this->app->log("Added created jailkit parent user home in : ".$this->data['new']['dir'].$jailkit_chroot_puserhome,LOGLEVEL_DEBUG);
+			$this->app->log("Added jailkit parent user home in : ".$this->data['new']['dir'].$jailkit_chroot_puserhome,LOGLEVEL_DEBUG);
 			
-			/*
-			// ssh-rsa authentication variables
-			$sshrsa = escapeshellcmd($this->data['new']['ssh_rsa']);
-			$usrdir = escapeshellcmd($this->data['new']['dir']).'/'.$jailkit_chroot_userhome;
-			$sshdir = escapeshellcmd($this->data['new']['dir']).'/'.$jailkit_chroot_userhome.'/.ssh';
-			$sshkeys= escapeshellcmd($this->data['new']['dir']).'/'.$jailkit_chroot_userhome.'/.ssh/authorized_keys';
-			global $app;
-			
-			// determine the client id
-			$id = $this->data['new']['sys_groupid'];
-			if ($id>0) $id = $id -1;
-			
-			$user = $app->db->queryOneRecord("SELECT * FROM sys_user WHERE client_id  = ".$id);
-			$userkey = $user['ssh_rsa'];
-			$username= $user['username'];
-			
-			// If this user has no key yet, generate a pair
-			if ($userkey == '') 
-			{
-				//Generate ssh-rsa-keys
-				exec('ssh-keygen -t rsa -C '.$username.'-rsa-key-'.time().' -f /tmp/id_rsa -N ""');
-				
-				$privatekey = file_get_contents('/tmp/id_rsa');
-				$publickey  = file_get_contents('/tmp/id_rsa.pub');
-				
-				exec('rm -f /tmp/id_rsa /tmp/id_rsa.pub');
-				
-				// Set the missing keypair
-				$app->db->query("UPDATE sys_user SET id_rsa='$privatekey' ,ssh_rsa='$publickey' WHERE client_id = ".$id);
-				$userkey = $publickey;
-				
-				$this->app->log("ssh-rsa keypair generated for ".$username,LOGLEVEL_DEBUG);
-			
-			};
-			
-			if (!file_exists($sshkeys))
-			{
-				// add root's key
-				exec("mkdir '$sshdir'");
-				exec("cat /root/.ssh/authorized_keys > '$sshkeys'");
-				exec("echo '' >> '$sshkeys'");
-			
-				// add the user's key
-				exec("echo '$userkey' >> '$sshkeys'");
-				exec("echo '' >> '$sshkeys'");
-			}
-			// add the custom key 
-			exec("echo '$sshrsa' >> '$sshkeys'");
-			exec("echo '' >> '$sshkeys'");
-			
-			// set proper file permissions
-			exec("chown -R ".escapeshellcmd($this->data['new']['puser']).":".escapeshellcmd($this->data['new']['pgroup'])." ".$usrdir);
-			exec("chmod 600 '$sshkeys'");
-			
-			$this->app->log("ssh-rsa key added to ".$sshkeys,LOGLEVEL_DEBUG);
-			*/
+
 	}
 	
 	//* Update the website root directory permissions depending on the security level
@@ -444,6 +413,7 @@ class shelluser_jailkit_plugin {
 		// set proper file permissions
 		// exec("chown -R ".escapeshellcmd($this->data['new']['puser']).":".escapeshellcmd($this->data['new']['pgroup'])." ".$usrdir);
 		exec("chown -R ".escapeshellcmd($this->data['new']['puser']).":".escapeshellcmd($this->data['new']['pgroup'])." ".$sshdir);
+		exec("chmod 700 ".$sshdir);
 		exec("chmod 600 '$sshkeys'");
 		
 	}

@@ -234,13 +234,13 @@ class shelluser_base_plugin {
 
 		if (!file_exists($sshkeys)){
 			// add root's key
-			$app->file->mkdirs($sshdir, '0755');
+			$app->file->mkdirs($sshdir, '0700');
 			if(is_file('/root/.ssh/authorized_keys')) file_put_contents($sshkeys, file_get_contents('/root/.ssh/authorized_keys'));
 		
 			// Remove duplicate keys
-			$existing_keys = file($sshkeys);
+			$existing_keys = @file($sshkeys);
 			$new_keys = explode("\n", $userkey);
-			$final_keys_arr = array_merge($existing_keys, $new_keys);
+			$final_keys_arr = @array_merge($existing_keys, $new_keys);
 			$new_final_keys_arr = array();
 			if(is_array($final_keys_arr) && !empty($final_keys_arr)){
 				foreach($final_keys_arr as $key => $val){
