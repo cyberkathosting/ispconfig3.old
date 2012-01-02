@@ -587,6 +587,7 @@ class apache2_plugin {
 				$app->system->add_user_to_group($groupname, escapeshellcmd($web_config['user']));
 				
 				//* Chown all default directories
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']));
 				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/cgi-bin'));
 				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/log'));
 				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/ssl'));
@@ -610,11 +611,20 @@ class apache2_plugin {
 			} else {
 
 				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root']));
-				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root'].'/*'));
-				$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root']));
-
+				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root'].'/cgi-bin'));
+				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root'].'/log'));
+				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root'].'/ssl'));
+				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root'].'/web'));
+				
 				// make temp directory writable for Apache and the website users
 				$this->_exec('chmod 777 '.escapeshellcmd($data['new']['document_root'].'/tmp'));
+				
+				$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root']));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/cgi-bin'));
+				$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root'].'/log'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/tmp'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/ssl'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/web'));
 			}
 		}
 
