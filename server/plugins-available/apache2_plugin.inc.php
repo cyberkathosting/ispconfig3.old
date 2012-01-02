@@ -1115,7 +1115,13 @@ class apache2_plugin {
 			if($apache_online_status_before_restart && !$apache_online_status_after_restart) {
 				$app->log('Apache did not restart after the configuration change for website '.$data['new']['domain'].' Reverting the configuration. Saved non-working config as '.$vhost_file.'.err',LOGLEVEL_WARN);
 				copy($vhost_file,$vhost_file.'.err');
-				copy($vhost_file.'~',$vhost_file);
+				if(is_file($vhost_file.'~')) {
+					//* Copy back the last backup file
+					copy($vhost_file.'~',$vhost_file);
+				} else {
+					//* There is no backup file, so we create a empty vhost file with a warning message inside
+					file_put_contents($vhost_file,"# Apache did not start after modifying this vhost file.\n# Please check file $vhost_file.err for syntax errors.");
+				}
 				$app->services->restartService('httpd','restart');
 			}
 		} else {
