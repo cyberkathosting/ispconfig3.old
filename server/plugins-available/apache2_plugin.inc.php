@@ -1335,12 +1335,18 @@ class apache2_plugin {
 		}
 		
 		//* Create the folder path, if it does not exist
-		if(!is_dir($folder_path)) exec('mkdir -p '.$folder_path);
+		if(!is_dir($folder_path)) {
+			exec('mkdir -p '.$folder_path);
+			chown($folder_path,$website['system_user']);
+			chgrp($folder_path,$website['system_group']);
+		}
 		
 		//* Create empty .htpasswd file, if it does not exist
 		if(!is_file($folder_path.'.htpasswd')) {
 			touch($folder_path.'.htpasswd');
 			chmod($folder_path.'.htpasswd',0755);
+			chown($folder_path.'.htpasswd',$website['system_user']);
+			chgrp($folder_path.'.htpasswd',$website['system_group']);
 			$app->log('Created file '.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
 		}
 		
@@ -1378,7 +1384,9 @@ class apache2_plugin {
 		//if(!is_file($folder_path.'.htaccess')) {
 			$ht_file = "AuthType Basic\nAuthName \"Members Only\"\nAuthUserFile ".$folder_path.".htpasswd\nrequire valid-user";
 			file_put_contents($folder_path.'.htaccess',$ht_file);
-			chmod($folder_path.'.htpasswd',0755);
+			chmod($folder_path.'.htaccess',0755);
+			chown($folder_path.'.htaccess',$website['system_user']);
+			chgrp($folder_path.'.htaccess',$website['system_group']);
 			$app->log('Created file '.$folder_path.'.htaccess',LOGLEVEL_DEBUG);
 		//}
 		
@@ -1490,7 +1498,9 @@ class apache2_plugin {
 			$ht_file = "AuthType Basic\nAuthName \"Members Only\"\nAuthUserFile ".$new_folder_path.".htpasswd\nrequire valid-user";
 			file_put_contents($new_folder_path.'.htaccess',$ht_file);
 			chmod($new_folder_path.'.htpasswd',0755);
-			$app->log('Created file '.$new_folder_path.'.htaccess',LOGLEVEL_DEBUG);
+			chown($folder_path.'.htpasswd',$website['system_user']);
+			chgrp($folder_path.'.htpasswd',$website['system_group']);
+			$app->log('Created file '.$new_folder_path.'.htpasswd',LOGLEVEL_DEBUG);
 		}
 		
 		//* Remove .htaccess file
