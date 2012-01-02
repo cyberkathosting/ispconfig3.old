@@ -97,7 +97,6 @@ class page_action extends tform_actions {
 		parent::onSubmit();
 	}
 
-
 	function onShowEnd() {
 
 		global $app;
