@@ -13,3 +13,4 @@ $wb['name_error_regex'] = 'Ime hosta je u pogrešnom formatu.';
 $wb['data_error_empty'] = 'Prazan tekst';
 $wb['data_error_regex'] = 'Neispravan tekst format';
 ?>
+

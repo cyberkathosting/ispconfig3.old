@@ -13,3 +13,4 @@ $wb['name_error_regex'] = 'Hostname je u krivom formatu.';
 $wb['data_error_empty'] = 'Nedostaju informacije o hostu';
 $wb['data_error_regex'] = 'Informacije o hostu su u krivom formatu';
 ?>
+

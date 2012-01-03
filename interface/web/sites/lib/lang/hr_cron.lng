@@ -1,7 +1,7 @@
 <?php
 $wb['server_id_txt'] = 'Server';
 $wb['parent_domain_id_txt'] = 'Parent website';
-$wb['active_txt'] = 'Active';
+$wb['active_txt'] = 'Aktivno';
 $wb['client_txt'] = 'Client';
 $wb['run_min_txt'] = 'Minutes';
 $wb['run_hour_txt'] = 'Hours';
@@ -19,3 +19,4 @@ $wb['run_wday_error_format'] = 'Invalid format for days of the week.';
 $wb['command_error_format'] = 'Invalid command format. Please note that in case of an url call only http/https is allowed.';
 $wb['unknown_fieldtype_error'] = 'An unknown field type has been used.';
 ?>
+

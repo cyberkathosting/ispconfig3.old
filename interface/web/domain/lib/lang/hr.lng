@@ -7,3 +7,4 @@ $wb['error_domain_in webuse'] = 'Ova domena ne može biti obrisana jer se korist
 $wb['error_client_can_not_add_domain'] = 'Ne možete dodati novu domenu.';
 $wb['error_client_group_id_empty'] = 'Morate izabrati klijenta<br>';
 ?>
+

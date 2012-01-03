@@ -6,3 +6,4 @@ $wb['message_txt'] = 'Poruka';
 $wb['tstamp_txt'] = 'Vrijeme';
 $wb['reply_txt'] = 'Reply';
 ?>
+

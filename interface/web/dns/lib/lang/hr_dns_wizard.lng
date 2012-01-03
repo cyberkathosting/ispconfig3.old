@@ -27,3 +27,4 @@ $wb['error_ns1_regex'] = 'NS1 sadrži nedozvoljene znakove.';
 $wb['error_ns2_regex'] = 'NS2 sadrži nedozvoljene znakove.';
 $wb['error_email_regex'] = 'Email adresa nije ispravna.';
 ?>
+
