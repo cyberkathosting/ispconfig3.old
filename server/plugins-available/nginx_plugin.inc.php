@@ -531,74 +531,89 @@ class nginx_plugin {
 
 		if($this->action == 'insert' || $data["new"]["system_user"] != $data["old"]["system_user"]) {
 			// Chown and chmod the directories below the document root
-			$this->_exec('chown -R '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']));
+			$this->_exec('chown -R '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']).'/web');
 			// The document root itself has to be owned by root in normal level and by the web owner in security level 20
 			if($web_config['security_level'] == 20) {
-				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']).'/web');
 			} else {
-				$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root']));
+				$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root']).'/web');
 			}
 		}
-
-
-
+		
 		//* If the security level is set to high
-		if($web_config['security_level'] == 20) {
+		if(($this->action == 'insert' && $data['new']['type'] == 'vhost') or ($web_config['set_folder_permissions_on_update'] == 'y' && $data['new']['type'] == 'vhost')) {
+			if($web_config['security_level'] == 20) {
 
-			$this->_exec('chmod 751 '.escapeshellcmd($data['new']['document_root']));
-			$this->_exec('chmod 751 '.escapeshellcmd($data['new']['document_root']).'/*');
-			$this->_exec('chmod 710 '.escapeshellcmd($data['new']['document_root'].'/web'));
+				$this->_exec('chmod 751 '.escapeshellcmd($data['new']['document_root']));
+				$this->_exec('chmod 751 '.escapeshellcmd($data['new']['document_root']).'/*');
+				$this->_exec('chmod 710 '.escapeshellcmd($data['new']['document_root'].'/web'));
 
-			// make tmp directory writable for nginx and the website users
-			$this->_exec('chmod 777 '.escapeshellcmd($data['new']['document_root'].'/tmp'));
+				// make tmp directory writable for nginx and the website users
+				$this->_exec('chmod 777 '.escapeshellcmd($data['new']['document_root'].'/tmp'));
 			
-			// Set Log symlink to 755 to make the logs accessible by the FTP user
-			$this->_exec("chmod 755 ".escapeshellcmd($data["new"]["document_root"])."/log");
+				// Set Log symlink to 755 to make the logs accessible by the FTP user
+				$this->_exec("chmod 755 ".escapeshellcmd($data["new"]["document_root"])."/log");
 
-			$command = 'usermod';
-			$command .= ' --groups sshusers';
-			$command .= ' '.escapeshellcmd($data['new']['system_user']);
-			$this->_exec($command);
+				$command = 'usermod';
+				$command .= ' --groups sshusers';
+				$command .= ' '.escapeshellcmd($data['new']['system_user']);
+				$this->_exec($command);
 
-			//* if we have a chrooted nginx environment
-			if($nginx_chrooted) {
-				$this->_exec('chroot '.escapeshellcmd($web_config['website_basedir']).' '.$command);
+				//* if we have a chrooted nginx environment
+				if($nginx_chrooted) {
+					$this->_exec('chroot '.escapeshellcmd($web_config['website_basedir']).' '.$command);
 
-				//* add the nginx user to the client group in the chroot environment
-				$tmp_groupfile = $app->system->server_conf['group_datei'];
-				$app->system->server_conf['group_datei'] = $web_config['website_basedir'].'/etc/group';
-				$app->system->add_user_to_group($groupname, escapeshellcmd($web_config['user']));
-				$app->system->server_conf['group_datei'] = $tmp_groupfile;
-				unset($tmp_groupfile);
-			}
+					//* add the nginx user to the client group in the chroot environment
+					$tmp_groupfile = $app->system->server_conf['group_datei'];
+					$app->system->server_conf['group_datei'] = $web_config['website_basedir'].'/etc/group';
+					$app->system->add_user_to_group($groupname, escapeshellcmd($web_config['user']));
+					$app->system->server_conf['group_datei'] = $tmp_groupfile;
+					unset($tmp_groupfile);
+				}
 
-			//* add the nginx user to the client group
-			$app->system->add_user_to_group($groupname, escapeshellcmd($web_config['nginx_user']));
+				//* add the nginx user to the client group
+				$app->system->add_user_to_group($groupname, escapeshellcmd($web_config['nginx_user']));
+				
+				//* Chown all default directories
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/cgi-bin'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/log'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/ssl'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/tmp'));
+				$this->_exec('chown -R '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/web'));
 
-			$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']));
+				/*
+				* Workaround for jailkit: If jailkit is enabled for the site, the 
+				* website root has to be owned by the root user and we have to chmod it to 755 then
+				*/
 
-			/*
-			* Workaround for jailkit: If jailkit is enabled for the site, the 
-			* website root has to be owned by the root user and we have to chmod it to 755 then
-			*/
+				//* Check if there is a jailkit user for this site
+				$tmp = $app->db->queryOneRecord('SELECT count(shell_user_id) as number FROM shell_user WHERE parent_domain_id = '.$data['new']['domain_id']." AND chroot = 'jailkit'");
+				if($tmp['number'] > 0) {
+					$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root']));
+					$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root']));
+				}
+				unset($tmp);
 
-			//* Check if there is a jailkit user for this site
-			$tmp = $app->db->queryOneRecord('SELECT count(shell_user_id) as number FROM shell_user WHERE parent_domain_id = '.$data['new']['domain_id']." AND chroot = 'jailkit'");
-			if($tmp['number'] > 0) {
+				// If the security Level is set to medium
+			} else {
+
 				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root']));
+				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root'].'/cgi-bin'));
+				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root'].'/log'));
+				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root'].'/ssl'));
+				$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root'].'/web'));
+				
+				// make temp directory writable for nginx and the website users
+				$this->_exec('chmod 777 '.escapeshellcmd($data['new']['document_root'].'/tmp'));
+				
 				$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root']));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/cgi-bin'));
+				$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root'].'/log'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/tmp'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/ssl'));
+				$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root'].'/web'));
 			}
-			unset($tmp);
-
-			// If the security Level is set to medium
-		} else {
-
-			$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root']));
-			$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root'].'/*'));
-			$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root']));
-
-			// make temp directory writable for nginx and the website users
-			$this->_exec('chmod 777 '.escapeshellcmd($data['new']['document_root'].'/tmp'));
 		}
 
 		// Change the ownership of the error log to the owner of the website
@@ -924,7 +939,13 @@ class nginx_plugin {
 			if($nginx_online_status_before_restart && !$nginx_online_status_after_restart) {
 				$app->log('nginx did not restart after the configuration change for website '.$data['new']['domain'].' Reverting the configuration. Saved non-working config as '.$vhost_file.'.err',LOGLEVEL_WARN);
 				copy($vhost_file,$vhost_file.'.err');
-				copy($vhost_file.'~',$vhost_file);
+				if(is_file($vhost_file.'~')) {
+					//* Copy back the last backup file
+					copy($vhost_file.'~',$vhost_file);
+				} else {
+					//* There is no backup file, so we create a empty vhost file with a warning message inside
+					file_put_contents($vhost_file,"# nginx did not start after modifying this vhost file.\n# Please check file $vhost_file.err for syntax errors.");
+				}
 				$app->services->restartService('httpd','restart');
 			}
 		} else {
@@ -1118,12 +1139,18 @@ class nginx_plugin {
 		}
 		
 		//* Create the folder path, if it does not exist
-		if(!is_dir($folder_path)) exec('mkdir -p '.$folder_path);
+		if(!is_dir($folder_path)) {
+			exec('mkdir -p '.$folder_path);
+			chown($folder_path,$website['system_user']);
+			chgrp($folder_path,$website['system_group']);
+		}
 		
 		//* Create empty .htpasswd file, if it does not exist
 		if(!is_file($folder_path.'.htpasswd')) {
 			touch($folder_path.'.htpasswd');
 			chmod($folder_path.'.htpasswd',0755);
+			chown($folder_path.'.htpasswd',$website['system_user']);
+			chgrp($folder_path.'.htpasswd',$website['system_group']);
 			$app->log('Created file'.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
 		}
 		
