@@ -406,7 +406,7 @@ if ($app->dbmaster == $app->db) {
 	$current_month = date('Y-m');
 
 	//* Check website traffic quota
-	$sql = "SELECT sys_groupid,domain_id,domain,traffic_quota,traffic_quota_lock FROM web_domain WHERE traffic_quota > 0 and type = 'vhost'";
+	$sql = "SELECT sys_groupid,domain_id,domain,traffic_quota,traffic_quota_lock FROM web_domain WHERE (traffic_quota > 0 or traffic_quota_lock = 'y') and type = 'vhost'";
 	$records = $app->db->queryAllRecords($sql);
 	if(is_array($records)) {
 		foreach($records as $rec) {

@@ -298,7 +298,11 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 			//print_r($diff_num);
 			//print_r($diffrec_full);
 			$diffstr = $app->db->quote(serialize($diffrec_full));
-			$username = $app->db->quote($_SESSION['s']['user']['username']);
+			if(isset($_SESSION)) {
+				$username = $app->db->quote($_SESSION['s']['user']['username']);
+			} else {
+				$username = 'admin';
+			}
 			$dbidx = $primary_field.':'.$primary_id;
 						
 			if($action == 'INSERT') $action = 'i';
