@@ -164,6 +164,7 @@ function updateDbAndIni() {
 		
 		//* update the database version in server table
 		$inst->db->query("UPDATE ".$conf["mysql"]["database"].".server SET dbversion = '".$current_db_version."' WHERE server_id = ".$conf['server_id']);
+		if($inst->db->dbHost != $inst->dbmaster->dbHost) $inst->dbmaster->query("UPDATE ".$conf["mysql"]["master_database"].".server SET dbversion = '".$current_db_version."' WHERE server_id = ".$conf['server_id']);
 		
 	
 	//* If ISPConfig Version < 3.0.3, we will do a full db update
@@ -207,6 +208,7 @@ function updateDbAndIni() {
 		
 		//* update the database version in server table
 		$inst->db->query("UPDATE ".$conf["mysql"]["database"].".server SET dbversion = '".$current_db_version."' WHERE server_id = ".$conf['server_id']);
+		if($inst->db->dbHost != $inst->dbmaster->dbHost) $inst->dbmaster->query("UPDATE ".$conf["mysql"]["master_database"].".server SET dbversion = '".$current_db_version."' WHERE server_id = ".$conf['server_id']);
 
 		if ($conf['powerdns']['installed']) {
                                                  
@@ -276,7 +278,7 @@ function updateDbAndIni() {
 		$tpl_ini_array['global']['webserver'] = 'nginx';
 	}
 
-	// update the new template with the old values
+	//* update the new template with the old values
 	if(is_array($old_ini_array)) {
 		foreach($old_ini_array as $tmp_section_name => $tmp_section_content) {
 			foreach($tmp_section_content as $tmp_var_name => $tmp_var_content) {
@@ -288,6 +290,11 @@ function updateDbAndIni() {
 	$new_ini = array_to_ini($tpl_ini_array);
 	$sql = "UPDATE ".$conf["mysql"]["database"].".server SET config = '".mysql_real_escape_string($new_ini)."' WHERE server_id = ".$conf['server_id'];
 	$inst->db->query($sql);
+	
+	if($inst->db->dbHost != $inst->dbmaster->dbHost) {
+		$sql = "UPDATE ".$conf["mysql"]["master_database"].".server SET config = '".mysql_real_escape_string($new_ini)."' WHERE server_id = ".$conf['server_id'];
+		$inst->dbmaster->query($sql);
+	}
 	unset($old_ini_array);
 	unset($tpl_ini_array);
 	unset($new_ini);
