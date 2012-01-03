@@ -239,6 +239,7 @@ class app {
 		/* Show username */
 		if(isset($_SESSION['s']['user'])) {
 			$this->tpl->setVar('cpuser', $_SESSION['s']['user']['username']);
+			$this->tpl->setVar('logout_txt', $this->lng('logout_txt'));
 		}
 	}
 
