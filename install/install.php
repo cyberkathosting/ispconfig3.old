@@ -102,8 +102,9 @@ if(is_dir('/usr/local/ispconfig')) {
 //** Detect the installed applications
 $inst->find_installed_apps();
 
-//** Select the language
+//** Select the language and set default timezone
 $conf['language'] = $inst->simple_query('Select language', array('en','de'), 'en');
+$conf['timezone'] = 'UTC';
 
 //** Select installation mode
 $install_mode = $inst->simple_query('Installation mode', array('standard','expert'), 'standard');

@@ -31,6 +31,9 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //* Enable gzip compression for the interface
 ob_start('ob_gzhandler');
 
+//* Set timezone
+if(isset($conf['timezone'])) date_default_timezone_set($conf['timezone']);
+
 //* Set error reporting level when we are not on a developer system
 if(DEVSYSTEM == 0) {
 	@ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_DEPRECATED);

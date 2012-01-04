@@ -96,6 +96,8 @@ $conf["mysql"]["ispconfig_user"] = $conf_old["db_user"];
 $conf["mysql"]["ispconfig_password"] = $conf_old["db_password"];
 $conf['language'] = $conf_old['language'];
 if($conf['language'] == '{language}') $conf['language'] = 'en';
+$conf['timezone'] = $conf_old['timezone'];
+if($conf['timezone'] == '{timezone}') $conf['timezone'] = 'UTC';
 
 if(isset($conf_old["dbmaster_host"])) $conf["mysql"]["master_host"] = $conf_old["dbmaster_host"];
 if(isset($conf_old["dbmaster_database"])) $conf["mysql"]["master_database"] = $conf_old["dbmaster_database"];
