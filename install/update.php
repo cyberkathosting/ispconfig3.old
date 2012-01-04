@@ -121,7 +121,7 @@ $inst->is_update = true;
 //** Detect the installed applications
 $inst->find_installed_apps();
 
-echo "This application will update ISPConfig 3 on your server.\n";
+echo "This application will update ISPConfig 3 on your server.\n\n";
 
 //* Make a backup before we start the update
 $do_backup = $inst->simple_query('Shall the script create a ISPConfig backup in /var/backup/ now?', array('yes','no'),'yes');
