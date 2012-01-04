@@ -293,10 +293,19 @@ class apache2_plugin {
 		$app->uses('system');
 		
 		if($web_config['connect_userid_to_webid'] == 'y') {
+			//* Calculate the uid and gid
 			$connect_userid_to_webid_start = ($web_config['connect_userid_to_webid_start'] < 1000)?1000:intval($web_config['connect_userid_to_webid_start']);
 			$fixed_uid_gid = intval($connect_userid_to_webid_start + $data['new']['domain_id']);
 			$fixed_uid_param = '--uid '.$fixed_uid_gid;
 			$fixed_gid_param = '--gid '.$fixed_uid_gid;
+			
+			//* Check if a ispconfigend user and group exists and create them
+			if(!$app->system->is_group('ispconfigend')) {
+				exec('groupadd --gid '.($connect_userid_to_webid_start + 10000).' ispconfigend');
+			}
+			if(!$app->system->is_user('ispconfigend')) {
+				exec('useradd -g ispconfigend -d /usr/local/ispconfig --uid '.($connect_userid_to_webid_start + 10000).' ispconfigend');
+			}
 		} else {
 			$fixed_uid_param = '';
 			$fixed_gid_param = '';
