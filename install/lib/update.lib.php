@@ -56,7 +56,11 @@ function prepareDBDump() {
 	//if(filesize('existing_db.sql') < 30000) die('Possible problem with dumping the database. We will stop here. Please check the file existing_db.sql');
 
 	// create a backup copy of the ispconfig database in the root folder
-	$backup_db_name = '/root/ispconfig_db_backup_'.@date('Y-m-d_h-i').'.sql';
+	if(isset($conf['backup_path'])) {
+		$backup_db_name = $conf['backup_path'].'/ispconfig_db_backup.sql';
+	} else {
+		$backup_db_name = '/root/ispconfig_db_backup_'.@date('Y-m-d_H-i').'.sql';
+	}
 	copy('existing_db.sql',$backup_db_name);
 	chmod($backup_db_name, 0700);
 	chown($backup_db_name, 'root');
