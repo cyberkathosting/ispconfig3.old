@@ -1,11 +1,10 @@
 <?php
-$wb['list_head_txt'] = "Virtualni server";
-$wb['active_txt'] = "Aktivan";
-$wb['server_id_txt'] = "Ime servera";
-$wb['ostemplate_id_txt'] = "Predložak operativnog sistema";
-$wb['template_id_txt'] = "Predložak";
-$wb['hostname_txt'] = "Ime hosta";
-$wb['ip_address_txt'] = "IP adresa";
-$wb['veid_txt'] = "VEID";
+$wb['list_head_txt'] = 'Virtualni server';
+$wb['active_txt'] = 'Aktivan';
+$wb['server_id_txt'] = 'Ime servera';
+$wb['ostemplate_id_txt'] = 'Predložak operativnog sistema';
+$wb['template_id_txt'] = 'Predložak';
+$wb['hostname_txt'] = 'Ime hosta';
+$wb['ip_address_txt'] = 'IP adresa';
+$wb['veid_txt'] = 'VEID';
 ?>
-

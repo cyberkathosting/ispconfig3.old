@@ -1,11 +1,10 @@
 <?php
-$wb['list_head_txt'] = "IP adrese";
-$wb['server_id_txt'] = "Server";
-$wb['ip_address_txt'] = "IP adresa";
-$wb['add_new_record_txt'] = "Dodaj novu IP adresu";
-$wb['client_id_txt'] = "Klijent";
-$wb['virtualhost_txt'] = "HTTP Vhost";
-$wb['virtualhost_port_txt'] = "HTTP portovi";
-$wb['ip_type_txt'] = "Vrsta";
+$wb['list_head_txt'] = 'IP adrese';
+$wb['server_id_txt'] = 'Server';
+$wb['ip_address_txt'] = 'IP adresa';
+$wb['add_new_record_txt'] = 'Dodaj novu IP adresu';
+$wb['client_id_txt'] = 'Klijent';
+$wb['virtualhost_txt'] = 'HTTP Vhost';
+$wb['virtualhost_port_txt'] = 'HTTP portovi';
+$wb['ip_type_txt'] = 'Vrsta';
 ?>
-

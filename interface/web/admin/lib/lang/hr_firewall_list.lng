@@ -1,9 +1,8 @@
 <?php
-$wb['list_head_txt'] = "Firewall";
-$wb['active_txt'] = "Aktivno";
-$wb['server_id_txt'] = "Server";
-$wb['tcp_port_txt'] = "Otvoreni TCP portovi";
-$wb['udp_port_txt'] = "Otvoreni UDP portovi";
-$wb['add_new_record_txt'] = "Dodaj Firewall zapis";
+$wb['list_head_txt'] = 'Firewall';
+$wb['active_txt'] = 'Aktivno';
+$wb['server_id_txt'] = 'Server';
+$wb['tcp_port_txt'] = 'Otvoreni TCP portovi';
+$wb['udp_port_txt'] = 'Otvoreni UDP portovi';
+$wb['add_new_record_txt'] = 'Dodaj Firewall zapis';
 ?>
-

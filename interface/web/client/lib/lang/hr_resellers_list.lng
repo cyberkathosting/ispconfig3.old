@@ -1,10 +1,9 @@
 <?php
-$wb['list_head_txt'] = "Preprodavač";
-$wb['client_id_txt'] = "ID";
-$wb['company_name_txt'] = "Poduzeće";
-$wb['contact_name_txt'] = "Kontakt osoba";
-$wb['city_txt'] = "Grad";
-$wb['country_txt'] = "Država";
-$wb['add_new_record_txt'] = "Dodaj novog preprodavača";
+$wb['list_head_txt'] = 'Preprodavač';
+$wb['client_id_txt'] = 'ID';
+$wb['company_name_txt'] = 'Poduzeće';
+$wb['contact_name_txt'] = 'Kontakt osoba';
+$wb['city_txt'] = 'Grad';
+$wb['country_txt'] = 'Država';
+$wb['add_new_record_txt'] = 'Dodaj novog preprodavača';
 ?>
-

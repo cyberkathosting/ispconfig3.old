@@ -1,16 +1,15 @@
 <?php
-$wb['config_txt'] = "konfiguracija";
-$wb['server_name_txt'] = "Ime servera";
-$wb['mail_server_txt'] = "Mail server";
-$wb['web_server_txt'] = "Web server";
-$wb['dns_server_txt'] = "DNS server";
-$wb['file_server_txt'] = "File server";
-$wb['db_server_txt'] = "DB server";
-$wb['vserver_server_txt'] = "VServer";
-$wb['active_txt'] = "Aktivan";
-$wb['mirror_server_id_txt'] = "je kopija servera";
-$wb['- None -'] = "- izaberi server -";
-$wb['proxy_server_txt'] = "Proxy server";
-$wb['firewall_server_txt'] = "Firewall server";
+$wb['config_txt'] = 'konfiguracija';
+$wb['server_name_txt'] = 'Ime servera';
+$wb['mail_server_txt'] = 'Mail server';
+$wb['web_server_txt'] = 'Web server';
+$wb['dns_server_txt'] = 'DNS server';
+$wb['file_server_txt'] = 'File server';
+$wb['db_server_txt'] = 'DB server';
+$wb['vserver_server_txt'] = 'VServer';
+$wb['active_txt'] = 'Aktivan';
+$wb['mirror_server_id_txt'] = 'je kopija servera';
+$wb['- None -'] = '- izaberi server -';
+$wb['proxy_server_txt'] = 'Proxy server';
+$wb['firewall_server_txt'] = 'Firewall server';
 ?>
-

@@ -1,9 +1,8 @@
 <?php
-$wb['list_head_txt'] = "Promet web stranice";
-$wb['domain_txt'] = "Domena";
-$wb['this_month_txt'] = "Ovaj mjesec";
-$wb['last_month_txt'] = "Prošli mjesec";
-$wb['this_year_txt'] = "Ovu godinu";
-$wb['last_year_txt'] = "Prošlu godinu";
+$wb['list_head_txt'] = 'Promet web stranice';
+$wb['domain_txt'] = 'Domena';
+$wb['this_month_txt'] = 'Ovaj mjesec';
+$wb['last_month_txt'] = 'Prošli mjesec';
+$wb['this_year_txt'] = 'Ovu godinu';
+$wb['last_year_txt'] = 'Prošlu godinu';
 ?>
-

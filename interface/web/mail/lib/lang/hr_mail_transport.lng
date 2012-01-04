@@ -8,4 +8,3 @@ $wb['sort_order_txt'] = 'Sort by';
 $wb['active_txt'] = 'Aktivno';
 $wb['limit_mailrouting_txt'] = 'The max. number of routes for your account is reached.';
 ?>
-

@@ -1,9 +1,8 @@
 <?php
-$wb['list_head_txt'] = "Importiraj jezičnu datoteku";
-$wb['language_import_txt'] = "Izaberi jezičnu datoteku";
-$wb['btn_save_txt'] = "Importiraj selektiranu jezičnu datoteku";
-$wb['language_overwrite_txt'] = "Prebriši datoteku, ukoliko već postoji.";
-$wb['btn_cancel_txt'] = "Natrag";
-$wb['ignore_version_txt'] = "Preskoči provjeru ISPConfig verzije";
+$wb['list_head_txt'] = 'Importiraj jezičnu datoteku';
+$wb['language_import_txt'] = 'Izaberi jezičnu datoteku';
+$wb['btn_save_txt'] = 'Importiraj selektiranu jezičnu datoteku';
+$wb['language_overwrite_txt'] = 'Prebriši datoteku, ukoliko već postoji.';
+$wb['btn_cancel_txt'] = 'Natrag';
+$wb['ignore_version_txt'] = 'Preskoči provjeru ISPConfig verzije';
 ?>
-

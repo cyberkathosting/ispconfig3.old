@@ -1,8 +1,7 @@
 <?php
-$wb['list_head_txt'] = "Editor jezičnih datoteka";
-$wb['language_select_txt'] = "Izaberi jezik";
-$wb['module_txt'] = "Modul";
-$wb['lang_file_txt'] = "Jezična datoteka";
-$wb['lang_file_date_txt'] = "Zadnja promjena";
+$wb['list_head_txt'] = 'Editor jezičnih datoteka';
+$wb['language_select_txt'] = 'Izaberi jezik';
+$wb['module_txt'] = 'Modul';
+$wb['lang_file_txt'] = 'Jezična datoteka';
+$wb['lang_file_date_txt'] = 'Zadnja promjena';
 ?>
-

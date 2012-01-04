@@ -1,9 +1,8 @@
 <?php
-$wb['list_head_txt'] = "Editor jezika";
-$wb['language_select_txt'] = "Izaberi jezik";
-$wb['module_txt'] = "Modul";
-$wb['lang_file_txt'] = "Jezična datoteka";
-$wb['btn_save_txt'] = "Spremi";
-$wb['btn_cancel_txt'] = "Natrag";
+$wb['list_head_txt'] = 'Editor jezika';
+$wb['language_select_txt'] = 'Izaberi jezik';
+$wb['module_txt'] = 'Modul';
+$wb['lang_file_txt'] = 'Jezična datoteka';
+$wb['btn_save_txt'] = 'Spremi';
+$wb['btn_cancel_txt'] = 'Natrag';
 ?>
-

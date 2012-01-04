@@ -15,4 +15,3 @@ $wb['username_txt'] = 'Korisničko ime';
 $wb['password_txt'] = 'Šifra';
 $wb['login_button_txt'] = 'Login';
 ?>
-

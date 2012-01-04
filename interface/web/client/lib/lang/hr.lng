@@ -1,14 +1,15 @@
 <?php
-$wb['Client'] = "Klijent";
-$wb['Address'] = "Adresa";
-$wb['Limits'] = "Limiti";
-$wb['Add Client'] = "Dodaj klijenta";
-$wb['Edit Client'] = "Editiraj klijenta";
-$wb['Clients'] = "Klijenti";
-$wb['Edit Client-Templates'] = "Editiraj predložak za klijente";
-$wb['Add Reseller'] = "Dodaj preprodavača";
-$wb['Edit Reseller'] = "Editiraj preprodavača";
-$wb['Resellers'] = "Preprodavači";
-$wb['error_has_clients'] = "Ovaj preprodavač ima klijente. Prvo morate obrisati klijente preprodavača.";
+$wb['Client'] = 'Klijent';
+$wb['Address'] = 'Adresa';
+$wb['Limits'] = 'Limiti';
+$wb['Add Client'] = 'Dodaj klijenta';
+$wb['Edit Client'] = 'Editiraj klijenta';
+$wb['Clients'] = 'Klijenti';
+$wb['Edit Client-Templates'] = 'Editiraj predložak za klijente';
+$wb['Add Reseller'] = 'Dodaj preprodavača';
+$wb['Edit Reseller'] = 'Editiraj preprodavača';
+$wb['Resellers'] = 'Preprodavači';
+$wb['error_has_clients'] = 'Ovaj preprodavač ima klijente. Prvo morate obrisati klijente preprodavača.';
+$wb['add_additional_template_txt'] = 'Add additional template';
+$wb['delete_additional_template_txt'] = 'Delete additional template';
 ?>
-

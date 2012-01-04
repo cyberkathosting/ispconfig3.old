@@ -1,24 +1,25 @@
 <?php
-$wb['DNS'] = "DNS";
-$wb['Zones'] = "Zone";
-$wb['DNS A'] = "DNS A";
-$wb['DNS ALIAS'] = "DNS ALIAS";
-$wb['DNS CNAME'] = "DNS CNAME";
-$wb['DNS hinfo'] = "DNS hinfo";
-$wb['DNS mx'] = "DNS mx";
-$wb['DNS ns'] = "DNS ns";
-$wb['DNS ptr'] = "DNS ptr";
-$wb['DNS RP'] = "DNS RP";
-$wb['DNS Zone'] = "DNS zona";
-$wb['Records'] = "DNS zapisi";
-$wb['DNS SRV'] = "DNS SRV";
-$wb['DNS TXT Record'] = "DNS TXT zapis";
-$wb['DNS TXT'] = "DNS TXT";
-$wb['DNS Wizard'] = "DNS čarobnjak";
-$wb['Add DNS Zone'] = "Dodaj";
-$wb['Templates'] = "Predlošci";
-$wb['zone_file_successfully_imported_txt'] = "Zonska datoteka je uspješno učitana!";
-$wb['error_no_valid_zone_file_txt'] = "Ovo nije ispravna zonska datoteka!";
-$wb['zonefile_to_import_txt'] = "Datoteka";
+$wb['DNS'] = 'DNS';
+$wb['Zones'] = 'Zone';
+$wb['DNS A'] = 'DNS A';
+$wb['DNS ALIAS'] = 'DNS ALIAS';
+$wb['DNS CNAME'] = 'DNS CNAME';
+$wb['DNS hinfo'] = 'DNS hinfo';
+$wb['DNS mx'] = 'DNS mx';
+$wb['DNS ns'] = 'DNS ns';
+$wb['DNS ptr'] = 'DNS ptr';
+$wb['DNS RP'] = 'DNS RP';
+$wb['DNS Zone'] = 'DNS zona';
+$wb['Records'] = 'DNS zapisi';
+$wb['DNS SRV'] = 'DNS SRV';
+$wb['DNS TXT Record'] = 'DNS TXT zapis';
+$wb['DNS TXT'] = 'DNS TXT';
+$wb['DNS Wizard'] = 'DNS čarobnjak';
+$wb['Add DNS Zone'] = 'Dodaj';
+$wb['Templates'] = 'Predlošci';
+$wb['zone_file_successfully_imported_txt'] = 'Zonska datoteka je uspješno učitana!';
+$wb['error_no_valid_zone_file_txt'] = 'Ovo nije ispravna zonska datoteka!';
+$wb['zonefile_to_import_txt'] = 'Datoteka';
+$wb['Secondary Zones'] = 'Secondary Zones';
+$wb['Import Zone File'] = 'Import Zone File';
 ?>
-

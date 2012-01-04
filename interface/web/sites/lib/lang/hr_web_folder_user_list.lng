@@ -4,4 +4,3 @@ $wb['active_txt'] = 'Aktivno';
 $wb['web_folder_id_txt'] = 'Folder';
 $wb['username_txt'] = 'Korisničko ime';
 ?>
-

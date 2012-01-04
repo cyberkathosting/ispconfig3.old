@@ -1,7 +1,6 @@
 <?php
-$wb['head_txt'] = "Instaliraj softverski paket";
-$wb['install_key_txt'] = "Unesi instalacijski ključ";
-$wb['btn_save_txt'] = "Pokreni instalaciju";
-$wb['btn_cancel_txt'] = "Odustani";
+$wb['head_txt'] = 'Instaliraj softverski paket';
+$wb['install_key_txt'] = 'Unesi instalacijski ključ';
+$wb['btn_save_txt'] = 'Pokreni instalaciju';
+$wb['btn_cancel_txt'] = 'Odustani';
 ?>
-

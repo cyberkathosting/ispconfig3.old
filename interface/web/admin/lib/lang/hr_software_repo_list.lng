@@ -1,7 +1,6 @@
 <?php
-$wb['list_head_txt'] = "Repozitorij";
-$wb['active_txt'] = "Aktivno";
-$wb['repo_name_txt'] = "Repozitorij";
-$wb['repo_url_txt'] = "URL";
+$wb['list_head_txt'] = 'Repozitorij';
+$wb['active_txt'] = 'Aktivno';
+$wb['repo_name_txt'] = 'Repozitorij';
+$wb['repo_url_txt'] = 'URL';
 ?>
-
