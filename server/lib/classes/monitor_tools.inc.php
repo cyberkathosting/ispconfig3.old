@@ -1722,6 +1722,8 @@ class monitor_tools {
 				// fwrite($fp, "GET / HTTP/1.0\r\n\r\n");
 				$out = "GET / HTTP/1.1\r\n";
 				$out .= "Host: localhost\r\n";
+				$out .= "User-Agent: Mozilla/5.0 (ISPConfig monitor)\r\n";
+				$out .= "Accept: application/xml,application/xhtml+xml,text/html\r\n";
 				$out .= "Connection: Close\r\n\r\n";
 				fwrite($fp, $out);
 				stream_set_timeout($fp, 5); // Timeout after 5 seconds
