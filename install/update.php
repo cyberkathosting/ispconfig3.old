@@ -135,10 +135,14 @@ if($do_backup == 'yes') {
 	exec("chmod 700 $backup_path");
 	
 	//* Do the backup
-	swriteln('Creating backup of /usr/local/ispconfig directory...');
-	exec("tar pcfz $backup_path/ispconfig_software.tar.gz /usr/local/ispconfig");
-	swriteln('Creating backup of /etc directory...');
-	exec("tar pcfz $backup_path/etc.tar.gz /etc");
+	swriteln('Creating backup of "/usr/local/ispconfig" directory...');
+	exec("tar pcfz $backup_path/ispconfig_software.tar.gz /usr/local/ispconfig 2> /dev/null",$out,$returnvar);
+	if($returnvar != 0) die("Backup failed. We stop here...\n");
+	
+	swriteln('Creating backup of "/etc" directory...');
+	exec("tar pcfz $backup_path/etc.tar.gz /etc 2> /dev/null",$out,$returnvar);
+	if($returnvar != 0) die("Backup failed. We stop here...\n");
+	
 	exec("chown root:root $backup_path/*.tar.gz");
 	exec("chmod 700 $backup_path/*.tar.gz");
 }
