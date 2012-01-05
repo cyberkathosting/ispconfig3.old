@@ -126,6 +126,11 @@ do {
 	$tmp_mysql_server_admin_user = $inst->free_query('MySQL root username', $conf['mysql']['admin_user']);
 	$tmp_mysql_server_admin_password = $inst->free_query('MySQL root password', $conf['mysql']['admin_password']);
 	$tmp_mysql_server_database = $inst->free_query('MySQL database to create', $conf['mysql']['database']);
+	if($install_mode == 'expert') {
+		swriteln("The next two questions are about the internal ISPConfig database user and password. It is recommended to accept the defaults which is 'ispconfig' as username and a random password.\n");
+		$conf['mysql']['ispconfig_user'] = $inst->free_query('ISPConfig mysql database username', $conf['mysql']['ispconfig_user']);
+		$conf['mysql']['ispconfig_password'] = $inst->free_query('ISPConfig mysql database password', $conf['mysql']['ispconfig_password']);
+	}
 	$tmp_mysql_server_charset = $inst->free_query('MySQL charset', $conf['mysql']['charset']);
 	
 	//* Initialize the MySQL server connection
