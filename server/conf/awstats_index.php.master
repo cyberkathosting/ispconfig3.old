@@ -27,7 +27,7 @@ if ($handle = opendir('.'))
 
         $month = date("n");
         $year = date("Y");
-
+		
         if (date("d") == 1)
         {
                 $month = date("m")-1;
