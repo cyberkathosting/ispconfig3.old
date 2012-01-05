@@ -502,18 +502,42 @@ class nginx_plugin {
 
 		// Create group and user, if not exist
 		$app->uses('system');
+		
+		if($web_config['connect_userid_to_webid'] == 'y') {
+			//* Calculate the uid and gid
+			$connect_userid_to_webid_start = ($web_config['connect_userid_to_webid_start'] < 1000)?1000:intval($web_config['connect_userid_to_webid_start']);
+			$fixed_uid_gid = intval($connect_userid_to_webid_start + $data['new']['domain_id']);
+			$fixed_uid_param = '--uid '.$fixed_uid_gid;
+			$fixed_gid_param = '--gid '.$fixed_uid_gid;
+			
+			//* Check if a ispconfigend user and group exists and create them
+			if(!$app->system->is_group('ispconfigend')) {
+				exec('groupadd --gid '.($connect_userid_to_webid_start + 10000).' ispconfigend');
+			}
+			if(!$app->system->is_user('ispconfigend')) {
+				exec('useradd -g ispconfigend -d /usr/local/ispconfig --uid '.($connect_userid_to_webid_start + 10000).' ispconfigend');
+			}
+		} else {
+			$fixed_uid_param = '';
+			$fixed_gid_param = '';
+		}
 
 		$groupname = escapeshellcmd($data['new']['system_group']);
 		if($data['new']['system_group'] != '' && !$app->system->is_group($data['new']['system_group'])) {
-			exec('groupadd '.$groupname);
+			exec('groupadd '.$fixed_gid_param.' '.$groupname);
 			if($apache_chrooted) $this->_exec('chroot '.escapeshellcmd($web_config['website_basedir']).' groupadd '.$groupname);
 			$app->log('Adding the group: '.$groupname,LOGLEVEL_DEBUG);
 		}
 
 		$username = escapeshellcmd($data['new']['system_user']);
 		if($data['new']['system_user'] != '' && !$app->system->is_user($data['new']['system_user'])) {
-			exec('useradd -d '.escapeshellcmd($data['new']['document_root'])." -g $groupname -G sshusers $username -s /bin/false");
-			if($apache_chrooted) $this->_exec('chroot '.escapeshellcmd($web_config['website_basedir']).' useradd -d '.escapeshellcmd($data['new']['document_root'])." -g $groupname -G sshusers $username -s /bin/false");
+			if($web_config['add_web_users_to_sshusers_group'] == 'y') {
+				exec('useradd -d '.escapeshellcmd($data['new']['document_root'])." -g $groupname $fixed_uid_param -G sshusers $username -s /bin/false");
+				if($nginx_chrooted) $this->_exec('chroot '.escapeshellcmd($web_config['website_basedir']).' useradd -d '.escapeshellcmd($data['new']['document_root'])." -g $groupname $fixed_uid_param -G sshusers $username -s /bin/false");
+			} else {
+				exec('useradd -d '.escapeshellcmd($data['new']['document_root'])." -g $groupname $fixed_uid_param $username -s /bin/false");
+				if($nginx_chrooted) $this->_exec('chroot '.escapeshellcmd($web_config['website_basedir']).' useradd -d '.escapeshellcmd($data['new']['document_root'])." -g $groupname $fixed_uid_param $username -s /bin/false");
+			}
 			$app->log('Adding the user: '.$username,LOGLEVEL_DEBUG);
 		}
 
@@ -554,10 +578,12 @@ class nginx_plugin {
 				// Set Log symlink to 755 to make the logs accessible by the FTP user
 				$this->_exec("chmod 755 ".escapeshellcmd($data["new"]["document_root"])."/log");
 
-				$command = 'usermod';
-				$command .= ' --groups sshusers';
-				$command .= ' '.escapeshellcmd($data['new']['system_user']);
-				$this->_exec($command);
+				if($web_config['add_web_users_to_sshusers_group'] == 'y') {
+					$command = 'usermod';
+					$command .= ' --groups sshusers';
+					$command .= ' '.escapeshellcmd($data['new']['system_user']);
+					$this->_exec($command);
+				}
 
 				//* if we have a chrooted nginx environment
 				if($nginx_chrooted) {
