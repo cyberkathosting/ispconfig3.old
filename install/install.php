@@ -129,7 +129,7 @@ do {
 	$tmp_mysql_server_charset = $inst->free_query('MySQL charset', $conf['mysql']['charset']);
 	
 	if($install_mode == 'expert') {
-		swriteln("The next two questions are about the internal ISPConfig database user and password. It is recommended to accept the defaults which is 'ispconfig' as username and a random password.\n");
+		swriteln("The next two questions are about the internal ISPConfig database user and password.\nIt is recommended to accept the defaults which are 'ispconfig' as username and a random password.\nIf you use a different password, use only numbers and chars for the password.\n");
 		$conf['mysql']['ispconfig_user'] = $inst->free_query('ISPConfig mysql database username', $conf['mysql']['ispconfig_user']);
 		$conf['mysql']['ispconfig_password'] = $inst->free_query('ISPConfig mysql database password', $conf['mysql']['ispconfig_password']);
 	}
