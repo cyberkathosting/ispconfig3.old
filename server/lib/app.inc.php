@@ -29,7 +29,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 //* Set timezone
-if(isset($conf['timezone'])) date_default_timezone_set($conf['timezone']);
+if(isset($conf['timezone']) && $conf['timezone'] != '') date_default_timezone_set($conf['timezone']);
 
 class app {
 		
