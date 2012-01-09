@@ -198,7 +198,17 @@ class nginx_plugin {
 			if(trim($data["new"]["ssl_request"]) != '') file_put_contents($csr_file,$data["new"]["ssl_request"]);
 			if(trim($data["new"]["ssl_cert"]) != '') file_put_contents($crt_file,$data["new"]["ssl_cert"]);
 			// for nginx, bundle files have to be appended to the certificate file
-			if(trim($data["new"]["ssl_bundle"]) != '') file_put_contents($crt_file,$data["new"]["ssl_bundle"], FILE_APPEND);
+			if(trim($data["new"]["ssl_bundle"]) != ''){
+				if(file_exists($crt_file)){
+					$crt_file_contents = trim(file_get_contents($crt_file));
+				} else {
+					$crt_file_contents = '';
+				}
+				if($crt_file_contents != '') $crt_file_contents .= "\n";
+				$crt_file_contents .= $data["new"]["ssl_bundle"];
+				file_put_contents($crt_file,$crt_file_contents);
+				unset($crt_file_contents);
+			}
 			/* Update the DB of the (local) Server */
 			$app->db->query("UPDATE web_domain SET ssl_action = '' WHERE domain = '".$data['new']['domain']."'");
 			/* Update also the master-DB of the Server-Farm */
