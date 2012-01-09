@@ -198,7 +198,7 @@ class nginx_plugin {
 			if(trim($data["new"]["ssl_request"]) != '') file_put_contents($csr_file,$data["new"]["ssl_request"]);
 			if(trim($data["new"]["ssl_cert"]) != '') file_put_contents($crt_file,$data["new"]["ssl_cert"]);
 			// for nginx, bundle files have to be appended to the certificate file
-			if(trim($data["new"]["ssl_bundle"]) != ''){
+			if(trim($data["new"]["ssl_bundle"]) != ''){				
 				if(file_exists($crt_file)){
 					$crt_file_contents = trim(file_get_contents($crt_file));
 				} else {
@@ -206,7 +206,7 @@ class nginx_plugin {
 				}
 				if($crt_file_contents != '') $crt_file_contents .= "\n";
 				$crt_file_contents .= $data["new"]["ssl_bundle"];
-				file_put_contents($crt_file,$crt_file_contents);
+				file_put_contents($crt_file,$app->file->unix_nl($crt_file_contents));
 				unset($crt_file_contents);
 			}
 			/* Update the DB of the (local) Server */
