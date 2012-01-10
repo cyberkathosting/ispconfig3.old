@@ -154,7 +154,7 @@ foreach($records as $rec) {
 // Create awstats statistics
 #######################################################################################################
 
-$sql = "SELECT domain_id, domain, document_root FROM web_domain WHERE stats_type = 'awstats' AND server_id = ".$conf['server_id'];
+$sql = "SELECT domain_id, domain, document_root, system_user, system_group FROM web_domain WHERE stats_type = 'awstats' AND server_id = ".$conf['server_id'];
 $records = $app->db->queryAllRecords($sql);
 
 $web_config = $app->getconf->get_server_config($conf['server_id'], 'web');
@@ -239,6 +239,11 @@ HostAliases="www.'.$domain.' localhost 127.0.0.1"'.$aliasdomain;
 		if(is_file($rec['document_root'].'/web/stats/index.html')) unlink($rec['document_root'].'/web/stats/index.html');
 		rename($rec['document_root'].'/web/stats/awstats.'.$domain.'.html',$rec['document_root'].'/web/stats/awsindex.html');
 		if(!is_file($rec['document_root']."/web/stats/index.php")) copy("/usr/local/ispconfig/server/conf/awstats_index.php.master",$rec['document_root']."/web/stats/index.php");
+		
+		if(is_file($rec['document_root']."/web/stats/index.php")) {
+			chown($rec['document_root']."/web/stats/index.php",$rec['system_user']);
+			chgrp($rec['document_root']."/web/stats/index.php",$rec['system_group']);
+		}
 		
 		$app->log('Created awstats statistics with command: '.$command,LOGLEVEL_DEBUG);
 	} else {
