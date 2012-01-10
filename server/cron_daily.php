@@ -240,14 +240,14 @@ HostAliases="www.'.$domain.' localhost 127.0.0.1"'.$aliasdomain;
 		rename($rec['document_root'].'/web/stats/awstats.'.$domain.'.html',$rec['document_root'].'/web/stats/awsindex.html');
 		if(!is_file($rec['document_root']."/web/stats/index.php")) copy("/usr/local/ispconfig/server/conf/awstats_index.php.master",$rec['document_root']."/web/stats/index.php");
 		
-		if(is_file($rec['document_root']."/web/stats/index.php")) {
-			chown($rec['document_root']."/web/stats/index.php",$rec['system_user']);
-			chgrp($rec['document_root']."/web/stats/index.php",$rec['system_group']);
-		}
-		
 		$app->log('Created awstats statistics with command: '.$command,LOGLEVEL_DEBUG);
 	} else {
 		$app->log("No awstats statistics created. Either $awstats_pl or $awstats_buildstaticpages_pl is not owned by root user.",LOGLEVEL_WARN);
+	}
+	
+	if(is_file($rec['document_root']."/web/stats/index.php")) {
+		chown($rec['document_root']."/web/stats/index.php",$rec['system_user']);
+		chgrp($rec['document_root']."/web/stats/index.php",$rec['system_group']);
 	}
 	
 }
