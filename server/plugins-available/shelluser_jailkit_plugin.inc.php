@@ -166,7 +166,7 @@ class shelluser_jailkit_plugin {
 			//exec('rm -rf '.$data['old']['dir'].$jailkit_chroot_userhome);
 			
 			if(@is_dir($data['old']['dir'].$jailkit_chroot_userhome)) {
-				$command = 'userdel';
+				$command = 'userdel -f';
 				$command .= ' '.escapeshellcmd($data['old']['username']);
 				exec($command);
 				$app->log("Jailkit Plugin -> delete chroot home:".$data['old']['dir'].$jailkit_chroot_userhome,LOGLEVEL_DEBUG);

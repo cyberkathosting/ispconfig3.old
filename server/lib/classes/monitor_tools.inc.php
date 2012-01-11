@@ -879,7 +879,7 @@ class monitor_tools {
 			/*
 			 * Fetch the output
 			 */
-			$data['output'] = shell_exec('zypper --non-interactive up');
+			$data['output'] = shell_exec('zypper lu');
 		} else {
 			/*
 			 * It is not Debian/Ubuntu, so there is no data and no state

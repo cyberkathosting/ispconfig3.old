@@ -1750,7 +1750,7 @@ class installer_base {
 			chgrp($install_dir.'/server/lib/mysql_clientdb.conf', 'root');
 		}
 		
-		if(is_file($install_dir.'/interface/invoices')) {
+		if(is_dir($install_dir.'/interface/invoices')) {
 			chmod($install_dir.'/interface/invoices', 0770);
 			chown($install_dir.'/interface/invoices', 'ispconfig');
 			chgrp($install_dir.'/interface/invoices', 'ispconfig');
