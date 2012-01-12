@@ -645,7 +645,11 @@ class remoting_lib {
 				foreach($primary_id as $key => $val) {
 					$key = $app->db->quote($key);
 					$val = $app->db->quote($val);
-					$sql_where .= "$key = '$val' AND ";
+					if(strpos($val,'%')) {
+						$sql_where .= "$key like '$val' AND ";
+					} else {
+						$sql_where .= "$key = '$val' AND ";
+					}
 				}
 				$sql_where = substr($sql_where,0,-5);
 				$sql = "SELECT * FROM ".$escape.$this->formDef['db_table'].$escape." WHERE ".$sql_where;
