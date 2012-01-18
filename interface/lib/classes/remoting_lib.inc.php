@@ -536,11 +536,16 @@ class remoting_lib {
                                                 if($field['formtype'] == 'PASSWORD') {
                                                         $sql_insert_key .= "`$key`, ";
                                                         if($field['encryption'] == 'CRYPT') {
-                                                                $record[$key] = $app->auth->crypt_password(stripslashes($record[$key]));
+																$record[$key] = $app->auth->crypt_password(stripslashes($record[$key]));
+																$sql_insert_val .= "'".$app->db->quote($record[$key])."', ";
+														} elseif ($field['encryption'] == 'MYSQL') {
+																$sql_insert_val .= "PASSWORD('".$app->db->quote($record[$key])."'), ";
+														} elseif ($field['encryption'] == 'CLEARTEXT') {
+																$sql_insert_val .= "'".$app->db->quote($record[$key])."', ";
                                                         } else {
-                                                                $record[$key] = md5($record[$key]);
+                                                                $record[$key] = md5(stripslashes($record[$key]));
+																$sql_insert_val .= "'".$app->db->quote($record[$key])."', ";
                                                         }
-														$sql_insert_val .= "'".$record[$key]."', ";
                                                 } elseif ($field['formtype'] == 'CHECKBOX') {
                                                         $sql_insert_key .= "`$key`, ";
 														if($record[$key] == '') {
@@ -645,7 +650,7 @@ class remoting_lib {
 				foreach($primary_id as $key => $val) {
 					$key = $app->db->quote($key);
 					$val = $app->db->quote($val);
-					if(strpos($val,'%')) {
+					if(stristr($val,'%')) {
 						$sql_where .= "$key like '$val' AND ";
 					} else {
 						$sql_where .= "$key = '$val' AND ";
