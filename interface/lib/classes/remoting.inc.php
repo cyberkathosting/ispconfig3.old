@@ -348,8 +348,8 @@ class remoting {
 			$this->server->fault('permission_denied','You do not have the permissions to access this function.');
 			return false;
 		}
-		$affected_rows = $this->deleteQuery('../mail/form/mail_user_filter.tform.php', $primary_id);
-		$app->plugin->raiseEvent('mail:mail_user_filter:on_after_delete',$this);
+		$affected_rows = $this->deleteQuery('../mail/form/mail_user_filter.tform.php', $primary_id,'mail:mail_user_filter:on_after_delete');
+		// $app->plugin->raiseEvent('mail:mail_user_filter:on_after_delete',$this);
 		return $affected_rows;
 	}
 
@@ -2317,22 +2317,23 @@ class remoting {
 		// set a few values for compatibility with tform actions, mostly used by plugins
 		$this->oldDataRecord = $old_rec;
 		$this->id = $primary_id;
-		$this->dataRecord = $params;
+		$this->dataRecord = $old_rec;
+		//$this->dataRecord = $params;
 		
 		//* Get the SQL query
 		$sql = $app->remoting_lib->getDeleteSQL($primary_id);
-		
+		$app->db->errorMessage = '';
 		$app->db->query($sql);
+		$affected_rows = $app->db->affectedRows();
 		
 		if($app->db->errorMessage != '') {
-			
-			if($event_identifier != '') $app->plugin->raiseEvent($event_identifier,$this);
-			
 			$this->server->fault('database_error', $app->db->errorMessage . ' '.$sql);
 			return false;
 		}
 		
-		$affected_rows = $app->db->affectedRows();
+		if($event_identifier != '') {
+			$app->plugin->raiseEvent($event_identifier,$this);
+		}
 		
 		//* Save changes to Datalog
 		if($app->remoting_lib->formDef["db_history"] == 'yes') {
