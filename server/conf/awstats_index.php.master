@@ -39,9 +39,12 @@ if ($handle = opendir('.'))
         }
 
         $current = $year.$month;
-        $awprev[$current] = $year."-".$month;
+		if ( $month < 10 ) {
+			$current = $year."0".$month;
+		}
+		$awprev[$current] = $year."-".$month;
 
-        closedir($handle);
+		closedir($handle);
 }
 
 echo '<div style="width: 97%; margin-left: 4px; height: 20px; background-color: #FFFFFF; position: fixed; padding: 7px; border: 2px solid #cccccc;><div align="left"><font color="#000000" size="2" face="Verdana, Arial, Helvetica,  sans-serif">' .$aw["aw_jump_text"]. '</font </div>';
