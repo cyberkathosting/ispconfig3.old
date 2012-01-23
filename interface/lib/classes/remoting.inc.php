@@ -2156,19 +2156,28 @@ class remoting {
 		
 		//* Get the SQL query
 		$sql = $app->remoting_lib->getSQL($params,'INSERT',0);
-		$app->db->query($sql);
 		
 		//* Check if no system user with that username exists
 		$username = $app->db->quote($params["username"]);
-		$tmp = $app->db->queryOneRecord("SELECT count(userid) as number FROm sys_user WHERE username = '$username'");
+		$tmp = $app->db->queryOneRecord("SELECT count(userid) as number FROM sys_user WHERE username = '$username'");
 		if($tmp['number'] > 0) $app->remoting_lib->errorMessage .= "Duplicate username<br />";
 		
+		//* Stop on error while preparing the sql query
 		if($app->remoting_lib->errorMessage != '') {
 			$this->server->fault('data_processing_error', $app->remoting_lib->errorMessage);
 			return false;
 		}
 		
+		//* Execute the SQL query
+		$app->db->query($sql);
 		$insert_id = $app->db->insertID();
+		
+		
+		//* Stop on error while executing the sql query
+		if($app->remoting_lib->errorMessage != '') {
+			$this->server->fault('data_processing_error', $app->remoting_lib->errorMessage);
+			return false;
+		}
 		
 		$this->id = $insert_id;
 		$this->dataRecord = $params;
