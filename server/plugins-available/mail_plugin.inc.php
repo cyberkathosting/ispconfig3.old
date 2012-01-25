@@ -91,18 +91,18 @@ class mail_plugin {
 		$tmp_basepath_parts = explode('/',$tmp_basepath);
 		unset($tmp_basepath_parts[count($tmp_basepath_parts)-1]);
 		$base_path = implode('/',$tmp_basepath_parts);
-		
-		
 
 		//* Create the mail domain directory, if it does not exist
 		if(!empty($base_path) && !is_dir($base_path)) {
-			exec("su -c 'mkdir -p ".escapeshellcmd($base_path)."' ".$mail_config['mailuser_name']);
+			//exec("su -c 'mkdir -p ".escapeshellcmd($base_path)."' ".$mail_config['mailuser_name']);
+			$app->system->mkdirpath($base_path, 0700, $mail_config['mailuser_name'], $mail_config['mailuser_group']);
 			$app->log('Created Directory: '.$base_path,LOGLEVEL_DEBUG);
 		}
 		
 		// Dovecot uses a different mail layout with a separate 'Maildir' subdirectory.
 		if($mail_config['pop3_imap_daemon'] == 'dovecot') {
-			exec("su -c 'mkdir -p ".escapeshellcmd($maildomain_path)."' ".$mail_config['mailuser_name']);
+			//exec("su -c 'mkdir -p ".escapeshellcmd($maildomain_path)."' ".$mail_config['mailuser_name']);
+			$app->system->mkdirpath($maildomain_path, 0700, $mail_config['mailuser_name'], $mail_config['mailuser_group']);
 			$app->log('Created Directory: '.$maildomain_path,LOGLEVEL_DEBUG);
 			$maildomain_path .= '/Maildir';
 		}
@@ -221,13 +221,14 @@ class mail_plugin {
 
 		//* Create the mail domain directory, if it does not exist
 		if(!empty($base_path) && !is_dir($base_path)) {
-			exec("su -c 'mkdir -p ".escapeshellcmd($base_path)."' ".$mail_config['mailuser_name']);
+			//exec("su -c 'mkdir -p ".escapeshellcmd($base_path)."' ".$mail_config['mailuser_name']);
+			$app->system->mkdirpath($base_path, 0700, $mail_config['mailuser_name'], $mail_config['mailuser_group']);
 			$app->log('Created Directory: '.$base_path,LOGLEVEL_DEBUG);
 		}
 		
 		// Dovecot uses a different mail layout with a separate 'Maildir' subdirectory.
 		if($mail_config['pop3_imap_daemon'] == 'dovecot') {
-			exec("su -c 'mkdir -p ".escapeshellcmd($maildomain_path)."' ".$mail_config['mailuser_name']);
+			$app->system->mkdirpath($maildomain_path, 0700, $mail_config['mailuser_name'], $mail_config['mailuser_group']);
 			$app->log('Created Directory: '.$base_path,LOGLEVEL_DEBUG);
 			$maildomain_path .= '/Maildir';
 		}
