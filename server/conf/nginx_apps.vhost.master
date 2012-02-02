@@ -41,7 +41,7 @@ server {
                        # To access phpMyAdmin, the default user (like www-data on Debian/Ubuntu) must be used
                        fastcgi_pass 127.0.0.1:9000;
                        fastcgi_index index.php;
-                       fastcgi_param SCRIPT_FILENAME $request_filename;
+                       fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                        fastcgi_param PATH_INFO $fastcgi_script_name;
                        fastcgi_buffer_size 128k;
                        fastcgi_buffers 256 4k;
@@ -66,7 +66,7 @@ server {
                        # To access SquirrelMail, the default user (like www-data on Debian/Ubuntu) must be used
                        fastcgi_pass 127.0.0.1:9000;
                        fastcgi_index index.php;
-                       fastcgi_param SCRIPT_FILENAME $request_filename;
+                       fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                        fastcgi_param PATH_INFO $fastcgi_script_name;
                        fastcgi_buffer_size 128k;
                        fastcgi_buffers 256 4k;
