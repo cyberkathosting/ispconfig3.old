@@ -531,7 +531,7 @@ $form["tabs"]['advanced'] = array (
 														'regex' => '/^([1-9][0-9]{0,10})$/',
 														'errmsg'=> 'pm_max_children_error_regex'),
 									),
-			'default'	=> '50',
+			'default'	=> '10',
 			'value'		=> '',
 			'width'		=> '3',
 			'maxlength'	=> '3'
@@ -543,7 +543,7 @@ $form["tabs"]['advanced'] = array (
 														'regex' => '/^([1-9][0-9]{0,10})$/',
 														'errmsg'=> 'pm_start_servers_error_regex'),
 									),
-			'default'	=> '20',
+			'default'	=> '2',
 			'value'		=> '',
 			'width'		=> '3',
 			'maxlength'	=> '3'
@@ -555,7 +555,7 @@ $form["tabs"]['advanced'] = array (
 														'regex' => '/^([1-9][0-9]{0,10})$/',
 														'errmsg'=> 'pm_min_spare_servers_error_regex'),
 									),
-			'default'	=> '5',
+			'default'	=> '1',
 			'value'		=> '',
 			'width'		=> '3',
 			'maxlength'	=> '3'
@@ -567,7 +567,7 @@ $form["tabs"]['advanced'] = array (
 														'regex' => '/^([1-9][0-9]{0,10})$/',
 														'errmsg'=> 'pm_max_spare_servers_error_regex'),
 									),
-			'default'	=> '35',
+			'default'	=> '5',
 			'value'		=> '',
 			'width'		=> '3',
 			'maxlength'	=> '3'
