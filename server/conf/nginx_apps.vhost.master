@@ -5,6 +5,8 @@ server {
 
         root   {apps_vhost_dir};
 
+        client_max_body_size 20M;
+
         location / {
                index index.php index.html;
         }
@@ -46,6 +48,7 @@ server {
                        fastcgi_buffers 256 4k;
                        fastcgi_busy_buffers_size 256k;
                        fastcgi_temp_file_write_size 256k;
+                       fastcgi_read_timeout 240;
                }
                location ~* ^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
                        root /usr/share/;
