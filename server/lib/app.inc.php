@@ -54,7 +54,7 @@ class app {
 					if we are in a multiserver setup
 					*/
 					
-					if($conf['dbmaster_host'] != '' && $conf['dbmaster_host'] != $conf['db_host']) {
+					if($conf['dbmaster_host'] != '' && ($conf['dbmaster_host'] != $conf['db_host'] || ($conf['dbmaster_host'] == $conf['db_host'] && $conf['dbmaster_database'] != $conf['db_database']))) {
 						$this->dbmaster = new db;
 						if($this->dbmaster->linkId) $this->dbmaster->closeConn();
 						$this->dbmaster->dbHost = $conf['dbmaster_host'];
