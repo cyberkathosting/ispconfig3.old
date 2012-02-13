@@ -42,11 +42,12 @@
 	SSLEngine on
     SSLCertificateFile <tmpl_var name='document_root'>/ssl/<tmpl_var name='ssl_domain'>.crt
     SSLCertificateKeyFile <tmpl_var name='document_root'>/ssl/<tmpl_var name='ssl_domain'>.key
-</tmpl_if>
 <tmpl_if name='has_bundle_cert'>
     SSLCACertificateFile <tmpl_var name='document_root'>/ssl/<tmpl_var name='ssl_domain'>.bundle
 </tmpl_if>
+</tmpl_if>
     </IfModule>
+
     <Directory {tmpl_var name='web_document_root_www'}>
         Options FollowSymLinks
         AllowOverride <tmpl_var name='allow_override'>
