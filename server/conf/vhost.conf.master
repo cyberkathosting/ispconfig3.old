@@ -183,6 +183,7 @@
         FcgidConnectTimeout 3
         FcgidIOTimeout 360
         FcgidBusyTimeout 300
+		FcgidMaxRequestLen 1073741824
 <tmpl_else>
         IdleTimeout 300
         ProcessLifeTime 3600
