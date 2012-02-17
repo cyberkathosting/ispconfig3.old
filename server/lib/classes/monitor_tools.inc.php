@@ -1020,7 +1020,7 @@ class monitor_tools {
 				/*
 				 * Fetch the output
 				 */
-				$data['output'] = shell_exec('mpt-status --autoload -n');
+				$data['output'] = shell_exec('mpt-status --autoload');
 
 				/*
 				 * Then calc the state.
