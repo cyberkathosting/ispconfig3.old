@@ -1032,7 +1032,7 @@ class monitor_tools {
 						* The output contains information for every RAID and every HDD.
 						* We only need the state of the RAID
 						*/
-						if (strpos($item, 'raidlevel:') !== false) {
+						if (strpos($item, 'state ') !== false) {
 							/*
 							* We found a raid, process the state of it
 							*/
