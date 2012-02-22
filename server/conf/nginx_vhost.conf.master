@@ -75,7 +75,7 @@ server {
             auth_basic_user_file <tmpl_var name='stats_auth_passwd_file'>;
         }
 
-        location /awstats-icon {
+        location ^~ /awstats-icon {
             alias /usr/share/awstats/icon;
         }
 
