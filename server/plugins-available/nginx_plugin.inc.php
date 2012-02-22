@@ -1366,6 +1366,7 @@ class nginx_plugin {
 		}
 		
 		if(is_file($data['new']['document_root']."/web/stats/index.html")) unlink($data['new']['document_root']."/web/stats/index.html");
+		if(!is_dir($data['new']['document_root']."/web/stats/")) mkdir($data['new']['document_root']."/web/stats");
 		copy("/usr/local/ispconfig/server/conf/awstats_index.php.master",$data['new']['document_root']."/web/stats/index.php");
 	}
 	
