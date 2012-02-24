@@ -1767,6 +1767,7 @@ class apache2_plugin {
 						$output .= "      Alias /webdav/" . $fn . ' ' . $webdavRoot . '/' . $fn . "\n";
 						$output .= "      <Location /webdav/" . $fn . ">\n";
 						$output .= "        DAV On\n";
+						$output .= '        BrowserMatch "MSIE" AuthDigestEnableQueryStringHack=On'."\n";
 						$output .= "        AuthType Digest\n";
 						$output .= "        AuthName \"" . $fn . "\"\n";
 						$output .= "        AuthUserFile " . $webdavRoot . '/' . $file . "\n";
