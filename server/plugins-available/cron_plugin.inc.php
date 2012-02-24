@@ -183,8 +183,9 @@ class cron_plugin {
         //* try to find customer's mail address
         
         /** TODO: add possibility for client to choose mail notification! **/
-        $cron_content = "MAILTO=''\n\n";
-        $chr_cron_content = "MAILTO=''\n\n";
+        $cron_content = "MAILTO=''\n";
+		$cron_content .= "SHELL='/bin/sh'\n\n";
+        $chr_cron_content = "MAILTO=''\n";
         $chr_cron_content .= "SHELL='/usr/sbin/jk_chrootsh'\n\n";
         
         $cmd_count = 0;
