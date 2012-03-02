@@ -202,7 +202,7 @@ class cron_plugin {
                 }
 				$command .= "\t{$this->parent_domain['system_user']}"; //* running as user
                 if($job['type'] == 'url') {
-                    $command .= "\t{$cron_config['wget']} -q -O /dev/null " . escapeshellarg($job['command']) . " >/dev/null 2>&1";
+                    $command .= "\t{$cron_config['wget']} -q -t 1 -T 7200 -O /dev/null " . escapeshellarg($job['command']) . " >/dev/null 2>&1";
                 } else {
                     if($job['type'] == 'chrooted') {
                         if(substr($job['command'], 0, strlen($this->parent_domain['document_root'])) == $this->parent_domain['document_root']) {
