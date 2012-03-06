@@ -611,6 +611,10 @@ class remoting_lib {
                                                 if($field['formtype'] == 'PASSWORD') {
 														if($field['encryption'] == 'CRYPT') {
                                                                 $record[$key] = $app->auth->crypt_password(stripslashes($record[$key]));
+                                                        } elseif ($field['encryption'] == 'MYSQL') {
+																$sql_insert_val .= "PASSWORD('".$app->db->quote($record[$key])."'), ";
+														} elseif ($field['encryption'] == 'CLEARTEXT') {
+																$sql_insert_val .= "'".$app->db->quote($record[$key])."', ";
                                                         } else {
                                                                 $record[$key] = md5($record[$key]);
                                                         }
