@@ -157,6 +157,38 @@ class remoting {
         return $all;
 	}
 	
+	//* Add a IP address record
+	public function server_ip_add($session_id, $client_id, $params)
+    {
+		if(!$this->checkPerm($session_id, 'server_ip_add')) {
+			$this->server->fault('permission_denied', 'You do not have the permissions to access this function.');
+			return false;
+		}
+		return $this->insertQuery('../admin/form/server_ip.tform.php',$client_id,$params);
+	}
+	
+	//* Update IP address record
+	public function server_ip_update($session_id, $client_id, $ip_id, $params)
+    {
+		if(!$this->checkPerm($session_id, 'server_ip_update')) {
+			$this->server->fault('permission_denied', 'You do not have the permissions to access this function.');
+			return false;
+		}
+		$affected_rows = $this->updateQuery('../admin/form/server_ip.tform.php',$client_id,$ip_id,$params);
+		return $affected_rows;
+	}
+	
+	//* Delete IP address record
+	public function server_ip_delete($session_id, $ip_id)
+    {
+		if(!$this->checkPerm($session_id, 'server_ip_delete')) {
+			$this->server->fault('permission_denied', 'You do not have the permissions to access this function.');
+			return false;
+		}
+		$affected_rows = $this->deleteQuery('../admin/form/server_ip.tform.php',$ip_id);
+		return $affected_rows;
+	}
+	
 	//* Get mail domain details
 	public function mail_domain_get($session_id, $primary_id)
     {
