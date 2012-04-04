@@ -1576,6 +1576,7 @@ class apache2_plugin {
 			$domain = $sitedata['domain'];
 			$user = $sitedata['system_user'];
 			$group = $sitedata['system_group'];
+			$webdav_user_dir = $documentRoot . '/webdav/' . $data['new']['dir'];
 
 			/* Check if this is a chrooted setup */
 			if($web_config['website_basedir'] != '' && @is_file($web_config['website_basedir'].'/etc/passwd')) {
@@ -1584,13 +1585,25 @@ class apache2_plugin {
 			} else {
 				$apache_chrooted = false;
 			}
+			
+			//* We dont want to have relative paths here
+			if(stristr($webdav_user_dir,'..')  || stristr($webdav_user_dir,'./')) {
+				$app->log('Folder path '.$webdav_user_dir.' contains ./ or .. '.$documentRoot,LOGLEVEL_WARN);
+				return false;
+			}
+			
+			//* Check if the resulting path exists if yes, if it is inside the docroot
+			if(is_dir($webdav_user_dir) && substr(realpath($webdav_user_dir),0,strlen($documentRoot)) != $documentRoot) {
+				$app->log('Folder path '.$webdav_user_dir.' is outside of docroot '.$documentRoot,LOGLEVEL_WARN);
+				return false;
+			}
 
 			/*
 			 * First the webdav-root - folder has to exist
 			*/
-			if(!is_dir($documentRoot . '/webdav/' . $data['new']['dir'])) {
-				$app->log('Webdav User directory '.$documentRoot.'/webdav/'.$data['new']['dir'].' does not exist. Creating it now.',LOGLEVEL_DEBUG);
-				exec('mkdir -p '.escapeshellcmd($documentRoot . '/webdav/' . $data['new']['dir']));
+			if(!is_dir($webdav_user_dir)) {
+				$app->log('Webdav User directory '.$webdav_user_dir.' does not exist. Creating it now.',LOGLEVEL_DEBUG);
+				exec('mkdir -p '.escapeshellcmd($webdav_user_dir));
 			}
 
 			/*
@@ -1603,19 +1616,19 @@ class apache2_plugin {
 			 * The webdav folder (not the webdav-root!) needs the same (not in ONE step, because the
 			 * pwd-files are owned by root)
 			*/
-			$this->_exec('chown ' . $user . ':' . $group . ' ' . escapeshellcmd($documentRoot . '/webdav/'. $data['new']['dir'] . ' -R'));
-			$this->_exec('chmod 770 ' . escapeshellcmd($documentRoot . '/webdav/' . $data['new']['dir'] . ' -R'));
+			$this->_exec('chown ' . $user . ':' . $group . ' ' . escapeshellcmd($webdav_user_dir.' -R'));
+			$this->_exec('chmod 770 ' . escapeshellcmd($webdav_user_dir.' -R'));
 
 			/*
 			 * if the user is active, we have to write/update the password - file
 			 * if the user is inactive, we have to inactivate the user by removing the user from the file
 			*/
 			if ($data['new']['active'] == 'y') {
-				$this->_writeHtDigestFile( $documentRoot . '/webdav/' . $data['new']['dir'] . '.htdigest', $data['new']['username'], $data['new']['dir'], $data['new']['password']);
+				$this->_writeHtDigestFile( $webdav_user_dir . '.htdigest', $data['new']['username'], $data['new']['dir'], $data['new']['password']);
 			}
 			else {
 				/* empty pwd removes the user! */
-				$this->_writeHtDigestFile( $documentRoot . '/webdav/' . $data['new']['dir'] . '.htdigest', $data['new']['username'], $data['new']['dir'], '');
+				$this->_writeHtDigestFile( $webdav_user_dir . '.htdigest', $data['new']['username'], $data['new']['dir'], '');
 			}
 
 			/*
