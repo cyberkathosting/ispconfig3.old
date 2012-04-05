@@ -120,6 +120,10 @@ if ($_SESSION["s"]["user"]["typ"] != 'admin' && $app->auth->has_clients($_SESSIO
 	$app->tpl->setVar("client_group_id",$client_select);
 }
 
+$lng_file = 'lib/lang/'.$_SESSION['s']['language'].'_dns_import.lng';
+include($lng_file);
+$app->tpl->setVar($wb);
+
 // Import the zone-file
 //if(1=="1")
 if(isset($_FILES['file']['name']) && is_uploaded_file($_FILES['file']['tmp_name'])){
@@ -545,18 +549,15 @@ if(isset($_FILES['file']['name']) && is_uploaded_file($_FILES['file']['tmp_name'
 		$error .= $app->lng('error_no_valid_zone_file_txt');
 	}
 	//header('Location: /dns/dns_soa_edit.php?id='.$dns_soa_id);
+} else {
+	if(isset($_FILES['file']['name'])) {
+		$error = $wb['no_file_uploaded_error'];
+	}
 }
 
 
 $app->tpl->setVar('msg',$msg);
 $app->tpl->setVar('error',$error);
-
-$app->tpl->setVar("title",'Import Zone Files');
-$app->tpl->setVar("zonefile_to_import_txt",$app->lng('zonefile_to_import_txt'));
-
-$lng_file = 'lib/lang/'.$_SESSION['s']['language'].'_dns_wizard.lng';
-include($lng_file);
-$app->tpl->setVar($wb);
 
 $app->tpl_defaults();
 $app->tpl->pparse();
