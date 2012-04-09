@@ -709,6 +709,11 @@ class apache2_plugin {
 		$vhost_data['ssl_domain'] = $data['new']['ssl_domain'];
 		$vhost_data['has_custom_php_ini'] = $has_custom_php_ini;
 		$vhost_data['custom_php_ini_dir'] = escapeshellcmd($custom_php_ini_dir);
+		
+		// Custom Apache directives
+		// Make sure we only have Unix linebreaks
+		$vhost_data['apache_directives'] = str_replace("\r\n", "\n", $vhost_data['apache_directives']);
+		$vhost_data['apache_directives'] = str_replace("\r", "\n", $vhost_data['apache_directives']);
 
 		// Check if a SSL cert exists
 		$ssl_dir = $data['new']['document_root'].'/ssl';
