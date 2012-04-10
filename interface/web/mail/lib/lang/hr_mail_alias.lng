@@ -9,4 +9,5 @@ $wb['destination_error_isemail'] = 'Destinacija email adrese je neispravna.';
 $wb['limit_mailalias_txt'] = 'Iskorišten je maksimalan broj email aliasa.';
 $wb['duplicate_mailbox_txt'] = 'Već postoji mailbox sa ovom email adresom';
 $wb['domain_txt'] = 'Domena';
+$wb['duplicate_email_alias_txt'] = 'This email alias does already exist.';
 ?>

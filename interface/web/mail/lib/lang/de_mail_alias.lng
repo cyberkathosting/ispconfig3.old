@@ -9,5 +9,5 @@ $wb['destination_error_isemail'] = 'Zieladresse ist ungültig.';
 $wb['limit_mailalias_txt'] = 'Die maximale Anzahl an E-Mail-Aliassen für ihr Konto wurde erreicht.';
 $wb['duplicate_mailbox_txt'] = 'Es existiert bereits eine Mailbox mit dieser E-Mail-Adresse.';
 $wb['domain_txt'] = 'Domain';
-$wb["duplicate_email_alias_txt"] = 'Dieser E-Mail-Alias existiert bereits.';
+$wb['duplicate_email_alias_txt'] = 'Dieser E-Mail-Alias existiert bereits.';
 ?>
