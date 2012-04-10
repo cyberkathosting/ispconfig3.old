@@ -199,7 +199,27 @@ if(isset($_FILES['file']['name']) && is_uploaded_file($_FILES['file']['tmp_name'
 		}
 		// TTL
 		if($parts[0] == '$ttl'){
-			$soa['ttl'] = intval($parts[1]);
+			$time_format = strtolower(substr($parts[1],-1));
+			switch ($time_format) {
+				case 's':
+					$soa['ttl'] = intval(substr($parts[1],0,-1));
+					break;
+				case 'm':
+					$soa['ttl'] = intval(substr($parts[1],0,-1)) * 60;
+					break;
+				case 'h':
+					$soa['ttl'] = intval(substr($parts[1],0,-1)) * 3600;
+					break;
+				case 'd':
+					$soa['ttl'] = intval(substr($parts[1],0,-1)) * 86400;
+					break;
+				case 'w':
+					$soa['ttl'] = intval(substr($parts[1],0,-1)) * 604800;
+					break;
+				default:
+					$soa['ttl'] = intval($parts[1]);
+			}
+			unset($time_format);
 		}
 		// SOA
 		if(in_array("soa", $parts)){
@@ -216,13 +236,101 @@ if(isset($_FILES['file']['name']) && is_uploaded_file($_FILES['file']['tmp_name'
 		// SERIAL
 		if($i == ($soa_array_key + 1)) $soa['serial'] = intval($parts[0]);
 		// REFRESH
-		if($i == ($soa_array_key + 2)) $soa['refresh'] = intval($parts[0]);
+		if($i == ($soa_array_key + 2)){
+			$time_format = strtolower(substr($parts[0],-1));
+			switch ($time_format) {
+				case 's':
+					$soa['refresh'] = intval(substr($parts[0],0,-1));
+					break;
+				case 'm':
+					$soa['refresh'] = intval(substr($parts[0],0,-1)) * 60;
+					break;
+				case 'h':
+					$soa['refresh'] = intval(substr($parts[0],0,-1)) * 3600;
+					break;
+				case 'd':
+					$soa['refresh'] = intval(substr($parts[0],0,-1)) * 86400;
+					break;
+				case 'w':
+					$soa['refresh'] = intval(substr($parts[0],0,-1)) * 604800;
+					break;
+				default:
+					$soa['refresh'] = intval($parts[0]);
+			}
+			unset($time_format);
+		}
 		// RETRY
-		if($i == ($soa_array_key + 3)) $soa['retry'] = intval($parts[0]);
+		if($i == ($soa_array_key + 3)){
+			$time_format = strtolower(substr($parts[0],-1));
+			switch ($time_format) {
+				case 's':
+					$soa['retry'] = intval(substr($parts[0],0,-1));
+					break;
+				case 'm':
+					$soa['retry'] = intval(substr($parts[0],0,-1)) * 60;
+					break;
+				case 'h':
+					$soa['retry'] = intval(substr($parts[0],0,-1)) * 3600;
+					break;
+				case 'd':
+					$soa['retry'] = intval(substr($parts[0],0,-1)) * 86400;
+					break;
+				case 'w':
+					$soa['retry'] = intval(substr($parts[0],0,-1)) * 604800;
+					break;
+				default:
+					$soa['retry'] = intval($parts[0]);
+			}
+			unset($time_format);
+		}
 		// EXPIRE
-		if($i == ($soa_array_key + 4)) $soa['expire'] = intval($parts[0]);
+		if($i == ($soa_array_key + 4)){
+			$time_format = strtolower(substr($parts[0],-1));
+			switch ($time_format) {
+				case 's':
+					$soa['expire'] = intval(substr($parts[0],0,-1));
+					break;
+				case 'm':
+					$soa['expire'] = intval(substr($parts[0],0,-1)) * 60;
+					break;
+				case 'h':
+					$soa['expire'] = intval(substr($parts[0],0,-1)) * 3600;
+					break;
+				case 'd':
+					$soa['expire'] = intval(substr($parts[0],0,-1)) * 86400;
+					break;
+				case 'w':
+					$soa['expire'] = intval(substr($parts[0],0,-1)) * 604800;
+					break;
+				default:
+					$soa['expire'] = intval($parts[0]);
+			}
+			unset($time_format);
+		}
 		// MINIMUM
-		if($i == ($soa_array_key + 5)) $soa['minimum'] = intval($parts[0]);
+		if($i == ($soa_array_key + 5)){
+			$time_format = strtolower(substr($parts[0],-1));
+			switch ($time_format) {
+				case 's':
+					$soa['minimum'] = intval(substr($parts[0],0,-1));
+					break;
+				case 'm':
+					$soa['minimum'] = intval(substr($parts[0],0,-1)) * 60;
+					break;
+				case 'h':
+					$soa['minimum'] = intval(substr($parts[0],0,-1)) * 3600;
+					break;
+				case 'd':
+					$soa['minimum'] = intval(substr($parts[0],0,-1)) * 86400;
+					break;
+				case 'w':
+					$soa['minimum'] = intval(substr($parts[0],0,-1)) * 604800;
+					break;
+				default:
+					$soa['minimum'] = intval($parts[0]);
+			}
+			unset($time_format);
+		}
 		// RESOURCE RECORDS
 		if($i > ($soa_array_key + 5)){
 			if(substr($parts[0],-1) == '.' || $parts[0] == '@' || ($parts[0] != 'a' && $parts[0] != 'aaaa' && $parts[0] != 'ns' && $parts[0] != 'cname' && $parts[0] != 'hinfo' && $parts[0] != 'mx' && $parts[0] != 'naptr' && $parts[0] != 'ptr' && $parts[0] != 'rp' && $parts[0] != 'srv' && $parts[0] != 'txt')){
@@ -544,9 +652,9 @@ if(isset($_FILES['file']['name']) && is_uploaded_file($_FILES['file']['tmp_name'
 				$dns_rr_id = $app->db->datalogInsert('dns_rr', $insert_data, 'id');
 			}
 		}
-		$msg .= $app->lng('zone_file_successfully_imported_txt');
+		$msg .= $wb['zone_file_successfully_imported_txt'];
 	} else {
-		$error .= $app->lng('error_no_valid_zone_file_txt');
+		$error .= $wb['error_no_valid_zone_file_txt'];
 	}
 	//header('Location: /dns/dns_soa_edit.php?id='.$dns_soa_id);
 } else {
