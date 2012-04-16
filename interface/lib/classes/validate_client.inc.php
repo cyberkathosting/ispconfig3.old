@@ -65,6 +65,36 @@ class validate_client {
 		}
 	}
 	
+	function username_collision($field_name, $field_value, $validator) {
+		global $app;
+		
+		if(isset($app->remoting_lib->primary_id)) {
+			$client_id = $app->remoting_lib->primary_id;
+		} else {
+			$client_id = $app->tform->primary_id;
+		}
+		
+		$app->uses('getconf');
+		$global_config = $app->getconf->get_global_config('sites');
+		
+		if(substr($field_value,0,3) == 'web' && 
+		  ($global_config['ftpuser_prefix'] == '[CLIENTNAME]' || 
+		   $global_config['ftpuser_prefix'] == '' ||
+		   $global_config['shelluser_prefix'] == '[CLIENTNAME]' ||
+		   $global_config['shelluser_prefix'] == '' )) {
+			$errmsg = $validator['errmsg'];
+			if(isset($app->tform->wordbook[$errmsg])) {
+				return $app->tform->wordbook[$errmsg]."<br>\r\n";
+			} else {
+				return $errmsg."<br>\r\n";
+			}
+		}
+		
+		
+		
+		
+	}
+	
 	
 	
 	
