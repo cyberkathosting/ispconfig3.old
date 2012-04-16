@@ -288,6 +288,10 @@ class apache2_plugin {
 			$app->log('Websites cannot be owned by the root user or group.',LOGLEVEL_WARN);
 			return 0;
 		}
+		if(trim($data['new']['domain']) == '') {
+			$app->log('domain is empty',LOGLEVEL_WARN);
+			return 0;
+		}
 		
 		// Create group and user, if not exist
 		$app->uses('system');
