@@ -77,7 +77,7 @@ class validate_client {
 		$app->uses('getconf');
 		$global_config = $app->getconf->get_global_config('sites');
 		
-		if(substr($field_value,0,3) == 'web' && 
+		if((trim($field_value) == 'web' || preg_match('/^web[0-9]/',$field_value)) && 
 		  ($global_config['ftpuser_prefix'] == '[CLIENTNAME]' || 
 		   $global_config['ftpuser_prefix'] == '' ||
 		   $global_config['shelluser_prefix'] == '[CLIENTNAME]' ||
