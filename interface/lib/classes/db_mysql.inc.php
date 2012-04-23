@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright (c) 2007, Till Brehm, projektfarm Gmbh
+Copyright (c) 2007-2012, Till Brehm, projektfarm Gmbh, ISPConfig UG
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -257,29 +257,34 @@ class db {
 	}
 	
 	//** Function to fill the datalog with a full differential record.
-	public function datalogSave($db_table, $action, $primary_field, $primary_id, $record_old, $record_new) {
+	public function datalogSave($db_table, $action, $primary_field, $primary_id, $record_old, $record_new, $force_update = false) {
 		global $app,$conf;
 
-		// Insert backticks only for incomplete table names.
+		//* Insert backticks only for incomplete table names.
 		if(stristr($db_table,'.')) {
 			$escape = '';
 		} else {
 			$escape = '`';
 		}
-
-		$tmp = $this->diffrec($record_old, $record_new);
-		$diffrec_full = $tmp['diff_rec'];
-		$diff_num = $tmp['diff_num'];
-		unset($tmp);
 		
-		// Insert the server_id, if the record has a server_id
+		if($force_update == true) {
+			//* We force a update even if no record has changed
+			$diffrec_full = array('new' => $record_new, 'old' => $record_old);
+			$diff_num = count($record_new);
+		} else {
+			//* get the difference record between old and new record
+			$tmp = $this->diffrec($record_old, $record_new);
+			$diffrec_full = $tmp['diff_rec'];
+			$diff_num = $tmp['diff_num'];
+			unset($tmp);
+		}
+		
+		//* Insert the server_id, if the record has a server_id
 		$server_id = (isset($record_old['server_id']) && $record_old['server_id'] > 0)?$record_old['server_id']:0;
 		if(isset($record_new['server_id'])) $server_id = $record_new['server_id'];
 		
 
 		if($diff_num > 0) {
-			//print_r($diff_num);
-			//print_r($diffrec_full);
 			$diffstr = $app->db->quote(serialize($diffrec_full));
 			$username = $app->db->quote($_SESSION['s']['user']['username']);
 			$dbidx = $primary_field.':'.$primary_id;
@@ -323,11 +328,7 @@ class db {
 	public function datalogUpdate($tablename, $update_data, $index_field, $index_value, $force_update = false) {
 		global $app;
 		
-		if($force_update == true) {
-			$old_rec = array();
-		} else {
-			$old_rec = $this->queryOneRecord("SELECT * FROM $tablename WHERE $index_field = '$index_value'");
-		}
+		$old_rec = $this->queryOneRecord("SELECT * FROM $tablename WHERE $index_field = '$index_value'");
 		
 		if(is_array($update_data)) {
 			$update_data_str = '';
@@ -340,7 +341,7 @@ class db {
 		
 		$this->query("UPDATE $tablename SET $update_data_str WHERE $index_field = '$index_value'");
 		$new_rec = $this->queryOneRecord("SELECT * FROM $tablename WHERE $index_field = '$index_value'");
-		$this->datalogSave($tablename, 'UPDATE', $index_field, $index_value, $old_rec, $new_rec);
+		$this->datalogSave($tablename, 'UPDATE', $index_field, $index_value, $old_rec, $new_rec, $force_update);
 		
 		return true;
 	}
