@@ -310,6 +310,8 @@ class db {
 				$key_str .= "`".$key ."`,";
 				$val_str .= "'".$this->quote($val)."',";
 			}
+			$key_str = substr($key_str,0,-1);
+			$val_str = substr($val_str,0,-1);
 			$insert_data_str = '('.$key_str.') VALUES ('.$val_str.')';
 		} else {
 			$insert_data_str = $insert_data;
@@ -335,6 +337,7 @@ class db {
 			foreach($update_data as $key => $val) {
 				$update_data_str .= "`".$key ."` = '".$this->quote($val)."',";
 			}
+			$update_data_str = substr($update_data_str,0,-1);
 		} else {
 			$update_data_str = $update_data;
 		}
