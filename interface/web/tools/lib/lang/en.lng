@@ -7,4 +7,6 @@ $wb['ispconfig_tools_note'] = 'This module allows you to change the password and
 $wb['Sync Tools'] = 'Sync Tools';
 $wb['Resync'] = 'Resync';
 $wb['Import'] = 'Import';
+$wb['ISPConfig 3 mail'] = 'ISPConfig 3 mail';
+$wb['PDNS Tupa'] = 'PowerDNS Tupa';
 ?>
