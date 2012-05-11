@@ -126,7 +126,7 @@ class listform {
 
     public function getSearchSQL($sql_where = '') 
     {
-        global $db;
+        global $app, $db;
 
         //* Get config variable
         $list_name = $this->listDef['name'];
@@ -151,9 +151,11 @@ class listform {
                 }
 
                 //* Store field in session
-                if(isset($_REQUEST[$search_prefix.$field])){
+                if(isset($_REQUEST[$search_prefix.$field]) && !stristr($_REQUEST[$search_prefix.$field],"'")){
                     $_SESSION['search'][$list_name][$search_prefix.$field] = $_REQUEST[$search_prefix.$field];
-                }
+					if(preg_match("/['\\\\]/", $_SESSION['search'][$list_name][$search_prefix.$field])) 
+					$_SESSION['search'][$list_name][$search_prefix.$field] = '';
+				}
 
                 if(isset($i['formtype']) && $i['formtype'] == 'SELECT'){
                     if(is_array($i['value'])) {
@@ -181,7 +183,7 @@ class listform {
                 $field = $i['field'];
                 // if($_REQUEST[$search_prefix.$field] != '') $sql_where .= " $field ".$i["op"]." '".$i["prefix"].$_REQUEST[$search_prefix.$field].$i["suffix"]."' and";
 		        if(isset($_SESSION['search'][$list_name][$search_prefix.$field]) && $_SESSION['search'][$list_name][$search_prefix.$field] != ''){
-                    $sql_where .= " $field ".$i['op']." '".$i['prefix'].$_SESSION['search'][$list_name][$search_prefix.$field].$i['suffix']."' and";
+                    $sql_where .= " $field ".$i['op']." '".$app->db->quote($i['prefix'].$_SESSION['search'][$list_name][$search_prefix.$field].$i['suffix'])."' and";
                 }
             }
         }
