@@ -153,8 +153,7 @@ class listform {
                 //* Store field in session
                 if(isset($_REQUEST[$search_prefix.$field]) && !stristr($_REQUEST[$search_prefix.$field],"'")){
                     $_SESSION['search'][$list_name][$search_prefix.$field] = $_REQUEST[$search_prefix.$field];
-					if(preg_match("/['\\\\]/", $_SESSION['search'][$list_name][$search_prefix.$field])) 
-					$_SESSION['search'][$list_name][$search_prefix.$field] = '';
+					if(preg_match("/['\\\\]/", $_SESSION['search'][$list_name][$search_prefix.$field])) $_SESSION['search'][$list_name][$search_prefix.$field] = '';
 				}
 
                 if(isset($i['formtype']) && $i['formtype'] == 'SELECT'){
@@ -197,7 +196,7 @@ class listform {
         //* Get Config variables
         $list_name          = $this->listDef['name'];
         $search_prefix      = $this->listDef['search_prefix'];
-        $records_per_page   = $this->listDef['records_per_page'];
+        $records_per_page   = intval($this->listDef['records_per_page']);
         $table              = $this->listDef['table'];
 
         //* set PAGE to zero, if in session not set
@@ -206,12 +205,12 @@ class listform {
         }
 
         //* set PAGE to worth request variable "PAGE" - ? setze page auf wert der request variablen "page"
-        if(isset($_REQUEST["page"])) $_SESSION["search"][$list_name]["page"] = $_REQUEST["page"];
+        if(isset($_REQUEST["page"])) $_SESSION["search"][$list_name]["page"] = intval($_REQUEST["page"]);
 
         //* PAGE to 0 set, if look for themselves ?  page auf 0 setzen, wenn suche sich ge�ndert hat.
         if($this->searchChanged == 1) $_SESSION['search'][$list_name]['page'] = 0;
 
-        $sql_von = $_SESSION['search'][$list_name]['page'] * $records_per_page;
+        $sql_von = intval($_SESSION['search'][$list_name]['page'] * $records_per_page);
         $record_count = $app->db->queryOneRecord("SELECT count(*) AS anzahl FROM $table WHERE $sql_where");
         $pages = intval(($record_count['anzahl'] - 1) / $records_per_page);
 
