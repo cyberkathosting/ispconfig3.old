@@ -896,7 +896,7 @@ class tform {
                 $this->action = $action;
                 $this->primary_id = $primary_id;
 
-                $record = $this->encode($record,$tab);
+                $record = $this->encode($record,$tab,true);
                 $sql_insert_key = '';
                 $sql_insert_val = '';
                 $sql_update = '';
@@ -1019,7 +1019,7 @@ class tform {
 					//* return a empty string if there is nothing to update
 					if(trim($sql_update) == '') $sql = '';
                 }
-                
+
                 return $sql;
         }
 
