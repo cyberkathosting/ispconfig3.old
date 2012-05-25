@@ -122,7 +122,7 @@ if(isset($_POST['resync_db']) && $_POST['resync_db'] == 1) {
 if(isset($_POST['resync_mailbox']) && $_POST['resync_mailbox'] == 1) {
 	$db_table = 'mail_user';
 	$index_field = 'mailuser_id';
-	$sql = "SELECT * FROM ".$db_table." WHERE active = 'y'";
+	$sql = "SELECT * FROM ".$db_table;
 	$records = $app->db->queryAllRecords($sql);
 	if(is_array($records)) {
 		foreach($records as $rec) {
