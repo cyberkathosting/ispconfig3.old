@@ -1392,7 +1392,7 @@ class installer_base {
 			$content = str_replace('{mysql_server_ispconfig_user}',$conf['mysql']['ispconfig_user'],$content);
 			$content = str_replace('{mysql_server_ispconfig_password}',$conf['mysql']['ispconfig_password'], $content);
 			$content = str_replace('{mysql_server_database}',$conf['mysql']['database'],$content);
-			$content = str_replace('{mysql_server_ip}',$conf['mysql']['host'],$content);
+			$content = str_replace('{mysql_server_ip}',$conf['mysql']['ip'],$content);
 		}
 		wf($conf['vlogger']['config_dir'].'/'.$configfile,$content);
 		chmod($conf['vlogger']['config_dir'].'/'.$configfile, 0600);
