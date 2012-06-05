@@ -642,9 +642,10 @@ class apache2_plugin {
 				* website root has to be owned by the root user and we have to chmod it to 755 then
 				*/
 
-				//* Check if there is a jailkit user for this site
+				//* Check if there is a jailkit user or cronjob for this site
 				$tmp = $app->db->queryOneRecord('SELECT count(shell_user_id) as number FROM shell_user WHERE parent_domain_id = '.$data['new']['domain_id']." AND chroot = 'jailkit'");
-				if($tmp['number'] > 0) {
+				$tmp2 = $app->db->queryOneRecord('SELECT count(id) as number FROM cron WHERE parent_domain_id = '.$data['new']['domain_id']." AND `type` = 'chrooted'");
+				if($tmp['number'] > 0 || $tmp2['number'] > 0) {
 					$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root']));
 					$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root']));
 				}
