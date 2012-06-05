@@ -676,9 +676,15 @@ class apache2_plugin {
 		$this->_exec('chown '.$username.':'.$groupname.' '.escapeshellcmd($data['new']['document_root']).'/log/error.log');
 
 
-		//* Write the custom php.ini file, if custom_php_ini filed is not empty
+		//* Write the custom php.ini file, if custom_php_ini fieled is not empty
 		$custom_php_ini_dir = $web_config['website_basedir'].'/conf/'.$data['new']['system_user'];
 		if(!is_dir($web_config['website_basedir'].'/conf')) mkdir($web_config['website_basedir'].'/conf');
+		
+		//* add open_basedir restriction to custom php.ini content, required for suphp only
+		if(!stristr($data['new']['custom_php_ini'],'open_basedir') && $data['new']['php'] == 'suphp') {
+			$data['new']['custom_php_ini'] .= "\nopen_basedir = '".$data['new']['php_open_basedir']."'\n";
+		}
+		//* Create custom php.ini
 		if(trim($data['new']['custom_php_ini']) != '') {
 			$has_custom_php_ini = true;
 			if(!is_dir($custom_php_ini_dir)) mkdir($custom_php_ini_dir);
