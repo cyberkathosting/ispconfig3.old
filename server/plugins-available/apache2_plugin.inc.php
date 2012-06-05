@@ -85,6 +85,8 @@ class apache2_plugin {
 		$app->plugins->registerEvent('web_folder_update',$this->plugin_name,'web_folder_update');
 		$app->plugins->registerEvent('web_folder_delete',$this->plugin_name,'web_folder_delete');
 		
+		$app->plugins->registerEvent('ftp_user_delete',$this->plugin_name,'ftp_user_delete');
+		
 	}
 
 	// Handle the creation of SSL certificates
@@ -1572,6 +1574,16 @@ class apache2_plugin {
 		
 		
 	}
+	
+	public function ftp_user_delete($event_name,$data) {
+		global $app, $conf;
+		
+		$ftpquota_file = $data['old']['dir'].'/.ftpquota';
+		if(file_exists($ftpquota_file)) unlink($ftpquota_file);
+		
+	}
+	
+	
 
 	/**
 	 * This function is called when a Webdav-User is inserted, updated or deleted.
