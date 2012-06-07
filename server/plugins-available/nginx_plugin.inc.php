@@ -86,6 +86,8 @@ class nginx_plugin {
 		
 		$app->plugins->registerEvent('web_folder_update',$this->plugin_name,'web_folder_update');
 		$app->plugins->registerEvent('web_folder_delete',$this->plugin_name,'web_folder_delete');
+		
+		$app->plugins->registerEvent('ftp_user_delete',$this->plugin_name,'ftp_user_delete');
 	}
 
 	// Handle the creation of SSL certificates
@@ -635,9 +637,10 @@ class nginx_plugin {
 				* website root has to be owned by the root user and we have to chmod it to 755 then
 				*/
 
-				//* Check if there is a jailkit user for this site
+				//* Check if there is a jailkit user or cronjob for this site
 				$tmp = $app->db->queryOneRecord('SELECT count(shell_user_id) as number FROM shell_user WHERE parent_domain_id = '.$data['new']['domain_id']." AND chroot = 'jailkit'");
-				if($tmp['number'] > 0) {
+				$tmp2 = $app->db->queryOneRecord('SELECT count(id) as number FROM cron WHERE parent_domain_id = '.$data['new']['domain_id']." AND `type` = 'chrooted'");
+				if($tmp['number'] > 0 || $tmp2['number'] > 0) {
 					$this->_exec('chmod 755 '.escapeshellcmd($data['new']['document_root']));
 					$this->_exec('chown root:root '.escapeshellcmd($data['new']['document_root']));
 				}
@@ -1312,6 +1315,14 @@ class nginx_plugin {
 		// write basic auth configuration to vhost file because nginx does not support .htaccess
 		$webdata['new'] = $webdata['old'] = $website;
 		$this->update('web_domain_update', $webdata);
+	}
+	
+	public function ftp_user_delete($event_name,$data) {
+		global $app, $conf;
+		
+		$ftpquota_file = $data['old']['dir'].'/.ftpquota';
+		if(file_exists($ftpquota_file)) unlink($ftpquota_file);
+		
 	}
 	
 	function _create_web_folder_auth_configuration($website){
