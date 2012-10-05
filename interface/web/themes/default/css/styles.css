@@ -778,8 +778,16 @@ div.group-icon {
 .group-user { background-position: 0 -400px; }
 
 #ajaxloader {
+    position: absolute;
+    width: 325px;
+    height: 150px;
+    background: #ffffff url('../images/ajax-loader.gif') no-repeat center center;
+    border: solid 2px #e1e1e1;
+    border-radius: 10px;
+    /*background: rgba(255, 255, 255, 0.85);*/
+    padding: 20px;
     text-align:center;
-    margin-top: 180px;
+    z-index: 100;
 }
 .blockLabel.email_at {
     width: 20px !important;

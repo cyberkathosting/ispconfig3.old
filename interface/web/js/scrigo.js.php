@@ -9,6 +9,9 @@ var tabChangeWarningTxt = '';
 var tabChangeDiscardTxt = '';
 var tabChangeWarning = false;
 var tabChangeDiscard = false;
+var requestsRunning = 0;
+var indicatorPaddingH = -1;
+var indicatorPaddingW = -1;
 redirect = '';
 
 function reportError(request) {
@@ -19,6 +22,39 @@ function reportError(request) {
 	/*alert(request);*/
 }
 
+function showLoadIndicator() {
+    requestsRunning += 1;
+    
+    var indicator = jQuery('#ajaxloader');
+    if(indicator.length < 1) {
+        indicator = jQuery('<div id="ajaxloader" style="display: none;"></div>');
+        indicator.appendTo('body');
+    }
+    var parent = jQuery('#content');
+    if(parent.length < 1) return;
+    
+    var atx = parent.offset().left + 150; //((parent.outerWidth(true) - indicator.outerWidth(true)) / 2);
+    var aty = parent.offset().top + 150;
+    indicator.css( {'left': atx, 'top': aty } ).fadeIn('fast');
+    
+    /*var atx = parent.offset().left;
+    var aty = parent.offset().top;
+    if(indicatorPaddingW == -1) indicatorPaddingW = parseInt(indicator.css('padding-left')) + parseInt(indicator.css('padding-right'));
+    if(indicatorPaddingH == -1) indicatorPaddingH = parseInt(indicator.css('padding-top')) + parseInt(indicator.css('padding-bottom'));
+    var atw = parent.outerWidth() - indicatorPaddingW;
+    var ath = parent.outerHeight() - indicatorPaddingH;
+    
+    indicator.css( {'left': atx, 'top': aty, 'width': atw, 'height': ath } ).fadeIn('fast');*/
+}
+
+function hideLoadIndicator() {
+    requestsRunning -= 1;
+    if(requestsRunning < 1) {
+        jQuery('#ajaxloader').fadeOut('fast');
+        requestsRunning = 0; // just for the case...
+    }
+}
+
 function loadContentRefresh(pagename) {
 	
   if(document.getElementById('refreshinterval').value > 0) {
@@ -26,11 +62,16 @@ function loadContentRefresh(pagename) {
 											url: pagename,
 											data: "refresh="+document.getElementById('refreshinterval').value,
 											dataType: "html",
+											beforeSend: function() {
+												showLoadIndicator();
+											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												jQuery('#pageContent').html(jqXHR.responseText);
                                                 pageFormChanged = false;
 											},
 											error: function() {
+                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful.'+pagename);
 											}
 										});
@@ -43,7 +84,11 @@ function capp(module, redirect) {
 											url: "capp.php", 
 											data: "mod="+module+((redirect != undefined) ? '&redirect='+redirect : ''),
 											dataType: "html",
+											beforeSend: function() {
+												showLoadIndicator();
+											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												if(jqXHR.responseText != '') {
 													if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 														var parts = jqXHR.responseText.split(':');
@@ -58,6 +103,7 @@ function capp(module, redirect) {
 												loadMenus();
 											},
 											error: function() {
+                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful.'+module);
 											}
 									});
@@ -80,7 +126,11 @@ function submitLoginForm(formname) {
 											url: "content.php",
 											data: jQuery('#'+formname).serialize(),
 											dataType: "html",
+											beforeSend: function() {
+												showLoadIndicator();
+											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 													var parts = jqXHR.responseText.split(':');
 													//alert(parts[1]);
@@ -97,6 +147,7 @@ function submitLoginForm(formname) {
 												loadMenus();
 											},
 											error: function() {
+                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful.110');
 											}
 									});
@@ -115,7 +166,11 @@ function submitForm(formname,target) {
 											url: target,
 											data: jQuery('#'+formname).serialize(),
 											dataType: "html",
+											beforeSend: function() {
+												showLoadIndicator();
+											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 													var parts = jqXHR.responseText.split(':');
 													//alert(parts[1]);
@@ -128,6 +183,7 @@ function submitForm(formname,target) {
 												}
 											},
 											error: function(jqXHR, textStatus, errorThrown) {
+                                                hideLoadIndicator();
 												var parts = jqXHR.responseText.split(':');
 												reportError('Ajax Request was not successful. 111');
 											}
@@ -147,7 +203,11 @@ function submitFormConfirm(formname,target,confirmation) {
 											url: target,
 											data: jQuery('#'+formname).serialize(),
 											dataType: "html",
+											beforeSend: function() {
+												showLoadIndicator();
+											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												if(successMessage) alert(successMessage);
 												if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 													var parts = jqXHR.responseText.split(':');
@@ -161,6 +221,7 @@ function submitFormConfirm(formname,target,confirmation) {
 												}
 											},
 											error: function(jqXHR, textStatus, errorThrown) {
+                                                hideLoadIndicator();
 												var parts = jqXHR.responseText.split(':');
 												reportError('Ajax Request was not successful. 111');
 											}
@@ -216,9 +277,10 @@ function loadContent(pagename) {
                                             data: (params ? params : null),
 											dataType: "html",
 											beforeSend: function() {
-												jQuery('#pageContent').html('<div id="ajaxloader"><img src="themes/default/images/ajax-loader.gif" /></div>');
+												showLoadIndicator();
 											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 													var parts = jqXHR.responseText.split(':');
 													loadContent(parts[1]);
@@ -236,6 +298,7 @@ function loadContent(pagename) {
 												}
 											},
 											error: function() {
+                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful. 113');
 											}
 									});
@@ -247,7 +310,11 @@ function loadInitContent() {
 											url: "content.php",
 											data: "s_mod=login&s_pg=index",
 											dataType: "html",
+											beforeSend: function() {
+												showLoadIndicator();
+											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 													var parts = jqXHR.responseText.split(":");
 													loadContent(parts[1]);
@@ -257,6 +324,7 @@ function loadInitContent() {
 												}
 											},
 											error: function() {
+                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful. 114');
 											}
 										});
@@ -280,10 +348,15 @@ function loadMenus() {
 											url: "nav.php",
 											data: "nav=side",
 											dataType: "html",
+											beforeSend: function() {
+												showLoadIndicator();
+											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												jQuery('#sideNav').html(jqXHR.responseText);
 											},
 											error: function() {
+                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful. 115');
 											}
 									});
@@ -292,10 +365,15 @@ function loadMenus() {
 											url: "nav.php",
 											data: "nav=top",
 											dataType: "html",
+											beforeSend: function() {
+												showLoadIndicator();
+											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												jQuery('#topNav').html(jqXHR.responseText);
 											},
 											error: function(o) {
+                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful. 116');
 											}
 								});
@@ -348,10 +426,15 @@ function loadContentInto(elementid,pagename) {
   var pageContentObject2 = jQuery.ajax({	type: "GET", 
 											url: pagename,
 											dataType: "html",
+											beforeSend: function() {
+												showLoadIndicator();
+											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												jQuery('#'+elementid).html(jqXHR.responseText);
 											},
 											error: function() {
+                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful. 118');
 											}
 										});
@@ -361,7 +444,11 @@ function loadOptionInto(elementid,pagename) {
 	var pageContentObject2 = jQuery.ajax({	type: "GET", 
 											url: pagename,
 											dataType: "html",
+											beforeSend: function() {
+												showLoadIndicator();
+											},
 											success: function(data, textStatus, jqXHR) {
+                                                hideLoadIndicator();
 												var teste = jqXHR.responseText;
 												var elemente = teste.split('#');
 												el=document.getElementById(elementid);
@@ -375,6 +462,7 @@ function loadOptionInto(elementid,pagename) {
 												}
 											},
 											error: function() {
+                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful. 119');
 											}
 										});
