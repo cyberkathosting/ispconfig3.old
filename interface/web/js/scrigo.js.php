@@ -55,6 +55,10 @@ function hideLoadIndicator() {
     }
 }
 
+function onAfterContentLoad() {
+    $('#pageContent').find("select").combobox();
+}
+
 function loadContentRefresh(pagename) {
 	
   if(document.getElementById('refreshinterval').value > 0) {
@@ -68,6 +72,7 @@ function loadContentRefresh(pagename) {
 											success: function(data, textStatus, jqXHR) {
                                                 hideLoadIndicator();
 												jQuery('#pageContent').html(jqXHR.responseText);
+                                                onAfterContentLoad();
                                                 pageFormChanged = false;
 											},
 											error: function() {
@@ -142,6 +147,7 @@ function submitLoginForm(formname) {
 													document.location.href = 'index.php';
 												} else {
 													jQuery('#pageContent').html(jqXHR.responseText);
+                                                    onAfterContentLoad();
                                                     pageFormChanged = false;
 												}
 												loadMenus();
@@ -179,6 +185,7 @@ function submitForm(formname,target) {
 													//window.setTimeout('loadContent(redirect)', 1000);
 												} else {
 													jQuery('#pageContent').html(jqXHR.responseText);
+                                                    onAfterContentLoad();
                                                     pageFormChanged = false;
 												}
 											},
@@ -217,6 +224,7 @@ function submitFormConfirm(formname,target,confirmation) {
 													//window.setTimeout('loadContent(redirect)', 1000);
 												} else {
 													jQuery('#pageContent').html(jqXHR.responseText);
+                                                    onAfterContentLoad();
                                                     pageFormChanged = false;
 												}
 											},
@@ -294,6 +302,7 @@ function loadContent(pagename) {
 													//jQuery.each(reponseScript, function(idx, val) { eval(val.text); } );
 													
 													jQuery('#pageContent').html(jqXHR.responseText);
+                                                    onAfterContentLoad();
                                                     pageFormChanged = false;
 												}
 											},
@@ -320,6 +329,7 @@ function loadInitContent() {
 													loadContent(parts[1]);
 												} else {
 													jQuery('#pageContent').html(jqXHR.responseText);
+                                                    onAfterContentLoad();
                                                     pageFormChanged = false;
 												}
 											},

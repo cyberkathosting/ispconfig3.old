@@ -64,7 +64,7 @@
             
             jQuery(document).bind("keypress", function(event) {
                 //Use jQuery submit with keypress Enter in panel filterbar
-                if (event.which == '13' && jQuery(".panel #Filter").length > 0) {
+                if (event.which == '13' && jQuery(".panel #Filter").length > 0 && jQuery(event.target).hasClass('ui-autocomplete-input') == false ) {
                     event.preventDefault();
                     jQuery(".panel #Filter").trigger('click');
                 }
