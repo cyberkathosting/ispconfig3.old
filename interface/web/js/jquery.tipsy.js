@@ -260,7 +260,7 @@
                 .appendTo( wrapper )
                 .val( value )
                 .addClass( "ui-state-default ui-combobox-input" )
-                .css( { "width": elwidth - 15, "height": elheight })
+                .css( { "width": (elwidth > 15 ? elwidth - 15 : 1), "height": elheight })
                 .autocomplete({
                     delay: 0,
                     minLength: 0,
