@@ -93,7 +93,6 @@ function capp(module, redirect) {
 												showLoadIndicator();
 											},
 											success: function(data, textStatus, jqXHR) {
-                                                hideLoadIndicator();
 												if(jqXHR.responseText != '') {
 													if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 														var parts = jqXHR.responseText.split(':');
@@ -106,6 +105,7 @@ function capp(module, redirect) {
 													}
 												}
 												loadMenus();
+                                                hideLoadIndicator();
 											},
 											error: function() {
                                                 hideLoadIndicator();
@@ -135,7 +135,6 @@ function submitLoginForm(formname) {
 												showLoadIndicator();
 											},
 											success: function(data, textStatus, jqXHR) {
-                                                hideLoadIndicator();
 												if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 													var parts = jqXHR.responseText.split(':');
 													//alert(parts[1]);
@@ -151,6 +150,7 @@ function submitLoginForm(formname) {
                                                     pageFormChanged = false;
 												}
 												loadMenus();
+                                                hideLoadIndicator();
 											},
 											error: function() {
                                                 hideLoadIndicator();
@@ -176,7 +176,6 @@ function submitForm(formname,target) {
 												showLoadIndicator();
 											},
 											success: function(data, textStatus, jqXHR) {
-                                                hideLoadIndicator();
 												if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 													var parts = jqXHR.responseText.split(':');
 													//alert(parts[1]);
@@ -188,6 +187,7 @@ function submitForm(formname,target) {
                                                     onAfterContentLoad();
                                                     pageFormChanged = false;
 												}
+                                                hideLoadIndicator();
 											},
 											error: function(jqXHR, textStatus, errorThrown) {
                                                 hideLoadIndicator();
@@ -214,7 +214,6 @@ function submitFormConfirm(formname,target,confirmation) {
 												showLoadIndicator();
 											},
 											success: function(data, textStatus, jqXHR) {
-                                                hideLoadIndicator();
 												if(successMessage) alert(successMessage);
 												if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 													var parts = jqXHR.responseText.split(':');
@@ -227,6 +226,7 @@ function submitFormConfirm(formname,target,confirmation) {
                                                     onAfterContentLoad();
                                                     pageFormChanged = false;
 												}
+                                                hideLoadIndicator();
 											},
 											error: function(jqXHR, textStatus, errorThrown) {
                                                 hideLoadIndicator();
@@ -288,7 +288,6 @@ function loadContent(pagename) {
 												showLoadIndicator();
 											},
 											success: function(data, textStatus, jqXHR) {
-                                                hideLoadIndicator();
 												if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 													var parts = jqXHR.responseText.split(':');
 													loadContent(parts[1]);
@@ -305,6 +304,7 @@ function loadContent(pagename) {
                                                     onAfterContentLoad();
                                                     pageFormChanged = false;
 												}
+                                                hideLoadIndicator();
 											},
 											error: function() {
                                                 hideLoadIndicator();
@@ -323,7 +323,6 @@ function loadInitContent() {
 												showLoadIndicator();
 											},
 											success: function(data, textStatus, jqXHR) {
-                                                hideLoadIndicator();
 												if(jqXHR.responseText.indexOf('HEADER_REDIRECT:') > -1) {
 													var parts = jqXHR.responseText.split(":");
 													loadContent(parts[1]);
@@ -332,6 +331,7 @@ function loadInitContent() {
                                                     onAfterContentLoad();
                                                     pageFormChanged = false;
 												}
+                                                hideLoadIndicator();
 											},
 											error: function() {
                                                 hideLoadIndicator();
@@ -455,10 +455,10 @@ function loadOptionInto(elementid,pagename) {
 											url: pagename,
 											dataType: "html",
 											beforeSend: function() {
-												showLoadIndicator();
+//												showLoadIndicator();
 											},
 											success: function(data, textStatus, jqXHR) {
-                                                hideLoadIndicator();
+//                                                hideLoadIndicator();
 												var teste = jqXHR.responseText;
 												var elemente = teste.split('#');
 												el=document.getElementById(elementid);
@@ -472,7 +472,7 @@ function loadOptionInto(elementid,pagename) {
 												}
 											},
 											error: function() {
-                                                hideLoadIndicator();
+//                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful. 119');
 											}
 										});
