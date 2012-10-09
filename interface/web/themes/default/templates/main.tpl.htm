@@ -76,7 +76,7 @@
             });
             
             jQuery(document).delegate('.pnl_listarea th', 'click', function(event) {
-                if(jQuery(this).attr('class').length > 0 && jQuery(".panel #Filter").length > 0) {
+                if(jQuery(this).attr('class').length > 0 && jQuery(".panel #Filter").length > 0 && jQuery(this).hasClass('tbl_col_buttons') == false && jQuery(this).hasClass('tbl_col_limit') == false && jQuery(this).hasClass('tbl_col_nosort') == false) {
                   event.preventDefault();
                   var clickevent = jQuery('#Filter').attr('onclick');
                   var element = jQuery(this).attr('class');
