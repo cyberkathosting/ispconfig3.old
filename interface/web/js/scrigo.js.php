@@ -12,6 +12,7 @@ var tabChangeDiscard = false;
 var requestsRunning = 0;
 var indicatorPaddingH = -1;
 var indicatorPaddingW = -1;
+var indicatorCompleted = false;
 redirect = '';
 
 function reportError(request) {
@@ -25,33 +26,31 @@ function reportError(request) {
 function showLoadIndicator() {
     requestsRunning += 1;
     
-    var indicator = jQuery('#ajaxloader');
-    if(indicator.length < 1) {
-        indicator = jQuery('<div id="ajaxloader" style="display: none;"></div>');
-        indicator.appendTo('body');
+    if(requestsRunning < 2) {
+        var indicator = jQuery('#ajaxloader');
+        if(indicator.length < 1) {
+            indicator = jQuery('<div id="ajaxloader" style="display: none;"></div>');
+            indicator.appendTo('body');
+        }
+        var parent = jQuery('#content');
+        if(parent.length < 1) return;
+        indicatorCompleted = false;
+        
+        var atx = parent.offset().left + 150; //((parent.outerWidth(true) - indicator.outerWidth(true)) / 2);
+        var aty = parent.offset().top + 150;
+        indicator.css( {'left': atx, 'top': aty } ).fadeIn('fast', function() {
+            // check if loader should be hidden immediately
+            indicatorCompleted = true;
+            if(requestsRunning < 1) $(this).fadeOut('fast', function() { $(this).hide();});
+        });
     }
-    var parent = jQuery('#content');
-    if(parent.length < 1) return;
-    
-    var atx = parent.offset().left + 150; //((parent.outerWidth(true) - indicator.outerWidth(true)) / 2);
-    var aty = parent.offset().top + 150;
-    indicator.css( {'left': atx, 'top': aty } ).fadeIn('fast');
-    
-    /*var atx = parent.offset().left;
-    var aty = parent.offset().top;
-    if(indicatorPaddingW == -1) indicatorPaddingW = parseInt(indicator.css('padding-left')) + parseInt(indicator.css('padding-right'));
-    if(indicatorPaddingH == -1) indicatorPaddingH = parseInt(indicator.css('padding-top')) + parseInt(indicator.css('padding-bottom'));
-    var atw = parent.outerWidth() - indicatorPaddingW;
-    var ath = parent.outerHeight() - indicatorPaddingH;
-    
-    indicator.css( {'left': atx, 'top': aty, 'width': atw, 'height': ath } ).fadeIn('fast');*/
 }
 
 function hideLoadIndicator() {
     requestsRunning -= 1;
     if(requestsRunning < 1) {
-        jQuery('#ajaxloader').fadeOut('fast', function() { jQuery('#ajaxloader').hide(); } );
         requestsRunning = 0; // just for the case...
+        if(indicatorCompleted == true) jQuery('#ajaxloader').fadeOut('fast', function() { jQuery('#ajaxloader').hide(); } );
     }
 }
 
@@ -437,14 +436,14 @@ function loadContentInto(elementid,pagename) {
 											url: pagename,
 											dataType: "html",
 											beforeSend: function() {
-												showLoadIndicator();
+//												showLoadIndicator();
 											},
 											success: function(data, textStatus, jqXHR) {
-                                                hideLoadIndicator();
+//                                                hideLoadIndicator();
 												jQuery('#'+elementid).html(jqXHR.responseText);
 											},
 											error: function() {
-                                                hideLoadIndicator();
+//                                                hideLoadIndicator();
 												reportError('Ajax Request was not successful. 118');
 											}
 										});
