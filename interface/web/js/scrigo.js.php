@@ -50,7 +50,7 @@ function showLoadIndicator() {
 function hideLoadIndicator() {
     requestsRunning -= 1;
     if(requestsRunning < 1) {
-        jQuery('#ajaxloader').fadeOut('fast');
+        jQuery('#ajaxloader').fadeOut('fast', function() { jQuery('#ajaxloader').hide(); } );
         requestsRunning = 0; // just for the case...
     }
 }
