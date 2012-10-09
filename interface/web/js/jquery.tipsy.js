@@ -287,6 +287,11 @@
                         self._trigger( "selected", event, {
                             item: ui.item.option
                         });
+                        if((select.onchange || false) && typeof select.onchange == 'function') {
+                            select.onchange( { target: select } );
+                        } else if($(select).attr('onchange')) {
+                            eval($(select).attr('onchange'));
+                        }
                         if (jQuery(".panel #Filter").length > 0) {
                             jQuery(".panel #Filter").trigger('click');
                         }
