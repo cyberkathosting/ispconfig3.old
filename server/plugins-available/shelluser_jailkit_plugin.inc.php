@@ -80,7 +80,7 @@ class shelluser_jailkit_plugin {
 		 	*/
 			if ($data['new']['chroot'] == "jailkit")
 			{
-				$app->system->web_folder_protection($web['document_root'],false);
+				
 				
 				// load the server configuration options
 				$app->uses("getconf");
@@ -89,6 +89,8 @@ class shelluser_jailkit_plugin {
 				$this->jailkit_config = $app->getconf->get_server_config($conf["server_id"], 'jailkit');
 				
 				$this->_update_website_security_level();
+				
+				$app->system->web_folder_protection($web['document_root'],false);
 			
 				$this->_setup_jailkit_chroot();
 				
@@ -131,7 +133,6 @@ class shelluser_jailkit_plugin {
 		 	*/
 			if ($data['new']['chroot'] == "jailkit")
 			{
-				$app->system->web_folder_protection($web['document_root'],false);
 				
 				// load the server configuration options
 				$app->uses("getconf");
@@ -140,6 +141,8 @@ class shelluser_jailkit_plugin {
 				$this->jailkit_config = $app->getconf->get_server_config($conf["server_id"], 'jailkit');
 				
 				$this->_update_website_security_level();
+				
+				$app->system->web_folder_protection($web['document_root'],false);
 			
 				$this->_setup_jailkit_chroot();
 				$this->_add_jailkit_user();

@@ -116,9 +116,9 @@ class cron_jailkit_plugin {
 				$this->app = $app;
 				$this->jailkit_config = $app->getconf->get_server_config($conf["server_id"], 'jailkit');
 				
-				$app->system->web_folder_protection($parent_domain['document_root'],false);
-				
 				$this->_update_website_security_level();
+				
+				$app->system->web_folder_protection($parent_domain['document_root'],false);
 			
 				$this->_setup_jailkit_chroot();
 				
@@ -185,9 +185,10 @@ class cron_jailkit_plugin {
 				$this->data = $data;
 				$this->app = $app;
 				$this->jailkit_config = $app->getconf->get_server_config($conf["server_id"], 'jailkit');
+
+				$this->_update_website_security_level();
 				
 				$app->system->web_folder_protection($parent_domain['document_root'],false);
-				$this->_update_website_security_level();
 			
 				$this->_setup_jailkit_chroot();
 				$this->_add_jailkit_user();
@@ -314,13 +315,18 @@ class cron_jailkit_plugin {
 		// load the server configuration options
 		$app->uses("getconf");
 		$web_config = $app->getconf->get_server_config($conf["server_id"], 'web');
-				
-		//* If the security level is set to high
-		if($web_config['security_level'] == 20) {
-			$this->_exec('chmod 755 '.escapeshellcmd($this->parent_domain['document_root']));
-			$this->_exec('chown root:root '.escapeshellcmd($this->parent_domain['document_root']));
-		}
 		
+		// Get the parent website of this shell user
+		$web = $app->db->queryOneRecord("SELECT * FROM web_domain WHERE domain_id = ".$this->data['new']['parent_domain_id']);
+		
+		//* If the security level is set to high
+		if($web_config['security_level'] == 20 && is_array($web)) {
+			$app->system->web_folder_protection($web["document_root"],false);
+			$app->system->chmod($web["document_root"],0755);
+			$app->system->chown($web["document_root"],'root');
+			$app->system->chgrp($web["document_root"],'root');
+			$app->system->web_folder_protection($web["document_root"],true);
+		}
 	}
 	
 	//* Wrapper for exec function for easier debugging
