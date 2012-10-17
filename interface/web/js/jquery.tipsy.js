@@ -345,6 +345,22 @@
                     .append( "<a>" + item.label + "</a>" )
                     .appendTo( ul );
             };
+            select.change(function(e) {
+                var matcher = new RegExp( "" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "", "i" ),
+                    matchtext = $(this).val();
+                    valid = false,
+                    selected = false;
+                select.children( "option" ).each(function() {
+                    if( ($(this).val() == "" && matchtext == "") || $( this ).text().match( matcher ) ) {
+                        valid = true;
+                        selected = $(this);
+                        return false;
+                    }
+                });
+                if(!valid) return false;
+                
+                input.val($(this).val()).autocomplete('option','select').call(input, (e ? e : {target: select}), { item: { option: selected.get(0) } });
+            });
 
             $( "<a>" )
                 .attr( "tabIndex", -1 )
