@@ -1444,7 +1444,7 @@ span.icons16-empty {
     width:16px;
     height:16px;
     cursor:pointer;
-    background: url("../icons/x16_sprite.png") no-repeat center center transparent;
+    background: url("../icons/x16_sprite.png") no-repeat -2px -42px transparent;
     float:right;
     display:inline;
     position:relative;
