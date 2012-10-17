@@ -2118,6 +2118,8 @@ class apache2_plugin {
 	 * @param string $pwd      The password-hash of the user
 	 */
 	private function _writeHtDigestFile($filename, $username, $authname, $pwdhash ) {
+		global $app;
+		
 		$changed = false;
 		if(is_file($filename) && !is_link($filename)) {
 			$in = fopen($filename, 'r');
