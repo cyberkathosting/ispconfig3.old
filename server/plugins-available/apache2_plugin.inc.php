@@ -115,8 +115,8 @@ class apache2_plugin {
 		$csr_file = $ssl_dir.'/'.$domain.'.csr';
 		$crt_file = $ssl_dir.'/'.$domain.'.crt';
 
-		//* Create a SSL Certificate
-		if($data['new']['ssl_action'] == 'create') {
+		//* Create a SSL Certificate, but only if this is not a mirror server.
+		if($data['new']['ssl_action'] == 'create' && $conf['mirror_server_id'] == 0) {
 			
 			$this->ssl_certificate_changed = true;
 			

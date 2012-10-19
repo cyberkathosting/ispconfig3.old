@@ -37,6 +37,7 @@ $wb['User / Domain'] = "Benutzer / Domain";
 $wb['Server Settings'] = "Servereinstellungen";
 $wb['Fetchmail'] = "E-Mail Sammeldienst";
 $wb['Mailbox traffic'] = "E-Mail Konto Datenverkehr";
+$wb['Mailbox quota'] = "E-Mail Konto Belegung";
 $wb['Statistics'] = "Statistiken";
 $wb['Postfix Whitelist'] = "Postfix Whitelist";
 $wb['Postfix Blacklist'] = "Postfix Blacklist";
