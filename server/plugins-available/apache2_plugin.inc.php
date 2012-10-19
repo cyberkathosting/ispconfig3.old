@@ -1354,7 +1354,7 @@ class apache2_plugin {
 				$app->system->web_folder_protection($data['new']['document_root'],false);
 				$app->system->file_put_contents($data['new']['document_root'].'/.htpasswd_stats',$htp_file);
 				$app->system->web_folder_protection($data['new']['document_root'],true);
-				$app->system->chmod($data['new']['document_root'].'/.htpasswd_stats',0755);
+				$app->system->chmod($data['new']['document_root'].'/.htpasswd_stats',0750);
 				unset($htp_file);
 			}
 		}
@@ -1715,8 +1715,8 @@ class apache2_plugin {
 		
 		//* Create empty .htpasswd file, if it does not exist
 		if(!is_file($folder_path.'.htpasswd')) {
-			touch($folder_path.'.htpasswd');
-			$app->system->chmod($folder_path.'.htpasswd',0755);
+			$app->system->touch($folder_path.'.htpasswd');
+			$app->system->chmod($folder_path.'.htpasswd',0750);
 			$app->system->chown($folder_path.'.htpasswd',$website['system_user']);
 			$app->system->chgrp($folder_path.'.htpasswd',$website['system_group']);
 			$app->log('Created file '.$folder_path.'.htpasswd',LOGLEVEL_DEBUG);
@@ -1770,7 +1770,7 @@ class apache2_plugin {
             unset($old_content);
             
             $app->system->file_put_contents($folder_path.'.htaccess',$ht_file);
-			$app->system->chmod($folder_path.'.htaccess',0755);
+			$app->system->chmod($folder_path.'.htaccess',0750);
 			$app->system->chown($folder_path.'.htaccess',$website['system_user']);
 			$app->system->chgrp($folder_path.'.htaccess',$website['system_group']);
 			$app->log('Created/modified file '.$folder_path.'.htaccess',LOGLEVEL_DEBUG);
@@ -1932,7 +1932,7 @@ class apache2_plugin {
             }
             
             $app->system->file_put_contents($new_folder_path.'.htaccess',$ht_file);
-			$app->system->chmod($new_folder_path.'.htaccess',0755);
+			$app->system->chmod($new_folder_path.'.htaccess',0750);
 			$app->system->chown($new_folder_path.'.htaccess',$website['system_user']);
 			$app->system->chgrp($new_folder_path.'.htaccess',$website['system_group']);
 			$app->log('Created/modified file '.$new_folder_path.'.htaccess',LOGLEVEL_DEBUG);
