@@ -278,7 +278,7 @@
                                             ")(?![^<>]*>)(?![^&;]+;)", "gi"
                                         ), "<strong>$1</strong>" )),
                                     value: text,
-                                    class: (select.hasClass('flags') ? 'country-' + $(this).val() : $(this).attr('class')),
+                                    class: (select.hasClass('flags') ? 'country-' + $(this).val().toUpperCase() : $(this).attr('class')),
                                     option: this
                                 };
                         }) );
