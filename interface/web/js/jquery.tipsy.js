@@ -292,6 +292,8 @@
                             select.onchange( { target: select } );
                         } else if($(select).attr('onchange')) {
                             eval($(select).attr('onchange'));
+                        } else {
+                            if(!ui.item.internal) $(select).change();
                         }
                         if (jQuery(".panel #Filter").length > 0) {
                             jQuery(".panel #Filter").trigger('click');
@@ -335,7 +337,7 @@
                         });
                         if(!valid) return false;
                         
-                        $(this).autocomplete('option','select').call($(this), event, { item: { option: selected.get(0) } });
+                        $(this).autocomplete('option','select').call($(this), event, { item: { option: selected.get(0), internal: true } });
                     }
                 })
                 .addClass( "ui-widget ui-widget-content ui-corner-left" );
@@ -363,7 +365,7 @@
                 });
                 if(!valid) return false;
                 
-                input.val($(this).val()).autocomplete('option','select').call(input, (e ? e : {target: select}), { item: { option: selected.get(0) } });
+                input.val($(this).val()).autocomplete('option','select').call(input, (e ? e : {target: select}), { item: { option: selected.get(0), internal: true } });
             });
 
             $( "<a>" )
