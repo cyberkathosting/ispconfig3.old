@@ -269,7 +269,7 @@
                         response( select.children( "option" ).map(function() {
                             var text = $( this ).text();
                             //if ( this.value && ( !request.term || matcher.test(text) ) )
-                            if ( !request.term || matcher.test(text) )
+                            if ( (!request.term || matcher.test(text)) && $(this).css('display') != 'none' )
                                 return {
                                     label: (text == "" ? "&nbsp;" : text.replace(
                                         new RegExp(
@@ -305,7 +305,7 @@
                                 matchtext = $(this).val();
                                 valid = false;
                             select.children( "option" ).each(function() {
-                                if( ($(this).text() == "" && matchtext == "") || $( this ).text().match( matcher ) ) {
+                                if( (($(this).text() == "" && matchtext == "") || $( this ).text().match( matcher )) && $(this).css('display') != 'none' ) {
                                     select.val($(this).val());
                                     this.selected = valid = true;
                                     return false;
@@ -329,7 +329,7 @@
                             valid = false,
                             selected = false;
                         select.children( "option" ).each(function() {
-                            if( ($(this).val() == "" && matchtext == "") || $( this ).text().match( matcher ) ) {
+                            if( (($(this).val() == "" && matchtext == "") || $( this ).text().match( matcher )) && $(this).css('display') != 'none' ) {
                                 valid = true;
                                 selected = $(this);
                                 return false;
@@ -357,7 +357,7 @@
                     valid = false,
                     selected = false;
                 select.children( "option" ).each(function() {
-                    if( ($(this).val() == "" && matchtext == "") || $( this ).text().match( matcher ) ) {
+                    if( (($(this).val() == "" && matchtext == "") || $( this ).text().match( matcher )) && $(this).css('display') != 'none' ) {
                         valid = true;
                         selected = $(this);
                         return false;
