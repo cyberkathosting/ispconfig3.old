@@ -215,6 +215,8 @@ class cron_jailkit_plugin {
 	
 	function _setup_jailkit_chroot()
 	{
+		global $app;	
+			
 			//check if the chroot environment is created yet if not create it with a list of program sections from the config
 			if (!is_dir($this->parent_domain['document_root'].'/etc/jailkit'))
 			{
@@ -239,7 +241,7 @@ class cron_jailkit_plugin {
 				$bashrc = escapeshellcmd($this->parent_domain['document_root']).'/etc/bash.bashrc';
 				if(@is_file($bashrc) || @is_link($bashrc)) unlink($bashrc);
 				
-				file_put_contents($bashrc,$tpl->grab());
+				$app->system->file_put_contents($bashrc,$tpl->grab());
 				unset($tpl);
 				
 				$this->app->log('Added bashrc script: '.$bashrc,LOGLEVEL_DEBUG);
@@ -252,7 +254,7 @@ class cron_jailkit_plugin {
 				$motd = escapeshellcmd($this->parent_domain['document_root']).'/var/run/motd';
 				if(@is_file($motd) || @is_link($motd)) unlink($motd);
 				
-				file_put_contents($motd,$tpl->grab());
+				$app->system->file_put_contents($motd,$tpl->grab());
 				
 			}
             $this->_add_jailkit_programs();
@@ -297,9 +299,9 @@ class cron_jailkit_plugin {
 				
 			$this->app->log("Added jailkit user to chroot with command: ".$command,LOGLEVEL_DEBUG);
 				
-			mkdir(escapeshellcmd($this->parent_domain['document_root'].$jailkit_chroot_userhome), 0755, true);
-			chown(escapeshellcmd($this->parent_domain['document_root'].$jailkit_chroot_userhome), escapeshellcmd($this->parent_domain['system_user']));
-			chgrp(escapeshellcmd($this->parent_domain['document_root'].$jailkit_chroot_userhome), escapeshellcmd($this->parent_domain['system_group']));
+			$app->system->mkdir(escapeshellcmd($this->parent_domain['document_root'].$jailkit_chroot_userhome), 0755, true);
+			$app->system->chown(escapeshellcmd($this->parent_domain['document_root'].$jailkit_chroot_userhome), escapeshellcmd($this->parent_domain['system_user']));
+			$app->system->chgrp(escapeshellcmd($this->parent_domain['document_root'].$jailkit_chroot_userhome), escapeshellcmd($this->parent_domain['system_group']));
 			
 	}
 	
