@@ -837,6 +837,12 @@ div[class^=country-] {
     height: 20px;
     width: 26px;
 }
+li[class^=country-] {
+    background-image: url("../icons/flags_sprite.png");
+    background-repeat: no-repeat;
+    text-indent: 24px;
+}
+li[class^=country-] a.ui-state-hover { background: transparent; }
 div[class^=country-] span {
     display: none;
 }
