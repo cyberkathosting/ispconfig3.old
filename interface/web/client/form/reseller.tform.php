@@ -118,6 +118,10 @@ $form["tabs"]['address'] = array (
 		'customer_no' => array (
 			'datatype'	=> 'VARCHAR',
 			'formtype'	=> 'TEXT',
+			'validators'	=> array ( 	0 => array (	'type'	=> 'UNIQUE',
+														'errmsg'=> 'customer_no_error_unique',
+														'allowempty' => 'y'),
+									),
 			'default'	=> '',
 			'value'		=> '',
 			'separator'	=> '',
