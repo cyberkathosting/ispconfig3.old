@@ -778,6 +778,9 @@ div.group-icon {
 .group-admin { background-position: 0 -380px; }
 .group-user { background-position: 0 -400px; }
 
+span.marked { color: #cc0000; }
+span.small { font-size: 0.9em; }
+
 #ajaxloader {
     position: absolute;
     width: 325px;
