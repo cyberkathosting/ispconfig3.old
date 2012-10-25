@@ -2676,7 +2676,7 @@ class remoting {
 		$this->id = $insert_id;
 		$this->dataRecord = $params;
 		
-		$app->plugin->raiseEvent('client:' . ($reseller_id ? 'reseller' : 'client') . ':on_after_insert',$this);
+		$app->plugin->raiseEvent('client:' . (isset($params['limit_client']) && $params['limit_client'] > 0 ? 'reseller' : 'client') . ':on_after_insert',$this);
 		
 		/*
 		if($app->db->errorMessage != '') {

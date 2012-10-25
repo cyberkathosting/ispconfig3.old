@@ -825,6 +825,10 @@ class remoting_lib {
 			} else {
 				$modules = $app->db->quote($params['modules']);
 			}
+			if(isset($params['limit_client']) && $params['limit_client'] > 0) {
+				$modules .= ',client';
+			}
+			
 			if(!isset($params['startmodule'])) {			
 				$startmodule = 'dashboard';
 			} else {						
