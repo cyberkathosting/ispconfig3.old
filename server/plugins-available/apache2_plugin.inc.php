@@ -2198,7 +2198,7 @@ class apache2_plugin {
 				$files = @scandir($webdavRoot);
 				if(is_array($files)) {
 				foreach($files as $file) {
-					if (substr($file, strlen($file) - strlen('.htdigest')) == '.htdigest' && preg_match("[a-zA-Z0-9\-_\.]",$file)) {
+					if (substr($file, strlen($file) - strlen('.htdigest')) == '.htdigest' && preg_match("/^[a-zA-Z0-9\-_\.]*$/",$file)) {
 						/*
 						 * found a htdigest - file, so add it to webdav
 						*/
