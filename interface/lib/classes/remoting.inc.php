@@ -306,30 +306,52 @@ class remoting {
 	}
 	
 	
-	//* dodanie uzytkownika email
+	//* Add mail domain
 	public function mail_user_add($session_id, $client_id, $params){
+		global $app;
+		
 		if (!$this->checkPerm($session_id, 'mail_user_add')){
 			$this->server->fault('permission_denied','You do not have the permissions to access this function.');
 			return false;
 		}
+		
+		//* Check if mail domain exists
+		$email_parts = explode('@',$params['email']);
+		$tmp = $app->db->queryOneRecord("SELECT domain FROM mail_domain WHERE domain = '".$app->db->quote($email_parts[1])."'");
+		if($tmp['domain'] != $email_parts[1]) {
+			$this->server->fault('mail_domain_does_not_exist','Mail domain - '.$email_parts[1].' - does not exist.');
+			return false;
+		}
+		
 		$affected_rows = $this->insertQuery('../mail/form/mail_user.tform.php', $client_id, $params);
 		return $affected_rows;
 	}
 
-	//* edycja uzytkownika email	
+	//* Update mail user	
 	public function mail_user_update($session_id, $client_id, $primary_id, $params)
 	{
+		global $app;
+		
 		if (!$this->checkPerm($session_id, 'mail_user_update'))
 		{
 			$this->server->fault('permission_denied','You do not have the permissions to access this function.');
 			return false;
 		}
+		
+		//* Check if mail domain exists
+		$email_parts = explode('@',$params['email']);
+		$tmp = $app->db->queryOneRecord("SELECT domain FROM mail_domain WHERE domain = '".$app->db->quote($email_parts[1])."'");
+		if($tmp['domain'] != $email_parts[1]) {
+			$this->server->fault('mail_domain_does_not_exist','Mail domain - '.$email_parts[1].' - does not exist.');
+			return false;
+		}
+		
 		$affected_rows = $this->updateQuery('../mail/form/mail_user.tform.php', $client_id, $primary_id, $params);
 		return $affected_rows;
 	}
 
 	
-	//*usuniecie uzytkownika emial
+	//* Delete mail user
 	public function mail_user_delete($session_id, $primary_id)
 	{
 		if (!$this->checkPerm($session_id, 'mail_user_delete'))

@@ -160,7 +160,7 @@ class remoting_lib {
 						}
 				}*/
 				
-				$user = $app->db->queryOneRecord("SELECT * FROM sys_user WHERE client_id = $client_id");
+				$user = $app->db->queryOneRecord("SELECT * FROM sys_user WHERE client_id = $this->client_id");
 				$this->sys_username         = $user['username'];
 				$this->sys_userid            = $user['userid'];
 				$this->sys_default_group     = $user['default_group'];
