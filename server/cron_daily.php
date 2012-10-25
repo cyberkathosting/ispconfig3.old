@@ -478,7 +478,7 @@ if ($app->dbmaster == $app->db) {
 
 			//* get the traffic
 			$tmp = $app->db->queryOneRecord("SELECT SUM(traffic_bytes) As total_traffic_bytes FROM web_traffic WHERE traffic_date like '$current_month%' AND hostname = '$domain'");
-			$web_traffic = (int)$tmp['total_traffic_bytes']/1024/1024;
+			$web_traffic = round($tmp['total_traffic_bytes']/1024/1024);
 
 			//* Website is over quota, we will disable it
 			/*if( ($web_traffic_quota > 0 && $web_traffic > $web_traffic_quota) ||
