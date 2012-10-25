@@ -77,7 +77,7 @@ class ApsInstaller extends ApsBase
         }
         catch(Exception $e)
         {
-            $app->log('Aborting execution because '.$e->getMessage());
+            $app->log('Aborting execution because '.$e->getMessage(), 1);
             return false;
         }
     }
@@ -252,7 +252,7 @@ class ApsInstaller extends ApsBase
         $this->domain = $main_domain['value'];
         
         // Get the document root
-        $domain_res = $app->db->queryOneRecord("SELECT document_root FROM web_domain 
+        $domain_res = $app->db->queryOneRecord("SELECT document_root, web_folder, type FROM web_domain 
             WHERE domain = '".$app->db->quote($this->domain)."';");
         $this->document_root = $domain_res['document_root'];
         
@@ -265,7 +265,8 @@ class ApsInstaller extends ApsBase
         if(substr($this->document_root, -1) != '/') $this->document_root .= '/';
         
         // Attention: ISPConfig Special: web files are in subfolder 'web' -> append it:
-        $this->document_root .= 'web/';
+        if($domain_res['type'] == 'vhostsubdomain') $this->document_root .= $domain_res['web_folder'] . '/';
+        else $this->document_root .= 'web/';
 
         // If a subfolder is given, make sure it's path doesn't begin with / i.e. /phpbb
         if(substr($this->sublocation, 0, 1) == '/') $this->sublocation = substr($this->sublocation, 1);
@@ -429,7 +430,7 @@ class ApsInstaller extends ApsBase
         {
             $app->dbmaster->query('UPDATE aps_instances SET instance_status = "'.INSTANCE_ERROR.'" 
                 WHERE id = "'.$app->db->quote($task['instance_id']).'";');
-            $app->log($e->getMessage());
+            $app->log($e->getMessage(), 1);
             return false;
         }
         
@@ -565,7 +566,7 @@ class ApsInstaller extends ApsBase
         {
             $app->dbmaster->query('UPDATE aps_instances SET instance_status = "'.INSTANCE_ERROR.'" 
                 WHERE id = "'.$app->db->quote($task['instance_id']).'";');
-            $app->log($e->getMessage());
+            $app->log($e->getMessage(), 1);
             return false;
         }
         
@@ -622,7 +623,7 @@ class ApsInstaller extends ApsBase
 			curl_setopt($ch, CURLOPT_TIMEOUT, 0);
 			curl_setopt($ch, CURLOPT_FAILONERROR, 1);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);     
-			if(curl_exec($ch) === false) $app->log(curl_error ($ch),LOGLEVEL_DEBUG);
+			if(curl_exec($ch) === false) $app->log(curl_error ($ch),1);
 			fclose($fh);
 			curl_close($ch);
 		}
@@ -646,7 +647,7 @@ class ApsInstaller extends ApsBase
         {
             $app->dbmaster->query('UPDATE aps_instances SET instance_status = "'.INSTANCE_ERROR.'" 
                 WHERE id = "'.$app->db->quote($task['instance_id']).'";');
-            $app->log('Unable to find the meta data file of package '.$task['path']);
+            $app->log('Unable to find the meta data file of package '.$task['path'], 1);
             return false;
         }
         
