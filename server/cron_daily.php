@@ -747,25 +747,28 @@ if($backup_dir != '') {
 				$dir_handle = dir($db_backup_dir);
 				$files = array();
 				while (false !== ($entry = $dir_handle->read())) {
-					if($entry != '.' && $entry != '..' && substr($entry,0,2) == 'db' && is_file($db_backup_dir.'/'.$entry)) {
-						$files[] = $entry;
+					if($entry != '.' && $entry != '..' && preg_match('/^db_(.*?)_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}\.sql.gz$/', $entry, $matches) && is_file($db_backup_dir.'/'.$entry)) {
+                        if(array_key_exists($matches[1], $files) == false) $files[$matches[1]] = array();
+						$files[$matches[1]][] = $entry;
 					}
 				}
 				$dir_handle->close();
-
-				rsort($files);
-
-				for ($n = $backup_copies; $n <= 10; $n++) {
-					if(isset($files[$n]) && is_file($db_backup_dir.'/'.$files[$n])) {
-						unlink($db_backup_dir.'/'.$files[$n]);
-						$sql = "SELECT backup_id FROM web_backup WHERE server_id = ".$conf['server_id']." AND parent_domain_id = $web_id AND filename = '".$app->db->quote($files[$n])."'";
-						$tmp = $app->dbmaster->queryOneRecord($sql);
-						//$app->dbmaster->datalogDelete('web_backup', 'backup_id', $tmp['backup_id']);
-						$sql = "DELETE FROM web_backup WHERE backup_id = ".intval($tmp['backup_id']);
-						$app->db->query($sql);
-						$app->dbmaster->query($sql);
-					}
-				}
+                
+                reset($files);
+                foreach($files as $db_name => $filelist) {
+                    rsort($filelist);
+                    for ($n = $backup_copies; $n <= 10; $n++) {
+                        if(isset($filelist[$n]) && is_file($db_backup_dir.'/'.$filelist[$n])) {
+                            unlink($db_backup_dir.'/'.$filelist[$n]);
+                            $sql = "SELECT backup_id FROM web_backup WHERE server_id = ".$conf['server_id']." AND parent_domain_id = $web_id AND filename = '".$app->db->quote($filelist[$n])."'";
+                            $tmp = $app->dbmaster->queryOneRecord($sql);
+                            //$app->dbmaster->datalogDelete('web_backup', 'backup_id', $tmp['backup_id']);
+                            $sql = "DELETE FROM web_backup WHERE backup_id = ".intval($tmp['backup_id']);
+                            $app->db->query($sql);
+                            $app->dbmaster->query($sql);
+                        }
+                    }
+                }
 
 				unset($files);
 				unset($dir_handle);

@@ -250,12 +250,13 @@
             var input,
                 self = this,
                 select = this.element,
+                internal = false,
                 selected = select.children( ":selected" ),
                 value = selected.val() ? selected.text() : "",
                 wrapper = this.wrapper = $( "<span>" )
                     .addClass( "ui-combobox" )
                     .insertAfter( select );
-
+            
             input = $( "<input>" ).css( { "width": (select.is(':visible') ? (elwidth > 15 ? elwidth - 15 : 1) : 350), "height": (elheight > 0 ? elheight : 16) });
             select.hide();
             input.appendTo( wrapper )
@@ -293,7 +294,10 @@
                         } else if($(select).attr('onchange')) {
                             eval($(select).attr('onchange'));
                         } else {
-                            if(!ui.item.internal) $(select).change();
+                            if(!ui.item.internal) {
+                                internal = true;
+                                $(select).change();
+                            }
                         }
                         if (jQuery(".panel #Filter").length > 0) {
                             jQuery(".panel #Filter").trigger('click');
@@ -352,6 +356,10 @@
                 return el;
             };
             select.change(function(e) {
+                if(internal == true) {
+                    internal = false;
+                    return;
+                }
                 var matcher = new RegExp( "" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "", "i" ),
                     matchtext = $(this).val();
                     valid = false,
