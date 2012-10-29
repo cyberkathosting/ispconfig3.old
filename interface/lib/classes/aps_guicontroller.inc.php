@@ -243,20 +243,39 @@ class ApsGUIController extends ApsBase
 			$dbuser_prefix = $app->tools_sites->replacePrefix($global_config['dbuser_prefix'], $tmp);
 			unset($tmp);
 			
-			//* get the default database server of the client
-			$client = $app->db->queryOneRecord("SELECT default_dbserver FROM sys_group, client WHERE sys_group.client_id = client.client_id and sys_group.groupid = ".$websrv['sys_groupid']);
-			if(is_array($client) && $client['default_dbserver'] > 0 && $client['default_dbserver'] != $websrv['server_id']) {
-				$mysql_db_server_id =  $client['default_dbserver'];
-				$dbserver_config = $web_config = $app->getconf->get_server_config($app->functions->intval($mysql_db_server_id),'server');
-				$mysql_db_host = $dbserver_config['ip_address'];
-				$mysql_db_remote_access = 'y';
-				$mysql_db_remote_ips = $dbserver_config['ip_address'];
-			} else {
+            // get information if the webserver is a db server, too
+            $web_server = $app->db->queryOneRecord("SELECT server_id,server_name,db_server FROM server WHERE server_id  = ".$websrv['server_id']);
+            if($web_server['db_server'] == 1) {
+                // create database on "localhost" (webserver)
 				$mysql_db_server_id = $websrv['server_id'];
 				$mysql_db_host = 'localhost';
 				$mysql_db_remote_access = 'n';
 				$mysql_db_remote_ips = '';
-			}
+            } else {
+                //* get the default database server of the client
+                $client = $app->db->queryOneRecord("SELECT default_dbserver FROM sys_group, client WHERE sys_group.client_id = client.client_id and sys_group.groupid = ".$websrv['sys_groupid']);
+                if(is_array($client) && $client['default_dbserver'] > 0 && $client['default_dbserver'] != $websrv['server_id']) {
+                    $mysql_db_server_id =  $client['default_dbserver'];
+                    $dbserver_config = $web_config = $app->getconf->get_server_config($app->functions->intval($mysql_db_server_id),'server');
+                    $mysql_db_host = $dbserver_config['ip_address'];
+                    $mysql_db_remote_access = 'y';
+                    $webserver_config = $app->getconf->get_server_config($app->functions->intval($websrv['server_id']),'server');
+                    $mysql_db_remote_ips = $webserver_config['ip_address'];
+                } else {
+                    /* I left this in place for a fallback that should NEVER! happen.
+                     * if we reach this point it means that there is NO default db server for the client
+                     * AND the webserver has NO db service enabled.
+                     * We have to abort the aps installation here... so I added a return false
+                     * although this does not present any error message to the user.
+                     */
+                    return false;
+                    
+                    /*$mysql_db_server_id = $websrv['server_id'];
+                    $mysql_db_host = 'localhost';
+                    $mysql_db_remote_access = 'n';
+                    $mysql_db_remote_ips = '';*/
+                }
+            }
 			
 			//* Find a free db name for the app
 			for($n = 1; $n <= 1000; $n++) {
