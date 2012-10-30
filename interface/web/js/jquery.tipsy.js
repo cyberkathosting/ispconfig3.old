@@ -278,8 +278,8 @@
                                             $.ui.autocomplete.escapeRegex(request.term) +
                                             ")(?![^<>]*>)(?![^&;]+;)", "gi"
                                         ), "<strong>$1</strong>" )),
-                                    value: text,
-                                    class: (select.hasClass('flags') ? 'country-' + $(this).val().toUpperCase() : $(this).attr('class')),
+                                    'value': (text ? text : ''),
+                                    'class': (select.hasClass('flags') ? 'country-' + ($(this).val() ? $(this).val().toUpperCase() : '') : $(this).attr('class')),
                                     option: this
                                 };
                         }) );
@@ -352,7 +352,7 @@
                     .data( "item.autocomplete", item )
                     .append( "<a>" + item.label + "</a>" )
                     .appendTo( ul );
-                if(item.class) el.addClass(item.class);
+                if(item && item['class'] && el) el.addClass(item['class']);
                 return el;
             };
             select.change(function(e) {
