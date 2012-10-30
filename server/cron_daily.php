@@ -639,7 +639,7 @@ if($backup_dir != '') {
 				//$app->dbmaster->datalogInsert('web_backup', $insert_data, 'backup_id');
 				$sql = "INSERT INTO web_backup (server_id,parent_domain_id,backup_type,backup_mode,tstamp,filename) VALUES (".$conf['server_id'].",".$web_id.",'web','".$backup_mode."',".time().",'".$app->db->quote($web_backup_file)."')";
 				$app->db->query($sql);
-				$app->dbmaster->query($sql);
+				if($app->db->dbHost != $app->dbmaster->dbHost) $app->dbmaster->query($sql);
 				
 				//* Remove old backups
 				$backup_copies = intval($rec['backup_copies']);
@@ -658,12 +658,13 @@ if($backup_dir != '') {
 				for ($n = $backup_copies; $n <= 10; $n++) {
 					if(isset($files[$n]) && is_file($web_backup_dir.'/'.$files[$n])) {
 						unlink($web_backup_dir.'/'.$files[$n]);
-						$sql = "SELECT backup_id FROM web_backup WHERE server_id = ".$conf['server_id']." AND parent_domain_id = $web_id AND filename = '".$app->db->quote($files[$n])."'";
-						$tmp = $app->dbmaster->queryOneRecord($sql);
+						//$sql = "SELECT backup_id FROM web_backup WHERE server_id = ".$conf['server_id']." AND parent_domain_id = $web_id AND filename = '".$app->db->quote($files[$n])."'";
+						//$tmp = $app->dbmaster->queryOneRecord($sql);
 						//$app->dbmaster->datalogDelete('web_backup', 'backup_id', $tmp['backup_id']);
-						$sql = "DELETE FROM web_backup WHERE backup_id = ".intval($tmp['backup_id']);
+						//$sql = "DELETE FROM web_backup WHERE backup_id = ".intval($tmp['backup_id']);
+						$sql = "DELETE FROM web_backup WHERE server_id = ".$conf['server_id']." AND parent_domain_id = $web_id AND filename = '".$app->db->quote($files[$n])."'";
 						$app->db->query($sql);
-						$app->dbmaster->query($sql);
+						if($app->db->dbHost != $app->dbmaster->dbHost) $app->dbmaster->query($sql);
 					}
 				}
 
@@ -736,7 +737,7 @@ if($backup_dir != '') {
 				//$app->dbmaster->datalogInsert('web_backup', $insert_data, 'backup_id');
 				$sql = "INSERT INTO web_backup (server_id,parent_domain_id,backup_type,backup_mode,tstamp,filename) VALUES (".$conf['server_id'].",$web_id,'mysql','sqlgz',".time().",'".$app->db->quote($db_backup_file).".gz')";
 				$app->db->query($sql);
-				$app->dbmaster->query($sql);
+				if($app->db->dbHost != $app->dbmaster->dbHost) $app->dbmaster->query($sql);
 
 				//* Remove the uncompressed file
 				unlink($db_backup_dir.'/'.$db_backup_file);
@@ -760,12 +761,12 @@ if($backup_dir != '') {
                     for ($n = $backup_copies; $n <= 10; $n++) {
                         if(isset($filelist[$n]) && is_file($db_backup_dir.'/'.$filelist[$n])) {
                             unlink($db_backup_dir.'/'.$filelist[$n]);
-                            $sql = "SELECT backup_id FROM web_backup WHERE server_id = ".$conf['server_id']." AND parent_domain_id = $web_id AND filename = '".$app->db->quote($filelist[$n])."'";
-                            $tmp = $app->dbmaster->queryOneRecord($sql);
-                            //$app->dbmaster->datalogDelete('web_backup', 'backup_id', $tmp['backup_id']);
-                            $sql = "DELETE FROM web_backup WHERE backup_id = ".intval($tmp['backup_id']);
+                            //$sql = "SELECT backup_id FROM web_backup WHERE server_id = ".$conf['server_id']." AND parent_domain_id = $web_id AND filename = '".$app->db->quote($filelist[$n])."'";
+                            //$tmp = $app->dbmaster->queryOneRecord($sql);
+                            //$sql = "DELETE FROM web_backup WHERE backup_id = ".intval($tmp['backup_id']);
+							$sql = "DELETE FROM web_backup WHERE server_id = ".$conf['server_id']." AND parent_domain_id = $web_id AND filename = '".$app->db->quote($filelist[$n])."'";
                             $app->db->query($sql);
-                            $app->dbmaster->query($sql);
+                            if($app->db->dbHost != $app->dbmaster->dbHost) $app->dbmaster->query($sql);
                         }
                     }
                 }
