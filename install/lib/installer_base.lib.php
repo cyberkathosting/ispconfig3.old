@@ -423,7 +423,7 @@ class installer_base {
 				$this->warning('Unable to set rights of user in master database: '.$value['db']."\n Query: ".$query."\n Error: ".$this->dbmaster->errorMessage);
 			}
 
-			$query = "GRANT SELECT, UPDATE (`ssl_request`, `ssl_cert`, `ssl_action`) ON ".$value['db'].".`web_domain` TO '".$value['user']."'@'".$host."' ";
+			$query = "GRANT SELECT, UPDATE (`ssl_request`, `ssl_cert`, `ssl_action`, `ssl_key`) ON ".$value['db'].".`web_domain` TO '".$value['user']."'@'".$host."' ";
 			if ($verbose){
 				echo $query ."\n";
 			}
