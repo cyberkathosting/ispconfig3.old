@@ -951,7 +951,7 @@ class nginx_plugin {
 			switch($data['new']['subdomain']) {
 				case 'www':
 					if(substr($data['new']['redirect_path'],0,1) == '/'){ // relative path
-						$rewrite_exclude = '(?!'.substr($data['new']['redirect_path'],0,-1).')';
+						$rewrite_exclude = '((?!'.substr($data['new']['redirect_path'],0,-1).'))';
 					} else { // URL - check if URL is local
 						$tmp_redirect_path = $data['new']['redirect_path'];
 						if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
@@ -959,7 +959,7 @@ class nginx_plugin {
 						if($tmp_redirect_path_parts['host'] == $data['new']['domain'] && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
 							if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 							if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
-							$rewrite_exclude = '(?!'.$tmp_redirect_path_parts['path'].')';
+							$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
 						} else {
 							$rewrite_exclude = '(.?)';
 						}
@@ -972,7 +972,7 @@ class nginx_plugin {
 					'rewrite_exclude'	=> $rewrite_exclude);
 					
 					if(substr($data['new']['redirect_path'],0,1) == '/'){ // relative path
-						$rewrite_exclude = '(?!'.substr($data['new']['redirect_path'],0,-1).')';
+						$rewrite_exclude = '((?!'.substr($data['new']['redirect_path'],0,-1).'))';
 					} else { // URL - check if URL is local
 						$tmp_redirect_path = $data['new']['redirect_path'];
 						if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
@@ -980,7 +980,7 @@ class nginx_plugin {
 						if($tmp_redirect_path_parts['host'] == 'www.'.$data['new']['domain'] && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
 							if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 							if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
-							$rewrite_exclude = '(?!'.$tmp_redirect_path_parts['path'].')';
+							$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
 						} else {
 							$rewrite_exclude = '(.?)';
 						}
@@ -994,7 +994,7 @@ class nginx_plugin {
 					break;
 				case '*':
 					if(substr($data['new']['redirect_path'],0,1) == '/'){ // relative path
-						$rewrite_exclude = '(?!'.substr($data['new']['redirect_path'],0,-1).')';
+						$rewrite_exclude = '((?!'.substr($data['new']['redirect_path'],0,-1).'))';
 					} else { // URL - check if URL is local
 						$tmp_redirect_path = $data['new']['redirect_path'];
 						if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
@@ -1002,7 +1002,7 @@ class nginx_plugin {
 						if(substr($tmp_redirect_path_parts['host'],-strlen($data['new']['domain'])) == $data['new']['domain'] && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
 							if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 							if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
-							$rewrite_exclude = '(?!'.$tmp_redirect_path_parts['path'].')';
+							$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
 						} else {
 							$rewrite_exclude = '(.?)';
 						}
@@ -1016,7 +1016,7 @@ class nginx_plugin {
 					break;
 				default:
 					if(substr($data['new']['redirect_path'],0,1) == '/'){ // relative path
-						$rewrite_exclude = '(?!'.substr($data['new']['redirect_path'],0,-1).')';
+						$rewrite_exclude = '((?!'.substr($data['new']['redirect_path'],0,-1).'))';
 					} else { // URL - check if URL is local
 						$tmp_redirect_path = $data['new']['redirect_path'];
 						if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
@@ -1024,7 +1024,7 @@ class nginx_plugin {
 						if($tmp_redirect_path_parts['host'] == $data['new']['domain'] && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
 							if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 							if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
-							$rewrite_exclude = '(?!'.$tmp_redirect_path_parts['path'].')';
+							$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
 						} else {
 							$rewrite_exclude = '(.?)';
 						}
@@ -1092,7 +1092,7 @@ class nginx_plugin {
 					switch($alias['subdomain']) {
 						case 'www':
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
-								$rewrite_exclude = '(?!'.substr($alias['redirect_path'],0,-1).')';
+								$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
 							} else { // URL - check if URL is local
 								$tmp_redirect_path = $alias['redirect_path'];
 								if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
@@ -1100,7 +1100,7 @@ class nginx_plugin {
 								if($tmp_redirect_path_parts['host'] == $alias['domain'] && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
 									if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 									if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
-									$rewrite_exclude = '(?!'.$tmp_redirect_path_parts['path'].')';
+									$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
 								} else {
 									$rewrite_exclude = '(.?)';
 								}
@@ -1113,7 +1113,7 @@ class nginx_plugin {
 								'rewrite_exclude'	=> $rewrite_exclude);
 								
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
-								$rewrite_exclude = '(?!'.substr($alias['redirect_path'],0,-1).')';
+								$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
 							} else { // URL - check if URL is local
 								$tmp_redirect_path = $alias['redirect_path'];
 								if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
@@ -1121,7 +1121,7 @@ class nginx_plugin {
 								if($tmp_redirect_path_parts['host'] == 'www.'.$alias['domain'] && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
 									if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 									if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
-									$rewrite_exclude = '(?!'.$tmp_redirect_path_parts['path'].')';
+									$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
 								} else {
 									$rewrite_exclude = '(.?)';
 								}
@@ -1135,7 +1135,7 @@ class nginx_plugin {
 							break;
 						case '*':
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
-								$rewrite_exclude = '(?!'.substr($alias['redirect_path'],0,-1).')';
+								$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
 							} else { // URL - check if URL is local
 								$tmp_redirect_path = $alias['redirect_path'];
 								if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
@@ -1143,7 +1143,7 @@ class nginx_plugin {
 								if(substr($tmp_redirect_path_parts['host'],-strlen($alias['domain'])) == $alias['domain'] && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
 									if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 									if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
-									$rewrite_exclude = '(?!'.$tmp_redirect_path_parts['path'].')';
+									$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
 								} else {
 									$rewrite_exclude = '(.?)';
 								}
@@ -1157,7 +1157,7 @@ class nginx_plugin {
 							break;
 						default:
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
-								$rewrite_exclude = '(?!'.substr($alias['redirect_path'],0,-1).')';
+								$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
 							} else { // URL - check if URL is local
 								$tmp_redirect_path = $alias['redirect_path'];
 								if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
@@ -1165,7 +1165,7 @@ class nginx_plugin {
 								if($tmp_redirect_path_parts['host'] == $alias['domain'] && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
 									if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 									if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
-									$rewrite_exclude = '(?!'.$tmp_redirect_path_parts['path'].')';
+									$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
 								} else {
 									$rewrite_exclude = '(.?)';
 								}
