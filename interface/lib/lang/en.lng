@@ -80,4 +80,16 @@ $wb['globalsearch_searchfield_watermark_txt'] = "Search";
 $wb['globalsearch_suggestions_text_txt'] = "Suggestions";
 $wb['global_tabchange_warning_txt'] = 'Changed data in this tab will be changed if you press OK. On cancel they will be discarded.';
 $wb['global_tabchange_discard_txt'] = 'You have unsaved changes in this tab. Changes will be discarded if you continue.';
+
+$wb['datalog_changes_txt'] = 'The following changes are not yet populated to all servers:';
+$wb['datalog_changes_end_txt'] = 'Storing updates can take up to one minute. Please be patient.';
+$wb['datalog_status_i_web_database'] = 'Create new database';
+$wb['datalog_status_u_web_database'] = 'Update database';
+$wb['datalog_status_d_web_database'] = 'Delete database';
+$wb['datalog_status_i_web_database_user'] = 'Create database user for database';
+$wb['datalog_status_u_web_database_user'] = 'Update database user';
+$wb['datalog_status_d_web_database_user'] = 'Delete database user';
+$wb['datalog_status_i_web_domain'] = 'Create new website';
+$wb['datalog_status_u_web_domain'] = 'Update website settings';
+$wb['datalog_status_d_web_domain'] = 'Delete website';
 ?>

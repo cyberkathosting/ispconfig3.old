@@ -317,6 +317,28 @@ public function toLower($record) {
 
       return true;
     }
+    
+    //* get the current datalog status for the specified login (or currently logged in user)
+    public function datalogStatus($login = '') {
+        global $app;
+        
+        $return = array('count' => 0, 'entries' => array());
+        if($_SESSION['s']['user']['typ'] == 'admin') return $return; // these information should not be displayed to admin users
+        
+        if($login == '' && isset($_SESSION['s']['user'])) {
+            $login = $_SESSION['s']['user']['username'];
+        }
+        
+        $result = $this->queryAllRecords("SELECT COUNT( * ) AS cnt, sys_datalog.action, sys_datalog.dbtable FROM sys_datalog, server WHERE server.server_id = sys_datalog.server_id AND sys_datalog.user = '" . $this->quote($login) . "' AND sys_datalog.datalog_id > server.updated GROUP BY sys_datalog.dbtable, sys_datalog.action");
+        foreach($result as $row) {
+            if(!$row['dbtable']) continue;
+            $return['entries'][] = array('table' => $row['dbtable'], 'action' => $row['action'], 'count' => $row['cnt'], 'text' => $app->lng('datalog_status_' . $row['action'] . '_' . $row['dbtable']));
+            $return['count'] += 1;
+        }
+        unset($result);
+        
+        return $return;
+    }
 
 
     public function freeResult($query) 
