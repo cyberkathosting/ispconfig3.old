@@ -1098,6 +1098,7 @@ class apache2_plugin {
 			$tpl->setVar('fastcgi_starter_path',$fastcgi_starter_path);
 			$tpl->setVar('fastcgi_starter_script',$fastcgi_config['fastcgi_starter_script'].($data['new']['type'] == 'vhostsubdomain' ? '_web' . $data['new']['domain_id'] : ''));
 			$tpl->setVar('fastcgi_config_syntax',$fastcgi_config['fastcgi_config_syntax']);
+			$tpl->setVar('fastcgi_max_requests',$fastcgi_config['fastcgi_max_requests']);
 
 		} else {
 			//remove the php fastgi starter script if available
