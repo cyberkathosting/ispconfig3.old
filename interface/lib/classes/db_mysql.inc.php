@@ -331,9 +331,9 @@ public function toLower($record) {
         
         $result = $this->queryAllRecords("SELECT COUNT( * ) AS cnt, sys_datalog.action, sys_datalog.dbtable FROM sys_datalog, server WHERE server.server_id = sys_datalog.server_id AND sys_datalog.user = '" . $this->quote($login) . "' AND sys_datalog.datalog_id > server.updated GROUP BY sys_datalog.dbtable, sys_datalog.action");
         foreach($result as $row) {
-            if(!$row['dbtable']) continue;
+            if(!$row['dbtable'] || in_array($row['dbtable'], array('spamfilter_users', ''))) continue; // ignore some entries, maybe more to come
             $return['entries'][] = array('table' => $row['dbtable'], 'action' => $row['action'], 'count' => $row['cnt'], 'text' => $app->lng('datalog_status_' . $row['action'] . '_' . $row['dbtable']));
-            $return['count'] += 1;
+            $return['count'] += $row['cnt'];
         }
         unset($result);
         

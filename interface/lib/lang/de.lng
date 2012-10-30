@@ -83,6 +83,9 @@ $wb['global_tabchange_discard_txt'] = "Achtung, Sie haben ungespeicherte Änderu
 
 $wb['datalog_changes_txt'] = 'Folgende &Auml;nderungen wurden noch nicht auf alle Server &uuml;bernommen:';
 $wb['datalog_changes_end_txt'] = 'Die &Uuml;bernahme der &Auml;nderungen kann bis zu 1 Minute in Anspruch nehmen.';
+$wb['datalog_status_i_ftp_user'] = 'FTP-Benutzer anlegen';
+$wb['datalog_status_u_ftp_user'] = 'FTP-Benutzer &auml;ndern';
+$wb['datalog_status_d_ftp_user'] = 'FTP-Benutzer l&ouml;schen';
 $wb['datalog_status_i_web_database'] = 'Neue Datenbank anlegen';
 $wb['datalog_status_u_web_database'] = 'Datenbank &auml;ndern';
 $wb['datalog_status_d_web_database'] = 'Datenbank l&ouml;schen';
@@ -92,6 +95,21 @@ $wb['datalog_status_d_web_database_user'] = 'Datenbank-Benutzer l&ouml;schen';
 $wb['datalog_status_i_web_domain'] = 'Neue Webseite anlegen';
 $wb['datalog_status_u_web_domain'] = 'Webseiten-Einstellungen &auml;ndern';
 $wb['datalog_status_d_web_domain'] = 'Webseite l&ouml;schen';
+$wb['datalog_status_i_mail_domain'] = 'Neue E-Mail Domain anlegen';
+$wb['datalog_status_u_mail_domain'] = 'E-Mail Domain &auml;ndern';
+$wb['datalog_status_d_mail_domain'] = 'E-Mail Domain l&ouml;schen';
+$wb['datalog_status_i_mail_user'] = 'Neues E-Mail Konto anlegen';
+$wb['datalog_status_u_mail_user'] = 'E-Mail Konto &auml;ndern';
+$wb['datalog_status_d_mail_user'] = 'E-Mail Konto l&ouml;schen';
+$wb['datalog_status_i_mail_forwarding'] = 'Neue E-Mail Adresse anlegen';
+$wb['datalog_status_u_mail_forwarding'] = 'E-Mail Adresse &auml;ndern';
+$wb['datalog_status_d_mail_forwarding'] = 'E-Mail Adresse l&ouml;schen';
+$wb['datalog_status_i_dns_rr'] = 'DNS Record anlegen';
+$wb['datalog_status_u_dns_rr'] = 'DNS Record &auml;ndern';
+$wb['datalog_status_d_dns_rr'] = 'DNS Record l&ouml;schen';
+$wb['datalog_status_i_dns_soa'] = 'DNS Zone anlegen';
+$wb['datalog_status_u_dns_soa'] = 'DNS Zone &auml;ndern';
+$wb['datalog_status_d_dns_soa'] = 'DNS Zone l&ouml;schen';
 
 ?>
 
