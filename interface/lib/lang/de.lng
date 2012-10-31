@@ -83,9 +83,6 @@ $wb['global_tabchange_discard_txt'] = "Achtung, Sie haben ungespeicherte Änderu
 
 $wb['datalog_changes_txt'] = 'Folgende &Auml;nderungen wurden noch nicht auf alle Server &uuml;bernommen:';
 $wb['datalog_changes_end_txt'] = 'Die &Uuml;bernahme der &Auml;nderungen kann bis zu 1 Minute in Anspruch nehmen.';
-$wb['datalog_status_i_ftp_user'] = 'FTP-Benutzer anlegen';
-$wb['datalog_status_u_ftp_user'] = 'FTP-Benutzer &auml;ndern';
-$wb['datalog_status_d_ftp_user'] = 'FTP-Benutzer l&ouml;schen';
 $wb['datalog_status_i_web_database'] = 'Neue Datenbank anlegen';
 $wb['datalog_status_u_web_database'] = 'Datenbank &auml;ndern';
 $wb['datalog_status_d_web_database'] = 'Datenbank l&ouml;schen';
@@ -95,6 +92,9 @@ $wb['datalog_status_d_web_database_user'] = 'Datenbank-Benutzer l&ouml;schen';
 $wb['datalog_status_i_web_domain'] = 'Neue Webseite anlegen';
 $wb['datalog_status_u_web_domain'] = 'Webseiten-Einstellungen &auml;ndern';
 $wb['datalog_status_d_web_domain'] = 'Webseite l&ouml;schen';
+$wb['datalog_status_i_ftp_user'] = 'FTP-Benutzer anlegen';
+$wb['datalog_status_u_ftp_user'] = 'FTP-Benutzer &auml;ndern';
+$wb['datalog_status_d_ftp_user'] = 'FTP-Benutzer l&ouml;schen';
 $wb['datalog_status_i_mail_domain'] = 'Neue E-Mail Domain anlegen';
 $wb['datalog_status_u_mail_domain'] = 'E-Mail Domain &auml;ndern';
 $wb['datalog_status_d_mail_domain'] = 'E-Mail Domain l&ouml;schen';
@@ -110,6 +110,24 @@ $wb['datalog_status_d_dns_rr'] = 'DNS Record l&ouml;schen';
 $wb['datalog_status_i_dns_soa'] = 'DNS Zone anlegen';
 $wb['datalog_status_u_dns_soa'] = 'DNS Zone &auml;ndern';
 $wb['datalog_status_d_dns_soa'] = 'DNS Zone l&ouml;schen';
+$wb['datalog_status_i_cron'] = 'Cronjob anlegen';
+$wb['datalog_status_u_cron'] = 'Cronjob &auml;ndern';
+$wb['datalog_status_d_cron'] = 'Cronjob l&ouml;schen';
+$wb['datalog_status_i_mail_get'] = 'Mailabruf anlegen';
+$wb['datalog_status_u_mail_get'] = 'Mailabruf &auml;ndern';
+$wb['datalog_status_d_mail_get'] = 'Mailabruf l&ouml;schen';
+$wb['datalog_status_i_mail_mailinglist'] = 'Mailingliste anlegen';
+$wb['datalog_status_u_mail_mailinglist'] = 'Mailingliste &auml;ndern';
+$wb['datalog_status_d_mail_mailinglist'] = 'Mailingliste l&ouml;schen';
+$wb['datalog_status_i_shell_user'] = 'Shell User anlegen';
+$wb['datalog_status_u_shell_user'] = 'Shell User &auml;ndern';
+$wb['datalog_status_d_shell_user'] = 'Shell User l&ouml;schen';
+$wb['datalog_status_i_web_folder'] = 'Verzeichnisschutz anlegen';
+$wb['datalog_status_u_web_folder'] = 'Verzeichnisschutz &auml;ndern';
+$wb['datalog_status_d_web_folder'] = 'Verzeichnisschutz l&ouml;schen';
+$wb['datalog_status_i_web_folder_user'] = 'Verzeichnisschutz Benutzer anlegen';
+$wb['datalog_status_u_web_folder_user'] = 'Verzeichnisschutz Benutzer &auml;ndern';
+$wb['datalog_status_d_web_folder_user'] = 'Verzeichnisschutz Benutzer l&ouml;schen';
 
 ?>
 
