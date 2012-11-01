@@ -272,7 +272,7 @@ function setConfigVar( $filename, $varName, $varValue ) {
 }
 
 
-$sql = "SELECT domain_id, domain, document_root, web_folder, type FROM web_domain WHERE stats_type = 'webalizer' AND server_id = ".$conf['server_id'];
+$sql = "SELECT domain_id, domain, document_root, web_folder, type FROM web_domain WHERE (type = 'vhost' or type = 'vhostsubdomain') and stats_type = 'webalizer' AND server_id = ".$conf['server_id'];
 $records = $app->db->queryAllRecords($sql);
 
 foreach($records as $rec) {
@@ -313,7 +313,7 @@ foreach($records as $rec) {
 // Create awstats statistics
 #######################################################################################################
 
-$sql = "SELECT domain_id, domain, document_root, web_folder, type, system_user, system_group FROM web_domain WHERE stats_type = 'awstats' AND server_id = ".$conf['server_id'];
+$sql = "SELECT domain_id, domain, document_root, web_folder, type, system_user, system_group FROM web_domain WHERE (type = 'vhost' or type = 'vhostsubdomain') and stats_type = 'awstats' AND server_id = ".$conf['server_id'];
 $records = $app->db->queryAllRecords($sql);
 
 $web_config = $app->getconf->get_server_config($conf['server_id'], 'web');
@@ -428,7 +428,7 @@ if(is_dir('/var/log/ispconfig/httpd')) exec('chmod +r /var/log/ispconfig/httpd/*
 // Manage and compress web logfiles and create traffic statistics
 #######################################################################################################
 
-$sql = "SELECT domain_id, domain, document_root FROM web_domain WHERE server_id = ".$conf['server_id'];
+$sql = "SELECT domain_id, domain, document_root FROM web_domain WHERE (type = 'vhost' or type = 'vhostsubdomain') AND server_id = ".$conf['server_id'];
 $records = $app->db->queryAllRecords($sql);
 foreach($records as $rec) {
 
