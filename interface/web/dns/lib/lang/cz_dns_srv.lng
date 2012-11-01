@@ -17,3 +17,4 @@ $wb['data_error_regex'] = 'ZÃ¡znam serveru mÃ¡ chybnÃ½ formÃ¡t';
 $wb['srv_error_regex'] = 'NeplatnÃ½ formÃ¡t zÃ¡znau serveru. ZÃ¡znam serveru musÃ­ obsahovat 3 textovÃ© Å™etÄ›zce oddÄ›lenÃ© mezerami.';
 $wb['aux_txt'] = 'Priority';
 ?>
+

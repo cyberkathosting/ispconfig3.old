@@ -9,3 +9,4 @@ $wb['limit_mailcatchall_txt'] = 'Dosažen maximální počet košů účtů pro 
 $wb['source_txt'] = 'Source';
 $wb['destination_error_isemail'] = 'Destination is no valid email address.';
 ?>
+
