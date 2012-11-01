@@ -95,12 +95,21 @@ if($parse_mail_log == true) {
     
     function parse_mail_log_line($line) {
         //Oct 31 17:35:48 mx01 amavis[32014]: (32014-05) Passed CLEAN, [IPv6:xxxxx] [IPv6:xxxxx] <xxx@yyyy> -> <aaaa@bbbb>, Message-ID: <xxxx@yyyyy>, mail_id: xxxxxx, Hits: -1.89, size: 1591, queued_as: xxxxxxx, 946 ms
-        if(preg_match('/^(\w+ \d+ \d+:\d+:\d+) [^ ]+ amavis.* <([^>]+)> -> <([^>]+)>, Message-ID: <([^>]+)>.* size: (\d+),.*$/', $line, $matches) == false) return false;
+        
+        if(preg_match('/^(\w+\s+\d+\s+\d+:\d+:\d+)\s+[^ ]+\s+amavis.* <([^>]+)>\s+->\s+((<[^>]+>,)+) .*Message-ID:\s+<([^>]+)>.* size:\s+(\d+),.*$/', $line, $matches) == false) return false;
         
         $timestamp = strtotime($matches[1]);
         if(!$timestamp) return false;
         
-        return array('line' => $line, 'timestamp' => $timestamp, 'size' => $matches[5], 'from' => $matches[2], 'to' => $matches[3], 'message-id' => $matches[4]);
+        $to = array();
+        $recipients = explode(',', $matches[3]);
+        foreach($recipients as $recipient) {
+            $recipient = substr($recipient, 1, -1);
+            if(!$recipient || $recipient == $matches[2]) continue;
+            $to[] = $recipient;
+        }
+        
+        return array('line' => $line, 'timestamp' => $timestamp, 'size' => $matches[6], 'from' => $matches[2], 'to' => $to, 'message-id' => $matches[5]);
     }
 
     function add_mailbox_traffic(&$traffic_array, $address, $traffic) {
@@ -171,7 +180,9 @@ if($parse_mail_log == true) {
             }
             
             add_mailbox_traffic($mailbox_traffic, $cur_line['from'], $cur_line['size']);
-            add_mailbox_traffic($mailbox_traffic, $cur_line['to'], $cur_line['size']);
+            foreach($cur_line['to'] as $to) {
+                add_mailbox_traffic($mailbox_traffic, $to, $cur_line['size']);
+            }
             $last_line = $line; // store for the state file
         }
         fclose($fp);
@@ -198,7 +209,9 @@ if($parse_mail_log == true) {
             }
             
             add_mailbox_traffic($mailbox_traffic, $cur_line['from'], $cur_line['size']);
-            add_mailbox_traffic($mailbox_traffic, $cur_line['to'], $cur_line['size']);
+            foreach($cur_line['to'] as $to) {
+                add_mailbox_traffic($mailbox_traffic, $to, $cur_line['size']);
+            }
         }
         fclose($fp);
         //echo "\n";
