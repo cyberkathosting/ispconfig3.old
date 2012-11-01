@@ -41,4 +41,3 @@ $wb['no_redirect_txt'] = 'Žádné přesměrování';
 $wb['no_flag_txt'] = 'Žádný příznak';
 $wb['domain_error_wildcard'] = 'Wildcard subdomains are not allowed.';
 ?>
-

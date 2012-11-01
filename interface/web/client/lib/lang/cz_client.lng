@@ -138,4 +138,3 @@ $wb['bank_account_owner_txt'] = 'Bankovní účet vlastníka';
 $wb['email_error_isemail'] = 'Please enter a valid email address.';
 $wb['customer_no_error_unique'] = 'The customer no. must be unique (or empty).';
 ?>
-
