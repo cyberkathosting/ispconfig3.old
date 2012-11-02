@@ -89,23 +89,27 @@
                 jQuery('#redirect_type option[value="break"]').show();
                 jQuery('#redirect_type option[value="redirect"]').show();
                 jQuery('#redirect_type option[value="permanent"]').show();
+				jQuery('#redirect_type option[value="internal"]').show();
 					
                 jQuery('#redirect_type option[value="last"]').attr('disabled',false);
                 jQuery('#redirect_type option[value="break"]').attr('disabled',false);
                 jQuery('#redirect_type option[value="redirect"]').attr('disabled',false);
                 jQuery('#redirect_type option[value="permanent"]').attr('disabled',false);
+				jQuery('#redirect_type option[value="internal"]').attr('disabled',false);
 					
-                if(selected != "no" && selected != "" && selected != "last"  && selected != "break"  && selected != "redirect"  && selected != "permanent") jQuery('#redirect_type option[value="no"]').attr('selected', 'selected');
+                if(selected != "no" && selected != "" && selected != "last" && selected != "break" && selected != "redirect" && selected != "permanent" && selected != "internal") jQuery('#redirect_type option[value="no"]').attr('selected', 'selected');
             } else {
                 jQuery('#redirect_type option[value="last"]').attr('disabled','disabled');
                 jQuery('#redirect_type option[value="break"]').attr('disabled','disabled');
                 jQuery('#redirect_type option[value="redirect"]').attr('disabled','disabled');
                 jQuery('#redirect_type option[value="permanent"]').attr('disabled','disabled');
+				jQuery('#redirect_type option[value="internal"]').attr('disabled','disabled');
 					
                 jQuery('#redirect_type option[value="last"]').hide();
                 jQuery('#redirect_type option[value="break"]').hide();
                 jQuery('#redirect_type option[value="redirect"]').hide();
                 jQuery('#redirect_type option[value="permanent"]').hide();
+				jQuery('#redirect_type option[value="internal"]').hide();
 					
                 jQuery('#redirect_type option[value="R"]').show();
                 jQuery('#redirect_type option[value="L"]').show();
@@ -117,7 +121,7 @@
                 jQuery('#redirect_type option[value="R,L"]').attr('disabled',false);
                 jQuery('#redirect_type option[value="R=301,L"]').attr('disabled',false);
 					
-                if(selected != "no" && selected != "" && selected != "R"  && selected != "L"  && selected != "R,L" && selected != "R=301,L") jQuery('#redirect_type option[value="no"]').attr('selected', 'selected');
+                if(selected != "no" && selected != "" && selected != "R" && selected != "L" && selected != "R,L" && selected != "R=301,L") jQuery('#redirect_type option[value="no"]').attr('selected', 'selected');
             }
         });
     }

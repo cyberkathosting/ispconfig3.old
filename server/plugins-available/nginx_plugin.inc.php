@@ -934,9 +934,10 @@ class nginx_plugin {
 			$vhost_data['seo_redirect_enabled'] = 0;
 		}
 		
-		$tpl->setVar($vhost_data);
+		
 
 		// Rewrite rules
+		$own_rewrite_rules = array();
 		$rewrite_rules = array();
 		if($data['new']['redirect_type'] != '' && $data['new']['redirect_path'] != '') {
 			if(substr($data['new']['redirect_path'],-1) != '/') $data['new']['redirect_path'] .= '/';
@@ -951,26 +952,45 @@ class nginx_plugin {
 			switch($data['new']['subdomain']) {
 				case 'www':
 					if(substr($data['new']['redirect_path'],0,1) == '/'){ // relative path
+						if($data['new']['redirect_type'] == 'internal'){
+							$vhost_data['web_document_root_www'] .= $data['new']['redirect_path'];
+							break;
+						}
 						$rewrite_exclude = '((?!'.substr($data['new']['redirect_path'],0,-1).'))';
 					} else { // URL - check if URL is local
 						$tmp_redirect_path = $data['new']['redirect_path'];
 						if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
 						$tmp_redirect_path_parts = parse_url($tmp_redirect_path);
-						if($tmp_redirect_path_parts['host'] == $data['new']['domain'] && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
+						if(($tmp_redirect_path_parts['host'] == $data['new']['domain'] || $tmp_redirect_path_parts['host'] == 'www.'.$data['new']['domain']) && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
+							// URL is local
 							if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 							if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
 							$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
+							if($data['new']['redirect_type'] == 'internal'){
+								$vhost_data['web_document_root_www'] .= $tmp_redirect_path_parts['path'];
+								break;
+							} else {
+							
+							}
 						} else {
+							// external URL
 							$rewrite_exclude = '(.?)';
+							if($data['new']['redirect_type'] == 'internal'){
+								$vhost_data['use_internal'] = 'y';
+							} else {
+							
+							}
 						}
 						unset($tmp_redirect_path);
 						unset($tmp_redirect_path_parts);
 					}
-					$rewrite_rules[] = array(	'rewrite_domain' 	=> '^'.$this->_rewrite_quote($data['new']['domain']),
-					'rewrite_type' 		=> ($data['new']['redirect_type'] == 'no')?'':$data['new']['redirect_type'],
-					'rewrite_target' 	=> $data['new']['redirect_path'],
-					'rewrite_exclude'	=> $rewrite_exclude);
-					
+					$own_rewrite_rules[] = array(	'rewrite_domain' 	=> '^'.$this->_rewrite_quote($data['new']['domain']),
+						'rewrite_type' 		=> ($data['new']['redirect_type'] == 'no')?'':$data['new']['redirect_type'],
+						'rewrite_target' 	=> $data['new']['redirect_path'],
+						'rewrite_exclude'	=> $rewrite_exclude,
+						'use_rewrite'	=> ($data['new']['redirect_type'] == 'internal' ? false:true),
+						'use_internal'	=> ($data['new']['redirect_type'] == 'internal' ? true:false));
+					/*
 					if(substr($data['new']['redirect_path'],0,1) == '/'){ // relative path
 						$rewrite_exclude = '((?!'.substr($data['new']['redirect_path'],0,-1).'))';
 					} else { // URL - check if URL is local
@@ -981,19 +1001,35 @@ class nginx_plugin {
 							if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 							if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
 							$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
+							if($data['new']['redirect_type'] == 'internal'){
+								$vhost_data['web_document_root_www'] .= $tmp_redirect_path_parts['path'];
+								break;
+							} else {
+							
+							}
 						} else {
 							$rewrite_exclude = '(.?)';
+							if($data['new']['redirect_type'] == 'internal'){
+							
+							} else {
+							
+							}
 						}
 						unset($tmp_redirect_path);
 						unset($tmp_redirect_path_parts);
 					}
-					$rewrite_rules[] = array(	'rewrite_domain' 	=> '^' . $this->_rewrite_quote('www.'.$data['new']['domain']),
-							'rewrite_type' 		=> ($data['new']['redirect_type'] == 'no')?'':$data['new']['redirect_type'],
-							'rewrite_target' 	=> $data['new']['redirect_path'],
-							'rewrite_exclude'	=> $rewrite_exclude);
+					$own_rewrite_rules[] = array(	'rewrite_domain' 	=> '^' . $this->_rewrite_quote('www.'.$data['new']['domain']),
+						'rewrite_type' 		=> ($data['new']['redirect_type'] == 'no')?'':$data['new']['redirect_type'],
+						'rewrite_target' 	=> $data['new']['redirect_path'],
+						'rewrite_exclude'	=> $rewrite_exclude,
+						'use_rewrite'	=> ($data['new']['redirect_type'] == 'internal' ? false:true),
+						'use_internal'	=> ($data['new']['redirect_type'] == 'internal' ? true:false));
+					*/
 					break;
 				case '*':
 					if(substr($data['new']['redirect_path'],0,1) == '/'){ // relative path
+						if($data['new']['redirect_type'] == 'internal') $vhost_data['web_document_root_www'] .= $data['new']['redirect_path'];
+						break;
 						$rewrite_exclude = '((?!'.substr($data['new']['redirect_path'],0,-1).'))';
 					} else { // URL - check if URL is local
 						$tmp_redirect_path = $data['new']['redirect_path'];
@@ -1009,13 +1045,15 @@ class nginx_plugin {
 						unset($tmp_redirect_path);
 						unset($tmp_redirect_path_parts);
 					}
-					$rewrite_rules[] = array(	'rewrite_domain' 	=> '(^|\.)'.$this->_rewrite_quote($data['new']['domain']),
+					$own_rewrite_rules[] = array(	'rewrite_domain' 	=> '(^|\.)'.$this->_rewrite_quote($data['new']['domain']),
 						'rewrite_type' 		=> ($data['new']['redirect_type'] == 'no')?'':$data['new']['redirect_type'],
 						'rewrite_target' 	=> $data['new']['redirect_path'],
 						'rewrite_exclude'	=> $rewrite_exclude);
 					break;
 				default:
 					if(substr($data['new']['redirect_path'],0,1) == '/'){ // relative path
+						if($data['new']['redirect_type'] == 'internal') $vhost_data['web_document_root_www'] .= $data['new']['redirect_path'];
+						break;
 						$rewrite_exclude = '((?!'.substr($data['new']['redirect_path'],0,-1).'))';
 					} else { // URL - check if URL is local
 						$tmp_redirect_path = $data['new']['redirect_path'];
@@ -1031,12 +1069,14 @@ class nginx_plugin {
 						unset($tmp_redirect_path);
 						unset($tmp_redirect_path_parts);
 					}
-					$rewrite_rules[] = array(	'rewrite_domain' 	=> '^'.$this->_rewrite_quote($data['new']['domain']),
+					$own_rewrite_rules[] = array(	'rewrite_domain' 	=> '^'.$this->_rewrite_quote($data['new']['domain']),
 					'rewrite_type' 		=> ($data['new']['redirect_type'] == 'no')?'':$data['new']['redirect_type'],
 					'rewrite_target' 	=> $data['new']['redirect_path'],
 					'rewrite_exclude'	=> $rewrite_exclude);
 			}
 		}
+
+		$tpl->setVar($vhost_data);
 		
 		$server_alias = array();
 		
@@ -1056,32 +1096,42 @@ class nginx_plugin {
 		
 		// get alias domains (co-domains and subdomains)
 		$aliases = $app->db->queryAllRecords('SELECT * FROM web_domain WHERE parent_domain_id = '.$data['new']['domain_id']." AND active = 'y' AND type != 'vhostsubdomain'");
-		switch($data['new']['subdomain']) {
-			case 'www':
-				$server_alias[] = 'www.'.$data['new']['domain'].' ';
-				break;
-			case '*':
-				$server_alias[] = '*.'.$data['new']['domain'].' ';
-				break;
-		}
+		//if($data['new']['redirect_type'] == '' || $data['new']['redirect_path'] == ''){
+			switch($data['new']['subdomain']) {
+				case 'www':
+					$server_alias[] = 'www.'.$data['new']['domain'].' ';
+					break;
+				case '*':
+					$server_alias[] = '*.'.$data['new']['domain'].' ';
+					break;
+			}
+		//}
 		if(is_array($aliases)) {
 			foreach($aliases as $alias) {
-				switch($alias['subdomain']) {
-					case 'www':
-						$server_alias[] = 'www.'.$alias['domain'].' '.$alias['domain'].' ';
-						break;
-					case '*':
-						$server_alias[] = '*.'.$alias['domain'].' '.$alias['domain'].' ';
-						break;
-					default:
-						$server_alias[] = $alias['domain'].' ';
-						break;
+				if($alias['redirect_type'] == '' || $alias['redirect_path'] == '') {
+					switch($alias['subdomain']) {
+						case 'www':
+							$server_alias[] = 'www.'.$alias['domain'].' '.$alias['domain'].' ';
+							break;
+						case '*':
+							$server_alias[] = '*.'.$alias['domain'].' '.$alias['domain'].' ';
+							break;
+						default:
+							$server_alias[] = $alias['domain'].' ';
+							break;
+					}
+					$app->log('Add server alias: '.$alias['domain'],LOGLEVEL_DEBUG);
 				}
-				$app->log('Add server alias: '.$alias['domain'],LOGLEVEL_DEBUG);
 				// Rewriting
 				if($alias['redirect_type'] != '' && $alias['redirect_path'] != '') {
 					if(substr($alias['redirect_path'],-1) != '/') $alias['redirect_path'] .= '/';
-					if(substr($alias['redirect_path'],0,8) == '[scheme]') $alias['redirect_path'] = '$scheme'.substr($alias['redirect_path'],8);	
+					if(substr($alias['redirect_path'],0,8) == '[scheme]'){
+						if($alias['redirect_type'] != 'internal'){
+							$alias['redirect_path'] = '$scheme'.substr($alias['redirect_path'],8);
+						} else {
+							$alias['redirect_path'] = 'http'.substr($alias['redirect_path'],8);
+						}
+					}
 					
 					/* Disabled the path extension
 					if($data['new']['redirect_type'] == 'no' && substr($data['new']['redirect_path'],0,4) != 'http') {
@@ -1092,29 +1142,42 @@ class nginx_plugin {
 					switch($alias['subdomain']) {
 						case 'www':
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
-								$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
+								//$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
+								//if($alias['redirect_type'] == 'internal'){
+									$alias['redirect_path'] = 'http://'.($vhost_data['seo_redirect_enabled'] ? $vhost_data['seo_redirect_target_domain'] : $data['new']['domain']).$alias['redirect_path'];
+								//}
 							} else { // URL - check if URL is local
+								/*
 								$tmp_redirect_path = $alias['redirect_path'];
 								if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
 								$tmp_redirect_path_parts = parse_url($tmp_redirect_path);
 								if($tmp_redirect_path_parts['host'] == $alias['domain'] && ($tmp_redirect_path_parts['port'] == '80' || $tmp_redirect_path_parts['port'] == '443' || !isset($tmp_redirect_path_parts['port']))){
 									if(substr($tmp_redirect_path_parts['path'],-1) == '/') $tmp_redirect_path_parts['path'] = substr($tmp_redirect_path_parts['path'],0,-1);
 									if(substr($tmp_redirect_path_parts['path'],0,1) != '/') $tmp_redirect_path_parts['path'] = '/'.$tmp_redirect_path_parts['path'];
-									$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
+									//$rewrite_exclude = '((?!'.$tmp_redirect_path_parts['path'].'))';
 								} else {
-									$rewrite_exclude = '(.?)';
+									//$rewrite_exclude = '(.?)';
 								}
 								unset($tmp_redirect_path);
 								unset($tmp_redirect_path_parts);
+								*/
 							}
-							$rewrite_rules[] = array(	'rewrite_domain' 	=> '^'.$this->_rewrite_quote($alias['domain']),
+							if($alias['redirect_type'] != 'internal'){
+								if(substr($alias['redirect_path'],-1) == '/') $alias['redirect_path'] = substr($alias['redirect_path'],0,-1);
+							}
+							$rewrite_rules[] = array(	'rewrite_domain' 	=> $alias['domain'],
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
 								'rewrite_target' 	=> $alias['redirect_path'],
-								'rewrite_exclude'	=> $rewrite_exclude);
+								'use_rewrite'	=> ($alias['redirect_type'] == 'internal' ? false:true),
+								'use_internal'	=> ($alias['redirect_type'] == 'internal' ? true:false));
 								
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
-								$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
+								//if($alias['redirect_type'] != 'internal'){
+									$alias['redirect_path'] = 'http://'.($vhost_data['seo_redirect_enabled'] ? $vhost_data['seo_redirect_target_domain'] : $data['new']['domain']).$alias['redirect_path'];
+								//}
+								//$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
 							} else { // URL - check if URL is local
+								/*
 								$tmp_redirect_path = $alias['redirect_path'];
 								if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
 								$tmp_redirect_path_parts = parse_url($tmp_redirect_path);
@@ -1127,16 +1190,25 @@ class nginx_plugin {
 								}
 								unset($tmp_redirect_path);
 								unset($tmp_redirect_path_parts);
+								*/
 							}
-							$rewrite_rules[] = array(	'rewrite_domain' 	=> '^' . $this->_rewrite_quote('www.'.$alias['domain']),
-									'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
-									'rewrite_target' 	=> $alias['redirect_path'],
-									'rewrite_exclude'	=> $rewrite_exclude);
+							if($alias['redirect_type'] != 'internal'){
+								if(substr($alias['redirect_path'],-1) == '/') $alias['redirect_path'] = substr($alias['redirect_path'],0,-1);
+							}
+							$rewrite_rules[] = array(	'rewrite_domain' 	=> 'www.'.$alias['domain'],
+								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
+								'rewrite_target' 	=> $alias['redirect_path'],
+								'use_rewrite'	=> ($alias['redirect_type'] == 'internal' ? false:true),
+								'use_internal'	=> ($alias['redirect_type'] == 'internal' ? true:false));
 							break;
 						case '*':
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
-								$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
+								//if($alias['redirect_type'] != 'internal'){
+									$alias['redirect_path'] = 'http://'.($vhost_data['seo_redirect_enabled'] ? $vhost_data['seo_redirect_target_domain'] : $data['new']['domain']).$alias['redirect_path'];
+								//}
+								//$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
 							} else { // URL - check if URL is local
+								/*
 								$tmp_redirect_path = $alias['redirect_path'];
 								if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
 								$tmp_redirect_path_parts = parse_url($tmp_redirect_path);
@@ -1149,16 +1221,25 @@ class nginx_plugin {
 								}
 								unset($tmp_redirect_path);
 								unset($tmp_redirect_path_parts);
+								*/
 							}
-							$rewrite_rules[] = array(	'rewrite_domain' 	=> '(^|\.)' . $this->_rewrite_quote($alias['domain']),
+							if($alias['redirect_type'] != 'internal'){
+								if(substr($alias['redirect_path'],-1) == '/') $alias['redirect_path'] = substr($alias['redirect_path'],0,-1);
+							}
+							$rewrite_rules[] = array(	'rewrite_domain' 	=> '*' . $alias['domain'],
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
 								'rewrite_target' 	=> $alias['redirect_path'],
-								'rewrite_exclude'	=> $rewrite_exclude);
+								'use_rewrite'	=> ($alias['redirect_type'] == 'internal' ? false:true),
+								'use_internal'	=> ($alias['redirect_type'] == 'internal' ? true:false));
 							break;
 						default:
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
-								$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
+								//if($alias['redirect_type'] != 'internal'){
+									$alias['redirect_path'] = 'http://'.($vhost_data['seo_redirect_enabled'] ? $vhost_data['seo_redirect_target_domain'] : $data['new']['domain']).$alias['redirect_path'];
+								//}
+								//$rewrite_exclude = '((?!'.substr($alias['redirect_path'],0,-1).'))';
 							} else { // URL - check if URL is local
+								/*
 								$tmp_redirect_path = $alias['redirect_path'];
 								if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
 								$tmp_redirect_path_parts = parse_url($tmp_redirect_path);
@@ -1171,13 +1252,18 @@ class nginx_plugin {
 								}
 								unset($tmp_redirect_path);
 								unset($tmp_redirect_path_parts);
+								*/
 							}
-                            if(substr($alias['domain'], 0, 2) === '*.') $domain_rule = '(^|\.)'.$this->_rewrite_quote(substr($alias['domain'], 2));
-                            else $domain_rule = '^'.$this->_rewrite_quote($alias['domain']);
+							if($alias['redirect_type'] != 'internal'){
+								if(substr($alias['redirect_path'],-1) == '/') $alias['redirect_path'] = substr($alias['redirect_path'],0,-1);
+							}
+                            if(substr($alias['domain'], 0, 2) === '*.') $domain_rule = '*.'.substr($alias['domain'], 2);
+                            else $domain_rule = $alias['domain'];
 							$rewrite_rules[] = array(	'rewrite_domain' 	=> $domain_rule,
-							'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
-							'rewrite_target' 	=> $alias['redirect_path'],
-							'rewrite_exclude'	=> $rewrite_exclude);
+								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
+								'rewrite_target' 	=> $alias['redirect_path'],
+								'use_rewrite'	=> ($alias['redirect_type'] == 'internal' ? false:true),
+								'use_internal'	=> ($alias['redirect_type'] == 'internal' ? true:false));
 					}
 				}
 			}
@@ -1200,6 +1286,9 @@ class nginx_plugin {
 
 		if(count($rewrite_rules) > 0) {
 			$tpl->setLoop('redirects',$rewrite_rules);
+		}
+		if(count($own_rewrite_rules) > 0) {
+			$tpl->setLoop('own_redirects',$own_rewrite_rules);
 		}
 		
 		//* Create basic http auth for website statistics
@@ -2043,9 +2132,12 @@ class nginx_plugin {
 			$locations = array();
 			$islocation = false;
 			$linecount = sizeof($lines);
+			$server_count = 0;
 
 			for($i=0;$i<$linecount;$i++){
 				$l = trim($lines[$i]);
+				if(substr($l, 0, 8) == 'server {') $server_count += 1;
+				if($server_count > 1) break;
 				if(substr($l, 0, 8) == 'location' && !$islocation){
 				
 					$islocation = true;
