@@ -277,15 +277,15 @@ class ApsGUIController extends ApsBase
                 }
             }
 			
-			//* Find a free db name for the app
+            //* Find a free db name for the app
 			for($n = 1; $n <= 1000; $n++) {
-				$mysql_db_name = $dbname_prefix.'aps'.$n;
+				$mysql_db_name = ($dbname_prefix != '' ? $dbname_prefix.'aps'.$n : uniqid('aps'));
 				$tmp = $app->db->queryOneRecord("SELECT count(database_id) as number FROM web_database WHERE database_name = '".$app->db->quote($mysql_db_name)."'");
 				if($tmp['number'] == 0) break;
 			}
 			//* Find a free db username for the app
 			for($n = 1; $n <= 1000; $n++) {
-				$mysql_db_user = $dbuser_prefix.'aps'.$n;
+				$mysql_db_user = ($dbname_prefix != '' ? $dbname_prefix.'aps'.$n : uniqid('aps'));
 				$tmp = $app->db->queryOneRecord("SELECT count(database_user_id) as number FROM web_database_user WHERE database_user = '".$app->db->quote($mysql_db_user)."'");
 				if($tmp['number'] == 0) break;
 			}
