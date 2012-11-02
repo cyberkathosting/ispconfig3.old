@@ -115,6 +115,7 @@
         });
     }
     jQuery('#parent_domain_id').change(function() { reloadDatabaseUsers(); });
+    reloadDatabaseUsers();
     </tmpl_if>
     jQuery('#remote_ips').ispconfigSearch({
         dataSrc: '/sites/ajax_get_json.php?type=get_ipv4',
