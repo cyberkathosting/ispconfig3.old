@@ -27,7 +27,7 @@ server {
 <tmpl_if name='use_rewrite'>		
         #if ($http_host ~* "<tmpl_var name='rewrite_domain'>$") {
             #rewrite ^/(.+)$ <tmpl_var name='rewrite_target'>$1 <tmpl_var name='rewrite_type'>;
-            rewrite ^<tmpl_var name='rewrite_exclude'>/(.+)$ <tmpl_var name='rewrite_target'>$2 <tmpl_var name='rewrite_type'>;
+            rewrite ^<tmpl_var name='rewrite_exclude'>(.+)$ <tmpl_var name='rewrite_target'>$2 <tmpl_var name='rewrite_type'>;
 			#rewrite ^ <tmpl_var name='rewrite_target'>$request_uri? <tmpl_var name='rewrite_type'>;
         #}
 </tmpl_if>
@@ -185,13 +185,13 @@ server {
 </tmpl_if>
         
         server_name <tmpl_var name='rewrite_domain'>;
-        location / {
 <tmpl_if name='use_rewrite'>
             rewrite ^ <tmpl_var name='rewrite_target'>$request_uri? <tmpl_var name='rewrite_type'>;
 </tmpl_if>
 <tmpl_if name='use_internal'>
+        location / {
             proxy_pass <tmpl_var name='rewrite_target'>;
-</tmpl_if>
         }
+</tmpl_if>
 }
 </tmpl_loop>

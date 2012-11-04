@@ -956,7 +956,7 @@ class nginx_plugin {
 							$vhost_data['web_document_root_www'] .= $data['new']['redirect_path'];
 							break;
 						}
-						$rewrite_exclude = '((?!'.substr($data['new']['redirect_path'],0,-1).'))';
+						$rewrite_exclude = '(?!(/'.substr($data['new']['redirect_path'],1,-1).'|stats'.($vhost_data['errordocs'] == 1 ? '|error' : '').')/)';
 					} else { // URL - check if URL is local
 						$tmp_redirect_path = $data['new']['redirect_path'];
 						if(substr($tmp_redirect_path,0,7) == '$scheme') $tmp_redirect_path = 'http'.substr($tmp_redirect_path,7);
@@ -970,7 +970,7 @@ class nginx_plugin {
 								$vhost_data['web_document_root_www'] .= $tmp_redirect_path_parts['path'];
 								break;
 							} else {
-							
+								$rewrite_exclude = '(?!(/'.substr($tmp_redirect_path_parts['path'],1).'|stats'.($vhost_data['errordocs'] == 1 ? '|error' : '').')/)';
 							}
 						} else {
 							// external URL
@@ -986,7 +986,7 @@ class nginx_plugin {
 					}
 					$own_rewrite_rules[] = array(	'rewrite_domain' 	=> '^'.$this->_rewrite_quote($data['new']['domain']),
 						'rewrite_type' 		=> ($data['new']['redirect_type'] == 'no')?'':$data['new']['redirect_type'],
-						'rewrite_target' 	=> $data['new']['redirect_path'],
+						'rewrite_target' 	=> ($data['new']['redirect_type'] != 'internal' && ($data['new']['redirect_type'] == 'redirect' || $data['new']['redirect_type'] == 'permanent')? substr($data['new']['redirect_path'],0,-1) : $data['new']['redirect_path']),
 						'rewrite_exclude'	=> $rewrite_exclude,
 						'use_rewrite'	=> ($data['new']['redirect_type'] == 'internal' ? false:true),
 						'use_internal'	=> ($data['new']['redirect_type'] == 'internal' ? true:false));
