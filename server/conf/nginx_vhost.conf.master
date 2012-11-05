@@ -18,18 +18,14 @@ server {
         root   <tmpl_var name='web_document_root_www'>;
 		
 <tmpl_if name='seo_redirect_enabled'>
-        if ($http_host = "<tmpl_var name='seo_redirect_origin_domain'>") {
+        if ($http_host != "<tmpl_var name='seo_redirect_target_domain'>") {
             rewrite ^ $scheme://<tmpl_var name='seo_redirect_target_domain'>$request_uri? permanent;
         }
 </tmpl_if>
 
 <tmpl_loop name="own_redirects">
-<tmpl_if name='use_rewrite'>		
-        #if ($http_host ~* "<tmpl_var name='rewrite_domain'>$") {
-            #rewrite ^/(.+)$ <tmpl_var name='rewrite_target'>$1 <tmpl_var name='rewrite_type'>;
-            rewrite ^<tmpl_var name='rewrite_exclude'>(.+)$ <tmpl_var name='rewrite_target'>$2 <tmpl_var name='rewrite_type'>;
-			#rewrite ^ <tmpl_var name='rewrite_target'>$request_uri? <tmpl_var name='rewrite_type'>;
-        #}
+<tmpl_if name='use_rewrite'>
+        rewrite ^<tmpl_var name='rewrite_exclude'>(.*)$ <tmpl_var name='rewrite_target'>$2 <tmpl_var name='rewrite_type'>;
 </tmpl_if>
 <tmpl_if name='use_internal'>
 		location / {
@@ -57,27 +53,35 @@ server {
         error_page 503 /error/503.html;
         recursive_error_pages on;
         location = /error/400.html {
+            <tmpl_var name='web_document_root_www_internal'>
             internal;
         }
         location = /error/401.html {
+            <tmpl_var name='web_document_root_www_internal'>
             internal;
         }
         location = /error/403.html {
+            <tmpl_var name='web_document_root_www_internal'>
             internal;
         }
         location = /error/404.html {
+            <tmpl_var name='web_document_root_www_internal'>
             internal;
         }
         location = /error/405.html {
+            <tmpl_var name='web_document_root_www_internal'>
             internal;
         }
         location = /error/500.html {
+            <tmpl_var name='web_document_root_www_internal'>
             internal;
         }
         location = /error/502.html {
+            <tmpl_var name='web_document_root_www_internal'>
             internal;
         }
         location = /error/503.html {
+            <tmpl_var name='web_document_root_www_internal'>
             internal;
         }
 </tmpl_if>
@@ -104,6 +108,7 @@ server {
         }
 		
         location /stats {
+            <tmpl_var name='web_document_root_www_internal'>
             index index.html index.php;
             auth_basic "Members Only";
             auth_basic_user_file <tmpl_var name='stats_auth_passwd_file'>;
@@ -186,7 +191,7 @@ server {
         
         server_name <tmpl_var name='rewrite_domain'>;
 <tmpl_if name='use_rewrite'>
-            rewrite ^ <tmpl_var name='rewrite_target'>$request_uri? <tmpl_var name='rewrite_type'>;
+        rewrite ^ <tmpl_var name='rewrite_target'>$request_uri? <tmpl_var name='rewrite_type'>;
 </tmpl_if>
 <tmpl_if name='use_internal'>
         location / {
