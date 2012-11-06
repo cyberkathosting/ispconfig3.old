@@ -27,13 +27,14 @@ server {
 <tmpl_if name='use_rewrite'>
         rewrite ^<tmpl_var name='rewrite_exclude'>(.*)$ <tmpl_var name='rewrite_target'>$2 <tmpl_var name='rewrite_type'>;
 </tmpl_if>
-<tmpl_if name='use_internal'>
+<tmpl_if name='use_proxy'>
 		location / {
             proxy_pass <tmpl_var name='rewrite_target'>;
+            rewrite ^/\b<tmpl_var name='rewrite_subdir'>\b(.*) $1;
         }
 </tmpl_if>
 </tmpl_loop>
-<tmpl_if name='use_internal' op='!=' value='y'>		
+<tmpl_if name='use_proxy' op='!=' value='y'>		
         index index.html index.htm index.php index.cgi index.pl index.xhtml;
 		
 <tmpl_if name='ssi' op='==' value='y'>		
@@ -53,35 +54,35 @@ server {
         error_page 503 /error/503.html;
         recursive_error_pages on;
         location = /error/400.html {
-            <tmpl_var name='web_document_root_www_internal'>
+            <tmpl_var name='web_document_root_www_proxy'>
             internal;
         }
         location = /error/401.html {
-            <tmpl_var name='web_document_root_www_internal'>
+            <tmpl_var name='web_document_root_www_proxy'>
             internal;
         }
         location = /error/403.html {
-            <tmpl_var name='web_document_root_www_internal'>
+            <tmpl_var name='web_document_root_www_proxy'>
             internal;
         }
         location = /error/404.html {
-            <tmpl_var name='web_document_root_www_internal'>
+            <tmpl_var name='web_document_root_www_proxy'>
             internal;
         }
         location = /error/405.html {
-            <tmpl_var name='web_document_root_www_internal'>
+            <tmpl_var name='web_document_root_www_proxy'>
             internal;
         }
         location = /error/500.html {
-            <tmpl_var name='web_document_root_www_internal'>
+            <tmpl_var name='web_document_root_www_proxy'>
             internal;
         }
         location = /error/502.html {
-            <tmpl_var name='web_document_root_www_internal'>
+            <tmpl_var name='web_document_root_www_proxy'>
             internal;
         }
         location = /error/503.html {
-            <tmpl_var name='web_document_root_www_internal'>
+            <tmpl_var name='web_document_root_www_proxy'>
             internal;
         }
 </tmpl_if>
@@ -108,7 +109,7 @@ server {
         }
 		
         location /stats {
-            <tmpl_var name='web_document_root_www_internal'>
+            <tmpl_var name='web_document_root_www_proxy'>
             index index.html index.php;
             auth_basic "Members Only";
             auth_basic_user_file <tmpl_var name='stats_auth_passwd_file'>;
@@ -193,9 +194,10 @@ server {
 <tmpl_if name='use_rewrite'>
         rewrite ^ <tmpl_var name='rewrite_target'>$request_uri? <tmpl_var name='rewrite_type'>;
 </tmpl_if>
-<tmpl_if name='use_internal'>
+<tmpl_if name='use_proxy'>
         location / {
             proxy_pass <tmpl_var name='rewrite_target'>;
+            rewrite ^/\b<tmpl_var name='rewrite_subdir'>\b(.*) $1;
         }
 </tmpl_if>
 }
