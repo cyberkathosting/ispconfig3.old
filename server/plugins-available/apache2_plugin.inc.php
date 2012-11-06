@@ -2557,6 +2557,8 @@ class apache2_plugin {
 	}
 
 	public function create_relative_link($f, $t) {
+		global $app;
+		
 		// $from already exists
 		$from = realpath($f);
 
