@@ -1582,7 +1582,7 @@ class apache2_plugin {
                         $tmp_symlink = str_replace('[website_domain]',$data['old']['domain'],$tmp_symlink);
                         // Remove trailing slash
                         if(substr($tmp_symlink, -1, 1) == '/') $tmp_symlink = substr($tmp_symlink, 0, -1);
-                        // create the symlinks, if not exist
+                        // delete the symlink
                         if(is_link($tmp_symlink)) {
                             $app->system->unlink($tmp_symlink);
                             $app->log('Removing symlink: '.$tmp_symlink,LOGLEVEL_DEBUG);
