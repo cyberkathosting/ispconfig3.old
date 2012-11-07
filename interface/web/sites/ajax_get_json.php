@@ -100,6 +100,15 @@ $type = $_GET["type"];
 		$json .= '"}';
 	}
 	
+	if($type == 'getredirecttype'){
+		$json = '{"redirecttype":"';
+		$sql = "SELECT redirect_type FROM web_domain WHERE domain_id = $web_id";
+		$redirect = $app->db->queryOneRecord($sql);
+		$json .= $redirect['redirect_type'];
+		unset($redirect);
+		$json .= '"}';
+	}
+	
 	if($type == 'get_ipv4'){		
 		$result = array();
 		

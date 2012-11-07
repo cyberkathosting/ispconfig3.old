@@ -948,6 +948,23 @@ class nginx_plugin {
 					$data['new']['redirect_path'] = 'http'.substr($data['new']['redirect_path'],8);
 				}
 			}
+			
+			// Custom proxy directives
+			if($data['new']['redirect_type'] == 'proxy' && trim($data['new']['proxy_directives'] != '')){
+				$final_proxy_directives = array();
+				$proxy_directives = $data['new']['proxy_directives'];
+				// Make sure we only have Unix linebreaks
+				$proxy_directives = str_replace("\r\n", "\n", $proxy_directives);
+				$proxy_directives = str_replace("\r", "\n", $proxy_directives);
+				$proxy_directive_lines = explode("\n", $proxy_directives);
+				if(is_array($proxy_directive_lines) && !empty($proxy_directive_lines)){
+					foreach($proxy_directive_lines as $proxy_directive_line){
+						$final_proxy_directives[] = array('proxy_directive' => $proxy_directive_line);
+					}
+				}
+			} else {
+				$final_proxy_directives = false;
+			}
 
 			switch($data['new']['subdomain']) {
 				case 'www':
@@ -992,6 +1009,7 @@ class nginx_plugin {
 						'rewrite_target' 	=> $data['new']['redirect_path'],
 						'rewrite_exclude'	=> $rewrite_exclude,
 						'rewrite_subdir'	=> $rewrite_subdir,
+						'proxy_directives'	=> $final_proxy_directives,
 						'use_rewrite'	=> ($data['new']['redirect_type'] == 'proxy' ? false:true),
 						'use_proxy'	=> ($data['new']['redirect_type'] == 'proxy' ? true:false));
 					break;
@@ -1039,6 +1057,7 @@ class nginx_plugin {
 						'rewrite_target' 	=> $data['new']['redirect_path'],
 						'rewrite_exclude'	=> $rewrite_exclude,
 						'rewrite_subdir'	=> $rewrite_subdir,
+						'proxy_directives'	=> $final_proxy_directives,
 						'use_rewrite'	=> ($data['new']['redirect_type'] == 'proxy' ? false:true),
 						'use_proxy'	=> ($data['new']['redirect_type'] == 'proxy' ? true:false));
 					break;
@@ -1084,6 +1103,7 @@ class nginx_plugin {
 						'rewrite_target' 	=> $data['new']['redirect_path'],
 						'rewrite_exclude'	=> $rewrite_exclude,
 						'rewrite_subdir'	=> $rewrite_subdir,
+						'proxy_directives'	=> $final_proxy_directives,
 						'use_rewrite'	=> ($data['new']['redirect_type'] == 'proxy' ? false:true),
 						'use_proxy'	=> ($data['new']['redirect_type'] == 'proxy' ? true:false));
 			}
@@ -1120,6 +1140,24 @@ class nginx_plugin {
 		$aliases = $app->db->queryAllRecords('SELECT * FROM web_domain WHERE parent_domain_id = '.$data['new']['domain_id']." AND active = 'y' AND type != 'vhostsubdomain'");
 		if(is_array($aliases)) {
 			foreach($aliases as $alias) {
+			
+				// Custom proxy directives
+				if($alias['redirect_type'] == 'proxy' && trim($alias['proxy_directives'] != '')){
+					$final_proxy_directives = array();
+					$proxy_directives = $alias['proxy_directives'];
+					// Make sure we only have Unix linebreaks
+					$proxy_directives = str_replace("\r\n", "\n", $proxy_directives);
+					$proxy_directives = str_replace("\r", "\n", $proxy_directives);
+					$proxy_directive_lines = explode("\n", $proxy_directives);
+					if(is_array($proxy_directive_lines) && !empty($proxy_directive_lines)){
+						foreach($proxy_directive_lines as $proxy_directive_line){
+							$final_proxy_directives[] = array('proxy_directive' => $proxy_directive_line);
+						}
+					}
+				} else {
+					$final_proxy_directives = false;
+				}
+			
 				if($alias['redirect_type'] == '' || $alias['redirect_path'] == '') {
 					switch($alias['subdomain']) {
 						case 'www':
@@ -1169,6 +1207,7 @@ class nginx_plugin {
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
 								'rewrite_target' 	=> $alias['redirect_path'],
 								'rewrite_subdir'	=> $rewrite_subdir,
+								'proxy_directives'	=> $final_proxy_directives,
 								'use_rewrite'	=> ($alias['redirect_type'] == 'proxy' ? false:true),
 								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false));
 								
@@ -1194,6 +1233,7 @@ class nginx_plugin {
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
 								'rewrite_target' 	=> $alias['redirect_path'],
 								'rewrite_subdir'	=> $rewrite_subdir,
+								'proxy_directives'	=> $final_proxy_directives,
 								'use_rewrite'	=> ($alias['redirect_type'] == 'proxy' ? false:true),
 								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false));
 							break;
@@ -1220,6 +1260,7 @@ class nginx_plugin {
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
 								'rewrite_target' 	=> $alias['redirect_path'],
 								'rewrite_subdir'	=> $rewrite_subdir,
+								'proxy_directives'	=> $final_proxy_directives,
 								'use_rewrite'	=> ($alias['redirect_type'] == 'proxy' ? false:true),
 								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false));
 							break;
@@ -1248,6 +1289,7 @@ class nginx_plugin {
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
 								'rewrite_target' 	=> $alias['redirect_path'],
 								'rewrite_subdir'	=> $rewrite_subdir,
+								'proxy_directives'	=> $final_proxy_directives,
 								'use_rewrite'	=> ($alias['redirect_type'] == 'proxy' ? false:true),
 								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false));
 					}

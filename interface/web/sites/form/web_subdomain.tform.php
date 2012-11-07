@@ -143,5 +143,32 @@ $form["tabs"]['domain'] = array (
 	)
 );
 
+if($_SESSION["s"]["user"]["typ"] == 'admin') {
+
+$form["tabs"]['advanced'] = array (
+	'title' 	=> "Options",
+	'width' 	=> 100,
+	'template' 	=> "templates/web_subdomain_advanced.htm",
+	'readonly'	=> false,
+	'fields' 	=> array (
+	##################################
+	# Begin Datatable fields
+	##################################
+		'proxy_directives' => array (
+			'datatype'	=> 'TEXT',
+			'formtype'	=> 'TEXT',
+			'default'	=> '',
+			'value'		=> '',
+			'width'		=> '30',
+			'maxlength'	=> '255'
+		),
+	##################################
+	# ENDE Datatable fields
+	##################################
+	)
+);
+
+}
+
 
 ?>

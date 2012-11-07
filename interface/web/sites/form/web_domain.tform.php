@@ -697,7 +697,15 @@ $form["tabs"]['advanced'] = array (
 			'value'		=> '',
 			'width'		=> '30',
 			'maxlength'	=> '255'
-		)
+		),
+		'proxy_directives' => array (
+			'datatype'	=> 'TEXT',
+			'formtype'	=> 'TEXT',
+			'default'	=> '',
+			'value'		=> '',
+			'width'		=> '30',
+			'maxlength'	=> '255'
+		),
 	##################################
 	# ENDE Datatable fields
 	##################################

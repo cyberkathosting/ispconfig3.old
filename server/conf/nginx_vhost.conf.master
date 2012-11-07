@@ -30,7 +30,10 @@ server {
 <tmpl_if name='use_proxy'>
 		location / {
             proxy_pass <tmpl_var name='rewrite_target'>;
-            rewrite ^/\b<tmpl_var name='rewrite_subdir'>\b(.*) $1;
+            rewrite ^/<tmpl_var name='rewrite_subdir'>/(.*) /$1;
+<tmpl_loop name="proxy_directives">
+        <tmpl_var name='proxy_directive'>
+</tmpl_loop>
         }
 </tmpl_if>
 </tmpl_loop>
@@ -197,7 +200,10 @@ server {
 <tmpl_if name='use_proxy'>
         location / {
             proxy_pass <tmpl_var name='rewrite_target'>;
-            rewrite ^/\b<tmpl_var name='rewrite_subdir'>\b(.*) $1;
+            rewrite ^/<tmpl_var name='rewrite_subdir'>/(.*) /$1;
+<tmpl_loop name="proxy_directives">
+        <tmpl_var name='proxy_directive'>
+</tmpl_loop>
         }
 </tmpl_if>
 }

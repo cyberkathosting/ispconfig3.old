@@ -109,4 +109,6 @@ $wb['password_match_txt'] = 'Die Passwörter stimmen überein.';
 $wb['available_php_directive_snippets_txt'] = 'Verfügbare PHP Direktiven Schnipsel:';
 $wb['available_apache_directive_snippets_txt'] = 'Verfügbare Apache Direktiven Schnipsel:';
 $wb['available_nginx_directive_snippets_txt'] = 'Verfügbare nginx Direktiven Schnipsel:';
+$wb['proxy_directives_txt'] = 'Proxy Direktiven';
+$wb['available_proxy_directive_snippets_txt'] = 'Verfügbare Proxy Direktiven Schnipsel:';
 ?>

@@ -130,4 +130,13 @@ $wb['password_mismatch_txt'] = 'Die Passwörter stimmen nicht überein.';
 $wb['password_match_txt'] = 'Die Passwörter stimmen überein.';
 $wb['customer_no_error_unique'] = 'Die Kundennummer muß einzigartig sein (oder leer).';
 $wb['email_error_isemail'] = 'Please enter a valid email address.';
+$wb['paypal_email_error_isemail'] = 'Bitte geben Sie eine gültige PayPal-E-Mail-Adresse an.';
+$wb['paypal_email_txt'] = 'PayPal-E-Mail';
+$wb['company_id_txt'] = 'Firmen/Entrepreneur ID';
+$wb['bank_account_number_txt'] = 'Kontonummer';
+$wb['bank_account_owner_txt'] = 'Kontoinhaber';
+$wb['bank_code_txt'] = 'BLZ';
+$wb['bank_name_txt'] = 'Bank';
+$wb['bank_account_iban_txt'] = 'IBAN';
+$wb['bank_account_swift_txt'] = 'BIC';
 ?>

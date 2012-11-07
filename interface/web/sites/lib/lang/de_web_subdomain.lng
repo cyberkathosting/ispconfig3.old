@@ -40,4 +40,6 @@ $wb['host_txt'] = 'Host';
 $wb['redirect_error_regex'] = 'Ungültiger redirect Pfad. Gültige Pfade sind beispielsweise: /test/ oder http://www.domain.tld/test/';
 $wb['no_redirect_txt'] = 'Kein Redirect';
 $wb['no_flag_txt'] = 'Kein Flag';
+$wb['proxy_directives_txt'] = 'Proxy Direktiven';
+$wb['available_proxy_directive_snippets_txt'] = 'Verfügbare Proxy Direktiven Schnipsel:';
 ?>
