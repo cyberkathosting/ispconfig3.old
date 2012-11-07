@@ -344,7 +344,21 @@
                         $(this).autocomplete('option','select').call($(this), event, { item: { option: selected.get(0), internal: true } });
                     }
                 })
-                .addClass( "ui-widget ui-widget-content ui-corner-left" );
+                .addClass( "ui-widget ui-widget-content ui-corner-left" )
+                .click(function() {
+                    // close if already visible
+                    if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
+                        //input.autocomplete( "close" );
+                        return;
+                    }
+
+                    // work around a bug (likely same cause as #5265)
+                    $( this ).blur();
+
+                    // pass empty string as value to search for, displaying all results
+                    input.autocomplete( "search", "" );
+                    input.focus();
+                });
             if(select.hasClass('flags')) input.addClass('flags');
 
             input.data( "autocomplete" )._renderItem = function( ul, item ) {
