@@ -849,15 +849,42 @@ class apache2_plugin {
 		//$vhost_data['document_root'] = $data['new']['document_root'].'/' . $web_folder;
 		
 		// Set SEO Redirect
-		if($data['new']['seo_redirect'] != '' && ($data['new']['subdomain'] == 'www' || $data['new']['subdomain'] == '*')){
+		if($data['new']['seo_redirect'] != ''){
 			$vhost_data['seo_redirect_enabled'] = 1;
-			if($data['new']['seo_redirect'] == 'non_www_to_www'){
-				$vhost_data['seo_redirect_origin_domain'] = $data['new']['domain'];
-				$vhost_data['seo_redirect_target_domain'] = 'www.'.$data['new']['domain'];
+			if($data['new']['subdomain'] == 'www' || $data['new']['subdomain'] == '*'){
+				if($data['new']['seo_redirect'] == 'non_www_to_www'){
+					$vhost_data['seo_redirect_origin_domain'] = str_replace('.', '\.', $data['new']['domain']);
+					$vhost_data['seo_redirect_target_domain'] = 'www.'.$data['new']['domain'];
+					$vhost_data['seo_redirect_operator'] = '';
+				}
+				if($data['new']['seo_redirect'] == '*_domain_tld_to_www_domain_tld'){
+					// ^(example\.com|(?!\bwww\b)\.example\.com)$
+					// ^(example\.com|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.example\.com))$
+					$vhost_data['seo_redirect_origin_domain'] = '('.str_replace('.', '\.', $data['new']['domain']).'|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.'.str_replace('.', '\.', $data['new']['domain']).'))';
+					$vhost_data['seo_redirect_target_domain'] = 'www.'.$data['new']['domain'];
+					$vhost_data['seo_redirect_operator'] = '';
+				}
+				if($data['new']['seo_redirect'] == '*_to_www_domain_tld'){
+					$vhost_data['seo_redirect_origin_domain'] = 'www\.'.str_replace('.', '\.', $data['new']['domain']);
+					$vhost_data['seo_redirect_target_domain'] = 'www.'.$data['new']['domain'];
+					$vhost_data['seo_redirect_operator'] = '!';
+				}
 			}
 			if($data['new']['seo_redirect'] == 'www_to_non_www'){
-				$vhost_data['seo_redirect_origin_domain'] = 'www.'.$data['new']['domain'];
+				$vhost_data['seo_redirect_origin_domain'] = 'www\.'.str_replace('.', '\.', $data['new']['domain']);
 				$vhost_data['seo_redirect_target_domain'] = $data['new']['domain'];
+				$vhost_data['seo_redirect_operator'] = '';
+			}
+			if($data['new']['seo_redirect'] == '*_domain_tld_to_domain_tld'){
+				// ^(.+)\.example\.com$
+				$vhost_data['seo_redirect_origin_domain'] = '(.+)\.'.str_replace('.', '\.', $data['new']['domain']);
+				$vhost_data['seo_redirect_target_domain'] = $data['new']['domain'];
+				$vhost_data['seo_redirect_operator'] = '';
+			}
+			if($data['new']['seo_redirect'] == '*_to_domain_tld'){
+				$vhost_data['seo_redirect_origin_domain'] = str_replace('.', '\.', $data['new']['domain']);
+				$vhost_data['seo_redirect_target_domain'] = $data['new']['domain'];
+				$vhost_data['seo_redirect_operator'] = '!';
 			}
 		} else {
 			$vhost_data['seo_redirect_enabled'] = 0;
