@@ -1165,6 +1165,7 @@ class nginx_plugin {
 
 		// get alias domains (co-domains and subdomains)
 		$aliases = $app->db->queryAllRecords('SELECT * FROM web_domain WHERE parent_domain_id = '.$data['new']['domain_id']." AND active = 'y' AND type != 'vhostsubdomain'");
+		$alias_seo_redirects = array();
 		if(is_array($aliases)) {
 			foreach($aliases as $alias) {
 			
@@ -1198,7 +1199,47 @@ class nginx_plugin {
 							break;
 					}
 					$app->log('Add server alias: '.$alias['domain'],LOGLEVEL_DEBUG);
+					
+					// Add SEO redirects for alias domains
+					if($alias['seo_redirect'] != ''){
+						if($alias['subdomain'] == 'www' || $alias['subdomain'] == '*'){
+							if($alias['seo_redirect'] == 'non_www_to_www'){
+								$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias['domain'],
+																'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																'alias_seo_redirect_operator' 	=> '=');
+							}
+							if($alias['seo_redirect'] == '*_domain_tld_to_www_domain_tld'){
+								// ^(example\.com|(?!\bwww\b)\.example\.com)$
+								// ^(example\.com|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.example\.com))$
+								$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> '^('.str_replace('.', '\.', $alias['domain']).'|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.'.str_replace('.', '\.', $alias['domain']).'))$',
+																'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																'alias_seo_redirect_operator' 	=> '~*');
+							}
+							if($alias['seo_redirect'] == '*_to_www_domain_tld'){
+								$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www.'.$alias['domain'],
+																'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+															'alias_seo_redirect_operator' 	=> '!=');
+							}
+						}
+						if($alias['seo_redirect'] == 'www_to_non_www'){
+							$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www.'.$alias['domain'],
+															'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+															'alias_seo_redirect_operator' 	=> '=');
+						}
+						if($alias['seo_redirect'] == '*_domain_tld_to_domain_tld'){
+							// ^(.+)\.example\.com$
+							$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> '^(.+)\.'.str_replace('.', '\.', $alias['domain']).'$',
+															'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+															'alias_seo_redirect_operator' 	=> '~*');
+						}
+						if($alias['seo_redirect'] == '*_to_domain_tld'){
+							$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias['domain'],
+															'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+															'alias_seo_redirect_operator' 	=> '!=');
+						}
+					}
 				}
+				
 				// Rewriting
 				if($alias['redirect_type'] != '' && $alias['redirect_path'] != '') {
 					if(substr($alias['redirect_path'],-1) != '/') $alias['redirect_path'] .= '/';
@@ -1230,13 +1271,54 @@ class nginx_plugin {
 							if($alias['redirect_type'] != 'proxy'){
 								if(substr($alias['redirect_path'],-1) == '/') $alias['redirect_path'] = substr($alias['redirect_path'],0,-1);
 							}
+							// Add SEO redirects for alias domains
+							$alias_seo_redirects2 = array();
+							if($alias['seo_redirect'] != ''){
+								if($alias['subdomain'] == 'www' || $alias['subdomain'] == '*'){
+									if($alias['seo_redirect'] == 'non_www_to_www'){
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias['domain'],
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '=');
+									}
+									if($alias['seo_redirect'] == '*_domain_tld_to_www_domain_tld'){
+										// ^(example\.com|(?!\bwww\b)\.example\.com)$
+										// ^(example\.com|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.example\.com))$
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> '^('.str_replace('.', '\.', $alias['domain']).'|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.'.str_replace('.', '\.', $alias['domain']).'))$',
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '~*');
+									}
+									if($alias['seo_redirect'] == '*_to_www_domain_tld'){
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '!=');
+									}
+								}
+								if($alias['seo_redirect'] == 'www_to_non_www'){
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www.'.$alias['domain'],
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '=');
+								}
+								if($alias['seo_redirect'] == '*_domain_tld_to_domain_tld'){
+									// ^(.+)\.example\.com$
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> '^(.+)\.'.str_replace('.', '\.', $alias['domain']).'$',
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '~*');
+								}
+								if($alias['seo_redirect'] == '*_to_domain_tld'){
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '!=');
+								}
+							}
 							$rewrite_rules[] = array(	'rewrite_domain' 	=> $alias['domain'],
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
 								'rewrite_target' 	=> $alias['redirect_path'],
 								'rewrite_subdir'	=> $rewrite_subdir,
 								'proxy_directives'	=> $final_proxy_directives,
 								'use_rewrite'	=> ($alias['redirect_type'] == 'proxy' ? false:true),
-								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false));
+								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false),
+								'alias_seo_redirects2' => (count($alias_seo_redirects2) > 0 ? $alias_seo_redirects2 : false));
+								
 								
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
 								if($alias['redirect_type'] == 'proxy'){
@@ -1256,13 +1338,53 @@ class nginx_plugin {
 							if($alias['redirect_type'] != 'proxy'){
 								if(substr($alias['redirect_path'],-1) == '/') $alias['redirect_path'] = substr($alias['redirect_path'],0,-1);
 							}
+							// Add SEO redirects for alias domains
+							$alias_seo_redirects2 = array();
+							if($alias['seo_redirect'] != ''){
+								if($alias['subdomain'] == 'www' || $alias['subdomain'] == '*'){
+									if($alias['seo_redirect'] == 'non_www_to_www'){
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias['domain'],
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '=');
+									}
+									if($alias['seo_redirect'] == '*_domain_tld_to_www_domain_tld'){
+										// ^(example\.com|(?!\bwww\b)\.example\.com)$
+										// ^(example\.com|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.example\.com))$
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> '^('.str_replace('.', '\.', $alias['domain']).'|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.'.str_replace('.', '\.', $alias['domain']).'))$',
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '~*');
+									}
+									if($alias['seo_redirect'] == '*_to_www_domain_tld'){
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '!=');
+									}
+								}
+								if($alias['seo_redirect'] == 'www_to_non_www'){
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www.'.$alias['domain'],
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '=');
+								}
+								if($alias['seo_redirect'] == '*_domain_tld_to_domain_tld'){
+									// ^(.+)\.example\.com$
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> '^(.+)\.'.str_replace('.', '\.', $alias['domain']).'$',
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '~*');
+								}
+								if($alias['seo_redirect'] == '*_to_domain_tld'){
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '!=');
+								}
+							}
 							$rewrite_rules[] = array(	'rewrite_domain' 	=> 'www.'.$alias['domain'],
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
 								'rewrite_target' 	=> $alias['redirect_path'],
 								'rewrite_subdir'	=> $rewrite_subdir,
 								'proxy_directives'	=> $final_proxy_directives,
 								'use_rewrite'	=> ($alias['redirect_type'] == 'proxy' ? false:true),
-								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false));
+								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false),
+								'alias_seo_redirects2' => (count($alias_seo_redirects2) > 0 ? $alias_seo_redirects2 : false));
 							break;
 						case '*':
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
@@ -1283,13 +1405,53 @@ class nginx_plugin {
 							if($alias['redirect_type'] != 'proxy'){
 								if(substr($alias['redirect_path'],-1) == '/') $alias['redirect_path'] = substr($alias['redirect_path'],0,-1);
 							}
+							// Add SEO redirects for alias domains
+							$alias_seo_redirects2 = array();
+							if($alias['seo_redirect'] != ''){
+								if($alias['subdomain'] == 'www' || $alias['subdomain'] == '*'){
+									if($alias['seo_redirect'] == 'non_www_to_www'){
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias['domain'],
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '=');
+									}
+									if($alias['seo_redirect'] == '*_domain_tld_to_www_domain_tld'){
+										// ^(example\.com|(?!\bwww\b)\.example\.com)$
+										// ^(example\.com|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.example\.com))$
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> '^('.str_replace('.', '\.', $alias['domain']).'|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.'.str_replace('.', '\.', $alias['domain']).'))$',
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '~*');
+									}
+									if($alias['seo_redirect'] == '*_to_www_domain_tld'){
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '!=');
+									}
+								}
+								if($alias['seo_redirect'] == 'www_to_non_www'){
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www.'.$alias['domain'],
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '=');
+								}
+								if($alias['seo_redirect'] == '*_domain_tld_to_domain_tld'){
+									// ^(.+)\.example\.com$
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> '^(.+)\.'.str_replace('.', '\.', $alias['domain']).'$',
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '~*');
+								}
+								if($alias['seo_redirect'] == '*_to_domain_tld'){
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '!=');
+								}
+							}
 							$rewrite_rules[] = array(	'rewrite_domain' 	=> '*.' . $alias['domain'],
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
 								'rewrite_target' 	=> $alias['redirect_path'],
 								'rewrite_subdir'	=> $rewrite_subdir,
 								'proxy_directives'	=> $final_proxy_directives,
 								'use_rewrite'	=> ($alias['redirect_type'] == 'proxy' ? false:true),
-								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false));
+								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false),
+								'alias_seo_redirects2' => (count($alias_seo_redirects2) > 0 ? $alias_seo_redirects2 : false));
 							break;
 						default:
 							if(substr($alias['redirect_path'],0,1) == '/'){ // relative path
@@ -1312,13 +1474,53 @@ class nginx_plugin {
 							}
                             if(substr($alias['domain'], 0, 2) === '*.') $domain_rule = '*.'.substr($alias['domain'], 2);
                             else $domain_rule = $alias['domain'];
+							// Add SEO redirects for alias domains
+							$alias_seo_redirects2 = array();
+							if($alias['seo_redirect'] != ''){
+								if($alias['subdomain'] == 'www' || $alias['subdomain'] == '*'){
+									if($alias['seo_redirect'] == 'non_www_to_www'){
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias['domain'],
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '=');
+									}
+									if($alias['seo_redirect'] == '*_domain_tld_to_www_domain_tld'){
+										// ^(example\.com|(?!\bwww\b)\.example\.com)$
+										// ^(example\.com|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.example\.com))$
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> '^('.str_replace('.', '\.', $alias['domain']).'|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.'.str_replace('.', '\.', $alias['domain']).'))$',
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '~*');
+									}
+									if($alias['seo_redirect'] == '*_to_www_domain_tld'){
+										$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
+																			'alias_seo_redirect_operator' 	=> '!=');
+									}
+								}
+								if($alias['seo_redirect'] == 'www_to_non_www'){
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www.'.$alias['domain'],
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '=');
+								}
+								if($alias['seo_redirect'] == '*_domain_tld_to_domain_tld'){
+									// ^(.+)\.example\.com$
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> '^(.+)\.'.str_replace('.', '\.', $alias['domain']).'$',
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '~*');
+								}
+								if($alias['seo_redirect'] == '*_to_domain_tld'){
+									$alias_seo_redirects2[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_target_domain' 	=> $alias['domain'],
+																		'alias_seo_redirect_operator' 	=> '!=');
+								}
+							}
 							$rewrite_rules[] = array(	'rewrite_domain' 	=> $domain_rule,
 								'rewrite_type' 		=> ($alias['redirect_type'] == 'no')?'':$alias['redirect_type'],
 								'rewrite_target' 	=> $alias['redirect_path'],
 								'rewrite_subdir'	=> $rewrite_subdir,
 								'proxy_directives'	=> $final_proxy_directives,
 								'use_rewrite'	=> ($alias['redirect_type'] == 'proxy' ? false:true),
-								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false));
+								'use_proxy'	=> ($alias['redirect_type'] == 'proxy' ? true:false),
+								'alias_seo_redirects2' => (count($alias_seo_redirects2) > 0 ? $alias_seo_redirects2 : false));
 					}
 				}
 			}
@@ -1344,6 +1546,9 @@ class nginx_plugin {
 		}
 		if(count($own_rewrite_rules) > 0) {
 			$tpl->setLoop('own_redirects',$own_rewrite_rules);
+		}
+		if(count($alias_seo_redirects) > 0) {
+			$tpl->setLoop('alias_seo_redirects',$alias_seo_redirects);
 		}
 		
 		//* Create basic http auth for website statistics

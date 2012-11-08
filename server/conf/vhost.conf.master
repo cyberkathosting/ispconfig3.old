@@ -256,6 +256,10 @@
 		RewriteCond %{HTTP_HOST} <tmpl_var name='seo_redirect_operator'>^<tmpl_var name='seo_redirect_origin_domain'>$ [NC]
 		RewriteRule ^(.*)$ http://<tmpl_var name='seo_redirect_target_domain'>$1 [R=301,L]
 </tmpl_if>
+<tmpl_loop name="alias_seo_redirects">
+		RewriteCond %{HTTP_HOST} <tmpl_var name='alias_seo_redirect_operator'>^<tmpl_var name='alias_seo_redirect_origin_domain'>$ [NC]
+		RewriteRule ^(.*)$ http://<tmpl_var name='alias_seo_redirect_target_domain'>$1 [R=301,L]
+</tmpl_loop>
 <tmpl_loop name="redirects">
 		RewriteCond %{HTTP_HOST}   <tmpl_var name='rewrite_domain'>$ [NC]
 <tmpl_if name="rewrite_is_url" op="==" value="n">
