@@ -851,40 +851,13 @@ class apache2_plugin {
 		// Set SEO Redirect
 		if($data['new']['seo_redirect'] != ''){
 			$vhost_data['seo_redirect_enabled'] = 1;
-			if($data['new']['subdomain'] == 'www' || $data['new']['subdomain'] == '*'){
-				if($data['new']['seo_redirect'] == 'non_www_to_www'){
-					$vhost_data['seo_redirect_origin_domain'] = str_replace('.', '\.', $data['new']['domain']);
-					$vhost_data['seo_redirect_target_domain'] = 'www.'.$data['new']['domain'];
-					$vhost_data['seo_redirect_operator'] = '';
+			$tmp_seo_redirects = $this->get_seo_redirects($data['new']);
+			if(is_array($tmp_seo_redirects) && !empty($tmp_seo_redirects)){
+				foreach($tmp_seo_redirects as $key => $val){
+					$vhost_data[$key] = $val;
 				}
-				if($data['new']['seo_redirect'] == '*_domain_tld_to_www_domain_tld'){
-					// ^(example\.com|(?!\bwww\b)\.example\.com)$
-					// ^(example\.com|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.example\.com))$
-					$vhost_data['seo_redirect_origin_domain'] = '('.str_replace('.', '\.', $data['new']['domain']).'|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.'.str_replace('.', '\.', $data['new']['domain']).'))';
-					$vhost_data['seo_redirect_target_domain'] = 'www.'.$data['new']['domain'];
-					$vhost_data['seo_redirect_operator'] = '';
-				}
-				if($data['new']['seo_redirect'] == '*_to_www_domain_tld'){
-					$vhost_data['seo_redirect_origin_domain'] = 'www\.'.str_replace('.', '\.', $data['new']['domain']);
-					$vhost_data['seo_redirect_target_domain'] = 'www.'.$data['new']['domain'];
-					$vhost_data['seo_redirect_operator'] = '!';
-				}
-			}
-			if($data['new']['seo_redirect'] == 'www_to_non_www'){
-				$vhost_data['seo_redirect_origin_domain'] = 'www\.'.str_replace('.', '\.', $data['new']['domain']);
-				$vhost_data['seo_redirect_target_domain'] = $data['new']['domain'];
-				$vhost_data['seo_redirect_operator'] = '';
-			}
-			if($data['new']['seo_redirect'] == '*_domain_tld_to_domain_tld'){
-				// ^(.+)\.example\.com$
-				$vhost_data['seo_redirect_origin_domain'] = '(.+)\.'.str_replace('.', '\.', $data['new']['domain']);
-				$vhost_data['seo_redirect_target_domain'] = $data['new']['domain'];
-				$vhost_data['seo_redirect_operator'] = '';
-			}
-			if($data['new']['seo_redirect'] == '*_to_domain_tld'){
-				$vhost_data['seo_redirect_origin_domain'] = str_replace('.', '\.', $data['new']['domain']);
-				$vhost_data['seo_redirect_target_domain'] = $data['new']['domain'];
-				$vhost_data['seo_redirect_operator'] = '!';
+			} else {
+				$vhost_data['seo_redirect_enabled'] = 0;
 			}
 		} else {
 			$vhost_data['seo_redirect_enabled'] = 0;
@@ -982,44 +955,10 @@ class apache2_plugin {
 				
 				// Add SEO redirects for alias domains
 				if($alias['seo_redirect'] != ''){
-					if($alias['subdomain'] == 'www' || $alias['subdomain'] == '*'){
-						if($alias['seo_redirect'] == 'non_www_to_www'){
-							$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> str_replace('.', '\.', $alias['domain']),
-															'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
-															'alias_seo_redirect_operator' 	=> '');
-						}
-						if($alias['seo_redirect'] == '*_domain_tld_to_www_domain_tld'){
-							// ^(example\.com|(?!\bwww\b)\.example\.com)$
-							// ^(example\.com|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.example\.com))$
-							$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> '('.str_replace('.', '\.', $alias['domain']).'|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.'.str_replace('.', '\.', $alias['domain']).'))',
-															'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
-															'alias_seo_redirect_operator' 	=> '');
-						}
-						if($alias['seo_redirect'] == '*_to_www_domain_tld'){
-							$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www\.'.str_replace('.', '\.', $alias['domain']),
-															'alias_seo_redirect_target_domain' 	=> 'www.'.$alias['domain'],
-															'alias_seo_redirect_operator' 	=> '!');
-						}
+					$tmp_seo_redirects = $this->get_seo_redirects($alias, 'alias_');
+					if(is_array($tmp_seo_redirects) && !empty($tmp_seo_redirects)){
+						$alias_seo_redirects[] = $tmp_seo_redirects;
 					}
-					if($alias['seo_redirect'] == 'www_to_non_www'){
-						$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> 'www\.'.str_replace('.', '\.', $alias['domain']),
-														'alias_seo_redirect_target_domain' 	=> $alias['domain'],
-														'alias_seo_redirect_operator' 	=> '');
-					}
-					if($alias['seo_redirect'] == '*_domain_tld_to_domain_tld'){
-						// ^(.+)\.example\.com$
-						$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> '(.+)\.'.str_replace('.', '\.', $alias['domain']),
-														'alias_seo_redirect_target_domain' 	=> $alias['domain'],
-														'alias_seo_redirect_operator' 	=> '');
-					}
-					if($alias['seo_redirect'] == '*_to_domain_tld'){
-						$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> str_replace('.', '\.', $alias['domain']),
-														'alias_seo_redirect_target_domain' 	=> $alias['domain'],
-														'alias_seo_redirect_operator' 	=> '!');
-					}
-					$alias_seo_redirects[] = array(	'alias_seo_redirect_origin_domain' 	=> $alias_seo_redirect['alias_seo_redirect_origin_domain'],
-													'alias_seo_redirect_target_domain' 	=> $alias_seo_redirect['alias_seo_redirect_target_domain'],
-													'alias_seo_redirect_operator' 	=> $alias_seo_redirect['alias_seo_redirect_operator']);
 				}
 					
 				// Rewriting
@@ -2666,6 +2605,49 @@ class apache2_plugin {
     private function _is_url($string) {
         return preg_match('/^(f|ht)tp(s)?:\/\//i', $string);
     }
+	
+	private function get_seo_redirects($web, $prefix = ''){
+		$seo_redirects = array();
+		
+		if(substr($web['domain'], 0, 2) === '*.') $web['subdomain'] = '*';
+		
+		if($web['subdomain'] == 'www' || $web['subdomain'] == '*'){
+			if($web['seo_redirect'] == 'non_www_to_www'){
+				$seo_redirects[$prefix.'seo_redirect_origin_domain'] = str_replace('.', '\.', $web['domain']);
+				$seo_redirects[$prefix.'seo_redirect_target_domain'] = 'www.'.$web['domain'];
+				$seo_redirects[$prefix.'seo_redirect_operator'] = '';
+			}
+			if($web['seo_redirect'] == '*_domain_tld_to_www_domain_tld'){
+				// ^(example\.com|(?!\bwww\b)\.example\.com)$
+				// ^(example\.com|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.example\.com))$
+				$seo_redirects[$prefix.'seo_redirect_origin_domain'] = '('.str_replace('.', '\.', $web['domain']).'|((?:\w+(?:-\w+)*\.)*)((?!www\.)\w+(?:-\w+)*)(\.'.str_replace('.', '\.', $web['domain']).'))';
+				$seo_redirects[$prefix.'seo_redirect_target_domain'] = 'www.'.$web['domain'];
+				$seo_redirects[$prefix.'seo_redirect_operator'] = '';
+			}
+			if($web['seo_redirect'] == '*_to_www_domain_tld'){
+				$seo_redirects[$prefix.'seo_redirect_origin_domain'] = 'www\.'.str_replace('.', '\.', $web['domain']);
+				$seo_redirects[$prefix.'seo_redirect_target_domain'] = 'www.'.$web['domain'];
+				$seo_redirects[$prefix.'seo_redirect_operator'] = '!';
+			}
+		}
+		if($web['seo_redirect'] == 'www_to_non_www'){
+			$seo_redirects[$prefix.'seo_redirect_origin_domain'] = 'www\.'.str_replace('.', '\.', $web['domain']);
+			$seo_redirects[$prefix.'seo_redirect_target_domain'] = $web['domain'];
+			$seo_redirects[$prefix.'seo_redirect_operator'] = '';
+		}
+		if($web['seo_redirect'] == '*_domain_tld_to_domain_tld'){
+			// ^(.+)\.example\.com$
+			$seo_redirects[$prefix.'seo_redirect_origin_domain'] = '(.+)\.'.str_replace('.', '\.', $web['domain']);
+			$seo_redirects[$prefix.'seo_redirect_target_domain'] = $web['domain'];
+			$seo_redirects[$prefix.'seo_redirect_operator'] = '';
+		}
+		if($web['seo_redirect'] == '*_to_domain_tld'){
+			$seo_redirects[$prefix.'seo_redirect_origin_domain'] = str_replace('.', '\.', $web['domain']);
+			$seo_redirects[$prefix.'seo_redirect_target_domain'] = $web['domain'];
+			$seo_redirects[$prefix.'seo_redirect_operator'] = '!';
+		}
+		return $seo_redirects;
+	}
     
 } // end class
 

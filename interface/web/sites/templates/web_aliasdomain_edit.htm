@@ -69,6 +69,19 @@
         webId = $(this).val();
         getServerId(webId);
     });
+	
+	if(jQuery('#redirect_type').val() == 'proxy'){
+        jQuery('.tabbox_tabs ul li:last').show();
+    } else {
+        jQuery('.tabbox_tabs ul li:last').hide();
+    }
+    jQuery('#redirect_type').change(function(){
+        if(jQuery(this).val() == 'proxy'){
+            jQuery('.tabbox_tabs ul li:last').show();
+        } else {
+            jQuery('.tabbox_tabs ul li:last').hide();
+        }
+    });
 		
     function getServerId(webId){
         jQuery.getJSON('sites/ajax_get_json.php'+ '?' + Math.round(new Date().getTime()), {web_id : webId, type : "getserverid"}, function(data) {
