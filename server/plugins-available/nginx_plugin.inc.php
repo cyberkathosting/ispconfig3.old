@@ -1174,7 +1174,7 @@ class nginx_plugin {
 					$app->log('Add server alias: '.$alias['domain'],LOGLEVEL_DEBUG);
 					
 					// Add SEO redirects for alias domains
-					if($alias['seo_redirect'] != ''){
+					if($alias['seo_redirect'] != '' && $data['new']['seo_redirect'] != '*_to_www_domain_tld' && $data['new']['seo_redirect'] != '*_to_domain_tld'){
 						$tmp_seo_redirects = $this->get_seo_redirects($alias, 'alias_');
 						if(is_array($tmp_seo_redirects) && !empty($tmp_seo_redirects)){
 							$alias_seo_redirects[] = $tmp_seo_redirects;
