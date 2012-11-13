@@ -369,7 +369,7 @@ class page_action extends tform_actions {
             
             
             $this->dataRecord['web_folder'] = strtolower($this->dataRecord['web_folder']);
-            $forbidden_folders = array('', 'cgi-bin', 'web', 'log', 'private', 'ssl', 'tmp', 'webdav');
+            $forbidden_folders = array('', 'cgi-bin', 'log', 'private', 'ssl', 'tmp', 'webdav');
             $check_folder = strtolower($this->dataRecord['web_folder']);
             if(substr($check_folder, 0, 1) === '/') $check_folder = substr($check_folder, 1); // strip / at beginning to check against forbidden entries
             if(strpos($check_folder, '/') !== false) $check_folder = substr($check_folder, 0, strpos($check_folder, '/')); // get the first part of the path to check it
