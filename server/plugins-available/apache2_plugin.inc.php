@@ -1389,10 +1389,14 @@ class apache2_plugin {
 			$app->services->restartService('httpd','restart');
 			
 			// wait a few seconds, before we test the apache status again
+			$apache_online_status_after_restart = false;
 			sleep(2);
-		
+			for($i = 0; $i < 5; $i++) {
+				$apache_online_status_after_restart = $this->_checkTcp('localhost',80);
+				if($apache_online_status_after_restart) break;
+				sleep(1);
+			}
 			//* Check if apache restarted successfully if it was online before
-			$apache_online_status_after_restart = $this->_checkTcp('localhost',80);
 			$app->log('Apache online status after restart is: '.$apache_online_status_after_restart,LOGLEVEL_DEBUG);
 			if($apache_online_status_before_restart && !$apache_online_status_after_restart) {
 				$app->log('Apache did not restart after the configuration change for website '.$data['new']['domain'].' Reverting the configuration. Saved non-working config as '.$vhost_file.'.err',LOGLEVEL_WARN);
