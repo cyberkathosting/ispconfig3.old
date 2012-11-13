@@ -370,7 +370,10 @@ class page_action extends tform_actions {
             
             $this->dataRecord['web_folder'] = strtolower($this->dataRecord['web_folder']);
             $forbidden_folders = array('', 'cgi-bin', 'web', 'log', 'private', 'ssl', 'tmp', 'webdav');
-            if(in_array($this->dataRecord['web_folder'], $forbidden_folders)) {
+            $check_folder = strtolower($this->dataRecord['web_folder']);
+            if(substr($check_folder, 0, 1) === '/') $check_folder = substr($check_folder, 1); // strip / at beginning to check against forbidden entries
+            if(strpos($check_folder, '/') !== false) $check_folder = substr($check_folder, 0, strpos($check_folder, '/')); // get the first part of the path to check it
+            if(in_array($check_folder, $forbidden_folders)) {
                 $app->tform->errorMessage .= $app->tform->lng("web_folder_invalid_txt")."<br>";
             }
             // check for duplicate folder usage
