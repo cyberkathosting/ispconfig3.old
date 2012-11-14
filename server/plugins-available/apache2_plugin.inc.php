@@ -1277,8 +1277,22 @@ class apache2_plugin {
 			$app->log('Enable SSL for: '.$domain,LOGLEVEL_DEBUG);
 		}
 		
-		//* Add vhost for IPv6 IP
-		if($data['new']['ipv6_address'] != '') {
+	//* Add vhost for IPv6 IP
+	if($data['new']['ipv6_address'] != '') {
+		if ($conf['serverconfig']['web']['vhost_rewrite_v6'] == 'y') {
+			if (isset($conf['serverconfig']['server']['v6_prefix']) && $conf['serverconfig']['server']['v6_prefix'] <> '') {
+				$explode_v6prefix=explode(':',$conf['serverconfig']['server']['v6_prefix']);
+				$explode_v6=explode(':',$data['new']['ipv6_address']);
+
+print_r($explode_v6prefix);
+print_r($explode_v6);
+
+				for ( $i = 0; $i <= count($explode_v6prefix)-3; $i++ ) {
+				        $explode_v6[$i] = $explode_v6prefix[$i];
+				}
+				$data['new']['ipv6_address'] = implode(':',$explode_v6);
+			}
+		}
 			if(count($rewrite_rules) > 0){
 				$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 0, 'port' => 80, 'redirects' => $rewrite_rules);
 			} else {
