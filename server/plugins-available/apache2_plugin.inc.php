@@ -868,7 +868,7 @@ class apache2_plugin {
 		// Rewrite rules
 		$rewrite_rules = array();
 		if($data['new']['redirect_type'] != '' && $data['new']['redirect_path'] != '') {
-			if(substr($data['new']['redirect_path'],-1) != '/') $data['new']['redirect_path'] .= '/';
+			if(substr($data['new']['redirect_path'],-1) != '/' && !preg_match('/^(https?|\[scheme\]):\/\//', $data['new']['redirect_path'])) $data['new']['redirect_path'] .= '/';
 			if(substr($data['new']['redirect_path'],0,8) == '[scheme]'){
 				$rewrite_target = 'http'.substr($data['new']['redirect_path'],8);
 				$rewrite_target_ssl = 'https'.substr($data['new']['redirect_path'],8);
@@ -963,7 +963,7 @@ class apache2_plugin {
 					
 				// Rewriting
 				if($alias['redirect_type'] != '' && $alias['redirect_path'] != '') {
-					if(substr($alias['redirect_path'],-1) != '/') $alias['redirect_path'] .= '/';
+					if(substr($alias['redirect_path'],-1) != '/' && !preg_match('/^(https?|\[scheme\]):\/\//', $data['new']['redirect_path'])) $alias['redirect_path'] .= '/';
 					if(substr($alias['redirect_path'],0,8) == '[scheme]'){
 						$rewrite_target = 'http'.substr($alias['redirect_path'],8);
 						$rewrite_target_ssl = 'https'.substr($alias['redirect_path'],8);
