@@ -244,13 +244,21 @@ class listform {
     {
         global $app;
         
-        // we want to show at max 15 page numbers (7 left, current, 7 right)
-        $show_pages_count = 15;
+        // we want to show at max 17 page numbers (8 left, current, 8 right)
+        $show_pages_count = 17;
         
         $show_pages = array(0); // first page
         if($vars['pages'] > 0) $show_pages[] = $vars['pages']; // last page
-        for($p = $vars['page'] - 3; $p <= $vars['page'] + 3; $p++) { // surrounding pages
+        for($p = $vars['page'] - 2; $p <= $vars['page'] + 2; $p++) { // surrounding pages
             if($p > 0 && $p < $vars['pages']) $show_pages[] = $p;
+        }
+        
+        $l_start = $vars['page'] - 13;
+        $l_start -= ($l_start % 10) + 1;
+        $h_end = $vars['page'] + 23;
+        $h_end -= ($h_end % 10) + 1;
+        for($p = $l_start; $p <= $h_end; $p += 10) { // surrounding pages
+            if($p > 0 && $p < $vars['pages'] && !in_array($p, $show_pages, true) && count($show_pages) < $show_pages_count) $show_pages[] = $p;
         }
         
         $l_start = $vars['page'] - 503;
@@ -266,15 +274,7 @@ class listform {
         $h_end = $vars['page'] + 228;
         $h_end -= ($h_end % 25) + 1;
         for($p = $l_start; $p <= $h_end; $p += 25) { // surrounding pages
-            if($p > 0 && $p < $vars['pages'] && !in_array($p, $show_pages, true) && count($show_pages) < $show_pages_count) $show_pages[] = $p;
-        }
-        
-        $l_start = $vars['page'] - 53;
-        $l_start -= ($l_start % 10) + 1;
-        $h_end = $vars['page'] + 63;
-        $h_end -= ($h_end % 10) + 1;
-        for($p = $l_start; $p <= $h_end; $p += 10) { // surrounding pages
-            if($p > 0 && $p < $vars['pages'] && !in_array($p, $show_pages, true) && count($show_pages) < $show_pages_count) $show_pages[] = $p;
+            if($p > 0 && $p < $vars['pages'] && abs($p - $vars['page']) > 30 && !in_array($p, $show_pages, true) && count($show_pages) < $show_pages_count) $show_pages[] = $p;
         }
         
         sort($show_pages);
