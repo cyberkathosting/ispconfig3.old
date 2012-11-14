@@ -833,7 +833,21 @@ class nginx_plugin {
 		$vhost_data['web_basedir'] = $web_config['website_basedir'];
 		
 		// IPv6
-		if($data['new']['ipv6_address'] != '') $tpl->setVar('ipv6_enabled', 1);
+		if($data['new']['ipv6_address'] != ''){
+			$tpl->setVar('ipv6_enabled', 1);
+			if ($conf['serverconfig']['web']['vhost_rewrite_v6'] == 'y') {
+				if (isset($conf['serverconfig']['server']['v6_prefix']) && $conf['serverconfig']['server']['v6_prefix'] <> '') {
+					$explode_v6prefix=explode(':',$conf['serverconfig']['server']['v6_prefix']);
+					$explode_v6=explode(':',$data['new']['ipv6_address']);
+
+					for ( $i = 0; $i <= count($explode_v6prefix)-3; $i++ ) {
+				        $explode_v6[$i] = $explode_v6prefix[$i];
+					}
+					$data['new']['ipv6_address'] = implode(':',$explode_v6);
+					$vhost_data['ipv6_address'] = $data['new']['ipv6_address'];
+				}
+			}
+		}
 		
 		// PHP-FPM
 		// Support for multiple PHP versions
