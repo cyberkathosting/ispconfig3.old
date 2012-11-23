@@ -1,5 +1,5 @@
 <?php
-$wb['Client Circle'] = 'Client Circle';
+$wb['Client Circle'] = 'Klient Circle';
 $wb['Circle'] = 'Circle';
 $wb['circle_txt'] = 'Circle';
 $wb['circle_name_txt'] = 'Circle Name';
@@ -7,3 +7,4 @@ $wb['client_ids_txt'] = 'Clients/Resellers';
 $wb['description_txt'] = 'Description';
 $wb['active_txt'] = 'Aktivní';
 ?>
+

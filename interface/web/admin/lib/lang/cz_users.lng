@@ -7,7 +7,7 @@ $wb['passwort_txt'] = 'Heslo';
 $wb['password_strength_txt'] = 'Bezpečnost hesla';
 $wb['modules_txt'] = 'Modul';
 $wb['startmodule_txt'] = 'Výchozí modul';
-$wb['app_theme_txt'] = 'Design';
+$wb['app_theme_txt'] = 'Výchozí grafické téma';
 $wb['typ_txt'] = 'Typ';
 $wb['active_txt'] = 'Aktivní';
 $wb['language_txt'] = 'Jazyk';
@@ -18,7 +18,7 @@ $wb['strasse_txt'] = 'Ulice';
 $wb['ort_txt'] = 'Město';
 $wb['plz_txt'] = 'PSČ';
 $wb['land_txt'] = 'Stát';
-$wb['email_txt'] = 'Email';
+$wb['email_txt'] = 'E-mail';
 $wb['url_txt'] = 'URL';
 $wb['telefon_txt'] = 'Telefon';
 $wb['fax_txt'] = 'Fax';
@@ -30,3 +30,4 @@ $wb['repeat_password_txt'] = 'Opakujte heslo';
 $wb['password_mismatch_txt'] = 'Hesla se neshodují.';
 $wb['password_match_txt'] = 'Hesla se shodují.';
 ?>
+
