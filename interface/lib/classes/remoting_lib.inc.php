@@ -390,6 +390,7 @@ class remoting_lib {
 								if($dbencode == true) $new_record[$key] = $app->db->quote($new_record[$key]);
                         }
                 }
+                if(isset($record['_ispconfig_pw_crypted'])) $new_record['_ispconfig_pw_crypted'] = $record['_ispconfig_pw_crypted']; // this one is not in form definitions!
                 return $new_record;
         }
 		
