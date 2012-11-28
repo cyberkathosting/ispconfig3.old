@@ -846,7 +846,7 @@ class remoting_lib {
 			$language = $app->db->quote($params["language"]);
 			$groupid = $app->db->datalogInsert('sys_group', "(name,description,client_id) VALUES ('$username','','$insert_id')", 'groupid');
 			$groups = $groupid;
-			$password = $app->auth->crypt_password(stripslashes($password));
+			if(!isset($params['_ispconfig_pw_crypted']) || $params['_ispconfig_pw_crypted'] != 1) $password = $app->auth->crypt_password(stripslashes($password));
 			$sql1 = "INSERT INTO sys_user (username,passwort,modules,startmodule,app_theme,typ,active,language,groups,default_group,client_id)
 			VALUES ('$username','$password','$modules','$startmodule','$usertheme','$type','$active','$language',$groups,$groupid,$insert_id)";
 			$app->db->query($sql1);
@@ -857,7 +857,8 @@ class remoting_lib {
 			$username = $app->db->quote($params["username"]);
 			$clear_password = $app->db->quote($params["password"]);
 			$client_id = $app->functions->intval($client_id);
-			$password = $app->auth->crypt_password(stripslashes($clear_password));
+			if(!isset($params['_ispconfig_pw_crypted']) || $params['_ispconfig_pw_crypted'] != 1) $password = $app->auth->crypt_password(stripslashes($clear_password));
+            else $password = $clear_password;
 			if ($clear_password) $pwstring = ", passwort = '$password'"; else $pwstring ="" ;
 			$sql = "UPDATE sys_user set username = '$username' $pwstring WHERE client_id = $client_id";
 			$app->db->query($sql);
