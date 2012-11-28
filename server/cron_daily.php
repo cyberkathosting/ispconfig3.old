@@ -873,10 +873,10 @@ if($backup_dir != '') {
 
 				$web_id = $rec['parent_domain_id'];
 				$db_backup_dir = $backup_dir.'/web'.$web_id;
-				if(!is_dir($web_backup_dir)) mkdir($web_backup_dir, 0750);
-				chmod($web_backup_dir, 0750);
-				chown($web_backup_dir, 'root');
-				chgrp($web_backup_dir, 'root');
+				if(!is_dir($db_backup_dir)) mkdir($db_backup_dir, 0750);
+				chmod($db_backup_dir, 0750);
+				chown($db_backup_dir, 'root');
+				chgrp($db_backup_dir, 'root');
 
 				//* Do the mysql database backup with mysqldump
 				$db_id = $rec['database_id'];
