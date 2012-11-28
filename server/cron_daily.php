@@ -686,7 +686,7 @@ if ($app->dbmaster == $app->db) {
 					}
 					
 					//* Send email to client
-					if($web_config['overtraffic_notify_admin'] == 'y') {
+					if($web_config['overtraffic_notify_client'] == 'y') {
 						$client_group_id = $rec["sys_groupid"];
 						$client = $app->db->queryOneRecord("SELECT client.email FROM sys_group, client WHERE sys_group.client_id = client.client_id and sys_group.groupid = $client_group_id");
 						if($client['email'] != '') {
