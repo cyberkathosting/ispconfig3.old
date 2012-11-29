@@ -105,6 +105,16 @@ class page_action extends tform_actions {
 		$section = $app->tform->getCurrentTab();
 		
 		$server_config_array = $app->getconf->get_global_config();
+		
+		foreach($app->tform->formDef['tabs'][$section]['fields'] as $key => $field) {
+			if ($field['formtype'] == 'CHECKBOX') {
+				if($this->dataRecord[$key] == '') {
+					// if a checkbox is not set, we set it to the unchecked value
+					$this->dataRecord[$key] = $field['value'][0];
+				}
+			}
+		}
+
 		$new_config = $app->tform->encode($this->dataRecord,$section);
         if($section == 'sites' && $new_config['vhost_subdomains'] != 'y' && $server_config_array['vhost_subdomains'] == 'y') {
             // check for existing vhost subdomains, if found the mode cannot be disabled

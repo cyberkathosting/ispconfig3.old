@@ -24,38 +24,50 @@ function reportError(request) {
 }
 
 function showLoadIndicator() {
-    requestsRunning += 1;
+	jQuery.getJSON('sites/ajax_get_json.php'+ '?' + Math.round(new Date().getTime()), {type : "get_use_loadindicator"}, function(data) {
+        if(data.useloadindicator == "y"){
+            requestsRunning += 1;
     
-    if(requestsRunning < 2) {
-        var indicator = jQuery('#ajaxloader');
-        if(indicator.length < 1) {
-            indicator = jQuery('<div id="ajaxloader" style="display: none;"></div>');
-            indicator.appendTo('body');
-        }
-        var parent = jQuery('#content');
-        if(parent.length < 1) return;
-        indicatorCompleted = false;
+			if(requestsRunning < 2) {
+				var indicator = jQuery('#ajaxloader');
+				if(indicator.length < 1) {
+					indicator = jQuery('<div id="ajaxloader" style="display: none;"></div>');
+					indicator.appendTo('body');
+				}
+				var parent = jQuery('#content');
+				if(parent.length < 1) return;
+				indicatorCompleted = false;
         
-        var atx = parent.offset().left + 150; //((parent.outerWidth(true) - indicator.outerWidth(true)) / 2);
-        var aty = parent.offset().top + 150;
-        indicator.css( {'left': atx, 'top': aty } ).fadeIn('fast', function() {
-            // check if loader should be hidden immediately
-            indicatorCompleted = true;
-            if(requestsRunning < 1) $(this).fadeOut('fast', function() { $(this).hide();});
-        });
-    }
+				var atx = parent.offset().left + 150; //((parent.outerWidth(true) - indicator.outerWidth(true)) / 2);
+				var aty = parent.offset().top + 150;
+				indicator.css( {'left': atx, 'top': aty } ).fadeIn('fast', function() {
+					// check if loader should be hidden immediately
+					indicatorCompleted = true;
+					if(requestsRunning < 1) $(this).fadeOut('fast', function() { $(this).hide();});
+				});
+			}
+        }
+    });
 }
 
 function hideLoadIndicator() {
-    requestsRunning -= 1;
-    if(requestsRunning < 1) {
-        requestsRunning = 0; // just for the case...
-        if(indicatorCompleted == true) jQuery('#ajaxloader').fadeOut('fast', function() { jQuery('#ajaxloader').hide(); } );
-    }
+	jQuery.getJSON('sites/ajax_get_json.php'+ '?' + Math.round(new Date().getTime()), {type : "get_use_loadindicator"}, function(data) {
+        if(data.useloadindicator == "y"){
+            requestsRunning -= 1;
+			if(requestsRunning < 1) {
+				requestsRunning = 0; // just for the case...
+				if(indicatorCompleted == true) jQuery('#ajaxloader').fadeOut('fast', function() { jQuery('#ajaxloader').hide(); } );
+			}
+        }
+    });
 }
 
 function onAfterContentLoad() {
-    $('#pageContent').find("select").combobox();
+	jQuery.getJSON('sites/ajax_get_json.php'+ '?' + Math.round(new Date().getTime()), {type : "get_use_combobox"}, function(data) {
+        if(data.usecombobox == "y"){
+            $('#pageContent').find("select").combobox();
+        }
+    });
 }
 
 function loadContentRefresh(pagename) {
