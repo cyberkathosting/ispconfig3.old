@@ -51,15 +51,11 @@ function showLoadIndicator() {
 }
 
 function hideLoadIndicator() {
-	jQuery.getJSON('sites/ajax_get_json.php'+ '?' + Math.round(new Date().getTime()), {type : "get_use_loadindicator"}, function(data) {
-        if(data.useloadindicator == "y"){
-            requestsRunning -= 1;
-			if(requestsRunning < 1) {
-				requestsRunning = 0; // just for the case...
-				if(indicatorCompleted == true) jQuery('#ajaxloader').fadeOut('fast', function() { jQuery('#ajaxloader').hide(); } );
-			}
-        }
-    });
+	requestsRunning -= 1;
+	if(requestsRunning < 1) {
+		requestsRunning = 0; // just for the case...
+		if(indicatorCompleted == true) jQuery('#ajaxloader').fadeOut('fast', function() { jQuery('#ajaxloader').hide(); } );
+	}
 }
 
 function onAfterContentLoad() {
