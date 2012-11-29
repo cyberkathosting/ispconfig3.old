@@ -43,4 +43,5 @@ $wb['smtp_pass_txt'] = 'SMTP password';
 $wb['smtp_crypt_txt'] = 'Use SSL/TLS encrypted connection for SMTP';
 $wb['phpmyadmin_url_error_regex'] = 'Invalid phpmyadmin URL';
 $wb['use_combobox_txt'] = 'Use jQuery UI Combobox';
+$wb['use_loadindicator_txt'] = 'Use Load Indicator';
 ?>
