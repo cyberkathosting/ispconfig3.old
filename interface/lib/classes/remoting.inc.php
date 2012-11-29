@@ -1412,23 +1412,56 @@ class remoting {
 	//* Update a record
 	public function sites_database_user_update($session_id, $client_id, $primary_id, $params)
     {
+        global $app;
+        
 		if(!$this->checkPerm($session_id, 'sites_database_user_update')) {
 			$this->server->fault('permission_denied', 'You do not have the permissions to access this function.');
 			return false;
 		}
+		$app->uses('remoting_lib');
+		$app->remoting_lib->loadFormDef('../sites/form/database_user.tform.php');
+        $old_rec = $app->remoting_lib->getDataRecord($primary_id);
         
-		return $this->updateQuery('../sites/form/database_user.tform.php', $client_id, $primary_id, $params);
+		$result = $this->updateQuery('../sites/form/database_user.tform.php', $client_id, $primary_id, $params);
+        
+        $new_rec = $app->remoting_lib->getDataRecord($primary_id);
+        
+        $records = $app->db->queryAllRecords("SELECT DISTINCT server_id FROM web_database WHERE database_user_id = '".$app->functions->intval($primary_id)."' UNION SELECT DISTINCT server_id FROM web_database WHERE database_ro_user_id = '".$app->functions->intval($primary_id)."'");
+        foreach($records as $rec) {
+            $tmp_rec = $new_rec;
+            $tmp_rec['server_id'] = $rec['server_id'];
+            $app->remoting_lib->datalogSave('UPDATE', $primary_id, $old_rec, $tmp_rec);
+        }
+        unset($new_rec);
+        unset($old_rec);
+        unset($records);
+        
+        return $result;
  	}
 	
 	//* Delete a record
 	public function sites_database_user_delete($session_id, $primary_id)
     {
+        global $app;
+        
 		if(!$this->checkPerm($session_id, 'sites_database_user_delete')) {
 			$this->server->fault('permission_denied', 'You do not have the permissions to access this function.');
 			return false;
 		}
         
+        $app->db->datalogDelete('web_database_user', 'database_user_id', $primary_id);
 		$affected_rows = $this->deleteQuery('../sites/form/database_user.tform.php',$primary_id);
+        
+        $records = $app->db->queryAllRecords("SELECT database_id FROM web_database WHERE database_user_id = '".$app->functions->intval($primary_id)."'");
+        foreach($records as $rec) {
+            $app->db->datalogUpdate('web_database','database_user_id=NULL','database_id', $rec['database_id']);
+            
+        }
+        $records = $app->db->queryAllRecords("SELECT database_id FROM web_database WHERE database_ro_user_id = '".$app->functions->intval($primary_id)."'");
+        foreach($records as $rec) {
+            $app->db->datalogUpdate('web_database','database_ro_user_id=NULL','database_id', $rec['database_id']);
+        }
+        
 		return $affected_rows;
 	}
 	
