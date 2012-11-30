@@ -421,8 +421,8 @@ class apache2_plugin {
 			
 			//* Create new base directory, if it does not exist yet
 			if(!is_dir($new_dir)) $app->system->mkdirpath($new_dir);
-			//exec('mv '.$data['old']['document_root'].' '.$new_dir);
-			$app->system->rename($data['old']['document_root'],$new_dir);
+			exec('mv '.escapeshellarg($data['old']['document_root']).' '.escapeshellarg($new_dir));
+			//$app->system->rename($data['old']['document_root'],$new_dir);
 			$app->log('Moving site to new document root: mv '.$data['old']['document_root'].' '.$new_dir,LOGLEVEL_DEBUG);
 
 			// Handle the change in php_open_basedir
