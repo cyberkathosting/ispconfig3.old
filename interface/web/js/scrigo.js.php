@@ -1,8 +1,12 @@
 <?php
 	session_start();
 	include('../../lib/config.inc.php');
+	require_once('../../lib/app.inc.php');
 	$lang = (isset($_SESSION['s']['language']) && $_SESSION['s']['language'] != '')?$_SESSION['s']['language']:'en';
 	include_once(ISPC_ROOT_PATH.'/web/strengthmeter/lib/lang/'.$lang.'_strengthmeter.lng');
+	
+	$app->uses('ini_parser,getconf');
+	$server_config_array = $app->getconf->get_global_config();
 ?>
 var pageFormChanged = false;
 var tabChangeWarningTxt = '';
@@ -24,46 +28,50 @@ function reportError(request) {
 }
 
 function showLoadIndicator() {
-	jQuery.getJSON('sites/ajax_get_json.php'+ '?' + Math.round(new Date().getTime()), {type : "get_use_loadindicator"}, function(data) {
-        if(data.useloadindicator == "y"){
-            requestsRunning += 1;
+<?php
+if($server_config_array['misc']['use_loadindicator'] == 'y'){
+?>
+    requestsRunning += 1;
     
-			if(requestsRunning < 2) {
-				var indicator = jQuery('#ajaxloader');
-				if(indicator.length < 1) {
-					indicator = jQuery('<div id="ajaxloader" style="display: none;"></div>');
-					indicator.appendTo('body');
-				}
-				var parent = jQuery('#content');
-				if(parent.length < 1) return;
-				indicatorCompleted = false;
-        
-				var atx = parent.offset().left + 150; //((parent.outerWidth(true) - indicator.outerWidth(true)) / 2);
-				var aty = parent.offset().top + 150;
-				indicator.css( {'left': atx, 'top': aty } ).fadeIn('fast', function() {
-					// check if loader should be hidden immediately
-					indicatorCompleted = true;
-					if(requestsRunning < 1) $(this).fadeOut('fast', function() { $(this).hide();});
-				});
-			}
+    if(requestsRunning < 2) {
+        var indicator = jQuery('#ajaxloader');
+        if(indicator.length < 1) {
+            indicator = jQuery('<div id="ajaxloader" style="display: none;"></div>');
+            indicator.appendTo('body');
         }
-    });
+        var parent = jQuery('#content');
+        if(parent.length < 1) return;
+        indicatorCompleted = false;
+        
+        var atx = parent.offset().left + 150; //((parent.outerWidth(true) - indicator.outerWidth(true)) / 2);
+        var aty = parent.offset().top + 150;
+        indicator.css( {'left': atx, 'top': aty } ).fadeIn('fast', function() {
+            // check if loader should be hidden immediately
+            indicatorCompleted = true;
+            if(requestsRunning < 1) $(this).fadeOut('fast', function() { $(this).hide();});
+        });
+    }
+<?php
+}
+?>
 }
 
 function hideLoadIndicator() {
-	requestsRunning -= 1;
-	if(requestsRunning < 1) {
-		requestsRunning = 0; // just for the case...
-		if(indicatorCompleted == true) jQuery('#ajaxloader').fadeOut('fast', function() { jQuery('#ajaxloader').hide(); } );
-	}
+    requestsRunning -= 1;
+    if(requestsRunning < 1) {
+        requestsRunning = 0; // just for the case...
+        if(indicatorCompleted == true) jQuery('#ajaxloader').fadeOut('fast', function() { jQuery('#ajaxloader').hide(); } );
+    }
 }
 
 function onAfterContentLoad() {
-	jQuery.getJSON('sites/ajax_get_json.php'+ '?' + Math.round(new Date().getTime()), {type : "get_use_combobox"}, function(data) {
-        if(data.usecombobox == "y"){
-            $('#pageContent').find("select").combobox();
-        }
-    });
+<?php
+if($server_config_array['misc']['use_combobox'] == 'y'){
+?>
+    $('#pageContent').find("select").combobox();
+<?php
+}
+?>
 }
 
 function loadContentRefresh(pagename) {
