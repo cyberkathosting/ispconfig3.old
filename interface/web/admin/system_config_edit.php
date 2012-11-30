@@ -50,6 +50,7 @@ $app->load('tform_actions');
 
 class page_action extends tform_actions {
 
+	//var $_js_changed = false;
 
 	function onShowEdit() {
 		global $app, $conf;
@@ -114,6 +115,12 @@ class page_action extends tform_actions {
 				}
 			}
 		}
+		
+		/*
+		if((isset($this->dataRecord['use_loadindicator']) && $this->dataRecord['use_loadindicator'] != $server_config_array[$section]['use_loadindicator']) || (isset($this->dataRecord['use_combobox']) && $this->dataRecord['use_combobox'] != $server_config_array[$section]['use_combobox'])){
+			$this->_js_changed = true;
+		}
+		*/
 
 		$new_config = $app->tform->encode($this->dataRecord,$section);
         if($section == 'sites' && $new_config['vhost_subdomains'] != 'y' && $server_config_array['vhost_subdomains'] == 'y') {
@@ -155,6 +162,17 @@ class page_action extends tform_actions {
 			$app->db->query("DELETE FROM sys_session WHERE session_id != '".$_SESSION['s']['id']."'");
 		}
 	}
+	
+	/*
+	function onAfterUpdate() {
+        if($this->_js_changed == true) {
+            // not the best way, but it works
+            header('Content-Type: text/html');
+            print '<script type="text/javascript">document.location.reload(true);</script>';
+            exit;
+        }
+    }
+	*/
 	
 }
 
