@@ -478,6 +478,9 @@ class apache2_plugin {
 			//* remove old log mount
 			$fstab_line = '/var/log/ispconfig/httpd/'.$data['old']['domain'].' '.$data['old']['document_root'].'/'.$log_folder.'    none    bind';
 			$app->system->removeLine('/etc/fstab',$fstab_line);
+			
+			//* Unmount log directory
+			exec('umount '.escapeshellarg($data['old']['document_root'].'/'.$log_folder));
 		}
 		
 		//* Create the log dir if nescessary and mount it
