@@ -22,6 +22,7 @@ webdavuser_prefix=[CLIENTNAME]
 dblist_phpmyadmin_link=y
 phpmyadmin_url=/phpmyadmin
 webftp_url=
+client_username_web_check_disabled=n
 
 [tools]
 
