@@ -114,6 +114,7 @@ class remoting_lib {
 		var $sys_default_group;
 		var $sys_groups;
 		var $client_id;
+		var $dataRecord;
 
 		
 		//* Load the form definition from file.
@@ -656,6 +657,7 @@ class remoting_lib {
 
                 $this->action = $action;
                 $this->primary_id = $primary_id;
+				$this->dataRecord = $record;
 
                 $record = $this->encode($record,true);
                 $sql_insert_key = '';
