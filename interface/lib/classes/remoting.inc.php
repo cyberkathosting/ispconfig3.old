@@ -481,11 +481,21 @@ class remoting {
 	//* aliasy email
 	public function mail_alias_add($session_id, $client_id, $params)
 	{
+		global $app;
+		
 		if (!$this->checkPerm($session_id, 'mail_alias_add'))
 		{
 			$this->server->fault('permission_denied','You do not have the permissions to access this function.');
 			return false;
 		}
+		
+		//* Check if there is no active mailbox with this address
+		$tmp = $app->db->queryOneRecord("SELECT count(mailuser_id) as number FROM mail_user WHERE postfix = 'y' AND email = '".$app->db->quote($params["source"])."'");
+		if($tmp['number'] > 0) {
+			$this->server->fault('duplicate','There is already a mailbox with this email address.');
+		}
+		unset($tmp);
+		
 		$affected_rows = $this->insertQuery('../mail/form/mail_alias.tform.php', $client_id, $params);
 		return $affected_rows;
 	}
@@ -493,13 +503,23 @@ class remoting {
 
 	public function mail_alias_update($session_id, $client_id, $primary_id, $params)
 	{
-			if (!$this->checkPerm($session_id, 'mail_alias_update'))
-			{
-					$this->server->fault('permission_denied','You do not have the permissions to access this function.');
-					return false;
-			}
-			$affected_rows = $this->updateQuery('../mail/form/mail_alias.tform.php', $client_id, $primary_id, $params);
-			return $affected_rows;
+		global $app;
+		
+		if (!$this->checkPerm($session_id, 'mail_alias_update'))
+		{
+			$this->server->fault('permission_denied','You do not have the permissions to access this function.');
+			return false;
+		}
+			
+			//* Check if there is no active mailbox with this address
+		$tmp = $app->db->queryOneRecord("SELECT count(mailuser_id) as number FROM mail_user WHERE postfix = 'y' AND email = '".$app->db->quote($params["source"])."'");
+		if($tmp['number'] > 0) {
+			$this->server->fault('duplicate','There is already a mailbox with this email address.');
+		}
+		unset($tmp);
+			
+		$affected_rows = $this->updateQuery('../mail/form/mail_alias.tform.php', $client_id, $primary_id, $params);
+		return $affected_rows;
 	}
 
 	public function mail_alias_delete($session_id, $primary_id)
