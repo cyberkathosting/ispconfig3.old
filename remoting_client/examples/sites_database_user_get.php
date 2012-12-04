@@ -15,24 +15,11 @@ try {
 	}
 	
 	//* Set the function parameters.
-	$client_id = 1;
-	$params = array(
-			'server_id' => 1,
-			'type' => 'mysql',
-			'database_name' => 'db_name2',
-			'database_user_id' => '1',
-			'database_ro_user_id' => '0',
-			'database_charset' => 'UTF8',
-			'remote_access' => 'y',
-			'remote_ips' => '',
-			'backup_interval' => 'none',
-			'backup_copies' => 1,
-			'active' => 'y'
-			);
+	$database_user_id = 1;
 	
-	$database_id = $client->sites_database_add($session_id, $client_id, $params);
+	$database_record = $client->sites_database_user_get($session_id, $database_user_id);
 
-	echo "Database ID: ".$database_id."<br>";
+	print_r($database_record);
 	
 	if($client->logout($session_id)) {
 		echo 'Logged out.<br />';

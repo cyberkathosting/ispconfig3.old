@@ -13,26 +13,15 @@ try {
 	if($session_id = $client->login($username,$password)) {
 		echo 'Logged successfull. Session ID:'.$session_id.'<br />';
 	}
-	
-	//* Set the function parameters.
-	$client_id = 1;
-	$params = array(
-			'server_id' => 1,
-			'type' => 'mysql',
-			'database_name' => 'db_name2',
-			'database_user_id' => '1',
-			'database_ro_user_id' => '0',
-			'database_charset' => 'UTF8',
-			'remote_access' => 'y',
-			'remote_ips' => '',
-			'backup_interval' => 'none',
-			'backup_copies' => 1,
-			'active' => 'y'
-			);
-	
-	$database_id = $client->sites_database_add($session_id, $client_id, $params);
 
-	echo "Database ID: ".$database_id."<br>";
+	//* Parameters
+	$database_user_id = 1;
+
+
+	//* Get the database record
+	$affected_rows = $client->sites_database_user_delete($session_id, $database_user_id);
+
+	echo "Number of records that have been deleted: ".$affected_rows."<br>";
 	
 	if($client->logout($session_id)) {
 		echo 'Logged out.<br />';
