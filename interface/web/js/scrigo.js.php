@@ -27,6 +27,10 @@ function reportError(request) {
 	/*alert(request);*/
 }
 
+function resetFormChanged() {
+    pageFormChanged = false;
+}
+
 function showLoadIndicator() {
 <?php
 if($server_config_array['misc']['use_loadindicator'] == 'y'){
