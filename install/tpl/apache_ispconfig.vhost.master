@@ -25,6 +25,7 @@ NameVirtualHost *:{vhost_port}
       Order allow,deny
       Allow from all
     </Directory>
+    IPCCommTimeout  7200
   </IfModule>
   
 #  <IfModule mod_php5.c>

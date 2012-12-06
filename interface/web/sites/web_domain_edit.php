@@ -853,7 +853,13 @@ class page_action extends tform_actions {
 		
 		//* Set php_open_basedir if empty or domain or client has been changed
 		if(empty($web_rec['php_open_basedir']) ||
-		(!empty($this->dataRecord["domain"]) && !empty($this->oldDataRecord["domain"]) && $this->dataRecord["domain"] != $this->oldDataRecord["domain"]) ||
+		(!empty($this->dataRecord["domain"]) && !empty($this->oldDataRecord["domain"]) && $this->dataRecord["domain"] != $this->oldDataRecord["domain"])) {
+			$php_open_basedir = $web_rec['php_open_basedir'];
+			$php_open_basedir = str_replace($this->oldDataRecord['domain'],$web_rec['domain'],$php_open_basedir);
+			$sql = "UPDATE web_domain SET php_open_basedir = '$php_open_basedir' WHERE domain_id = ".$this->id;
+			$app->db->query($sql);
+		}
+		if(empty($web_rec['php_open_basedir']) ||
 		(isset($this->dataRecord["client_group_id"]) && $this->dataRecord["client_group_id"] != $this->oldDataRecord["sys_groupid"])) {
 			$document_root = $app->db->quote(str_replace("[client_id]",$client_id,$document_root));
 			$php_open_basedir = str_replace("[website_path]",$document_root,$web_config["php_open_basedir"]);
