@@ -35,7 +35,7 @@
                             <td class="tbl_col_name"><a href="#" onclick="loadContent('sites/aps_packagedetails_show.php?id={tmpl_var name='package_id'}');">{tmpl_var name='package_name'}</a></td>
                             <td class="tbl_col_version">{tmpl_var name='package_version'}-{tmpl_var name='package_release'}</td>
                             <tmpl_if name='is_noclient'>
-                                <td class="tbl_col_customer"><a href="#" onclick="loadContent('client/client_edit.php?id={tmpl_var name='CustomerID'}');">{tmpl_var name='customer_name'}</a></td>
+                                <td class="tbl_col_customer"><a href="#" onclick="loadContent('sites/aps_packagedetails_show.php?id={tmpl_var name='package_id'}');">{tmpl_var name='customer_name'}</a></td>
                             </tmpl_if>
                             <td class="tbl_col_installlocation"><a href="http://{tmpl_var name='install_location'}" target="_blank">{tmpl_var name='install_location_short'}</a></td>
                             <td class="tbl_col_instancestatus"><span id="status_content{tmpl_var name='__ROWNUM__'}">{tmpl_var name='instance_status'}</span></td>
