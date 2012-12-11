@@ -542,7 +542,7 @@ class ApsGUIController extends ApsBase
                     // is not empty for further validation
                     if(!empty($doc_root))
                     {
-                        $used_path = $docroot['document_root'];
+                        $used_path = $doc_root['document_root'];
                         if(substr($used_path, -1) != '/') $used_path .= '/';
                         
                         $location_for_domain = $app->db->queryOneRecord("SELECT value 
@@ -550,7 +550,7 @@ class ApsGUIController extends ApsBase
                             AND instance_id = '".$app->db->quote($instance_domains[$i]['instance_id'])."';");
                         
                         // The location might be empty but the DB return must not be false!
-                        if($location_for_domain) $used_path .= $location_for_domain['value'];      
+                        if($location_for_domain) $used_path .= $location_for_domain['value'];  						
 
                         if($new_path == $used_path)
                         {
