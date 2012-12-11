@@ -113,7 +113,7 @@ class page_action extends tform_actions {
 		$global_config = $app->getconf->get_global_config('sites');
 		$ftpuser_prefix = $app->tools_sites->replacePrefix($global_config['ftpuser_prefix'], $this->dataRecord);
 
-        $this->dataRecord['username_prefix'] = ($ftpuser_prefix === '' ? '#' : $ftpuser_prefix);
+        $this->dataRecord['username_prefix'] = $ftpuser_prefix;
 		
 		if ($app->tform->errorMessage == '') {
 			$this->dataRecord['username'] = $ftpuser_prefix . $this->dataRecord['username'];
@@ -151,7 +151,7 @@ class page_action extends tform_actions {
 		
         $old_record = $app->tform->getDataRecord($this->id);
         $ftpuser_prefix = $app->tools_sites->getPrefix($old_record['username_prefix'], $ftpuser_prefix);
-        $this->dataRecord['username_prefix'] = ($ftpuser_prefix === '' ? '#' : $ftpuser_prefix);
+        $this->dataRecord['username_prefix'] = $ftpuser_prefix;
         
 		/* restrict the names */
 		if ($app->tform->errorMessage == '') {

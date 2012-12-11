@@ -128,7 +128,7 @@ class page_action extends tform_actions {
         $this->oldDataRecord = $app->db->queryOneRecord("SELECT * FROM web_database_user WHERE database_user_id = '".$this->id."'");
         
         $dbuser_prefix = $app->tools_sites->getPrefix($this->oldDataRecord['database_user_prefix'], $dbuser_prefix);
-        $this->dataRecord['database_user_prefix'] = ($dbuser_prefix === '' ? '#' : $dbuser_prefix);
+        $this->dataRecord['database_user_prefix'] = $dbuser_prefix;
         
 		//* Database username shall not be empty
 		if($this->dataRecord['database_user'] == '') $app->tform->errorMessage .= $app->tform->wordbook["database_user_error_empty"].'<br />';
@@ -163,7 +163,7 @@ class page_action extends tform_actions {
 		$global_config = $app->getconf->get_global_config('sites');
 		$dbuser_prefix = $app->tools_sites->replacePrefix($global_config['dbuser_prefix'], $this->dataRecord);
 		
-        $this->dataRecord['database_user_prefix'] = ($dbuser_prefix === '' ? '#' : $dbuser_prefix);
+        $this->dataRecord['database_user_prefix'] = $dbuser_prefix;
         
 		if(strlen($dbuser_prefix . $this->dataRecord['database_user']) > 16) $app->tform->errorMessage .= str_replace('{user}',$dbuser_prefix . $this->dataRecord['database_user'],$app->tform->wordbook["database_user_error_len"]).'<br />';
 		

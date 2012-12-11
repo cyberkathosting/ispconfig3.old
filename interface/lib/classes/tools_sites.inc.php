@@ -58,8 +58,8 @@ class tools_sites {
     function removePrefix($name, $currentPrefix, $globalPrefix) {
         if($name == "") return "";
         
-        if($currentPrefix == '#') return $name; // # = empty prefix, do not change name
-        if($currentPrefix === '') $currentPrefix = $globalPrefix; // entry has no prefix set, maybe it was created before this function was introduced
+        if($currentPrefix === '') return $name; // empty prefix, do not change name
+        if($currentPrefix === '#') $currentPrefix = $globalPrefix; // entry has no prefix set, maybe it was created before this function was introduced
         
         if($currentPrefix === '') return $name; // no current prefix and global prefix is empty -> nothing to remove here.
         
@@ -69,7 +69,7 @@ class tools_sites {
     function getPrefix($currentPrefix, $userPrefix, $adminPrefix = false) {
         global $app;
         
-        if($currentPrefix !== '') return ($currentPrefix == '#' ? '' : $currentPrefix); // return the currently set prefix for this entry (# = empty)
+        if($currentPrefix !== '#') return $currentPrefix; // return the currently set prefix for this entry (# = no prefix set yet)
         
         if($adminPrefix === false) $adminPrefix = $userPrefix;
         

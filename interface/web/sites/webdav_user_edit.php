@@ -128,7 +128,7 @@ class page_action extends tform_actions {
 			$global_config = $app->getconf->get_global_config('sites');
 			$webdavuser_prefix = $app->tools_sites->replacePrefix($global_config['webdavuser_prefix'], $this->dataRecord);
 
-            $this->dataRecord['username_prefix'] = ($webdavuser_prefix === '' ? '#' : $webdavuser_prefix);
+            $this->dataRecord['username_prefix'] = $webdavuser_prefix;
             
 			/* restrict the names */
 			$this->dataRecord['username'] = $webdavuser_prefix . $this->dataRecord['username'];
