@@ -977,6 +977,11 @@ class installer_dist extends installer_base {
 			} else {
 				$content = str_replace('{ssl_comment}', '#', $content);
 			}
+			if(is_file($install_dir.'/interface/ssl/ispserver.crt') && is_file($install_dir.'/interface/ssl/ispserver.key') && is_file($install_dir.'/interface/ssl/ispserver.bundle')) {
+				$content = str_replace('{ssl_bundle_comment}', '', $content);
+			} else {
+				$content = str_replace('{ssl_bundle_comment}', '#', $content);
+			}
 		
 			$content = str_replace('/var/www/', '/srv/www/', $content);
 		
