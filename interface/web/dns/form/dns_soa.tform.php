@@ -218,7 +218,7 @@ $form["tabs"]['dns_soa'] = array (
 			'datatype'	=> 'VARCHAR',
 			'formtype'	=> 'TEXT',
 			'validators'	=> array ( 	0 => array (	'type'	=> 'REGEX',
-														'regex' => '/^[0-9\.\,]{1,255}$/',
+														'regex' => '/^[0-9\.\,]{0,255}$/',
 														'errmsg'=> 'xfer_error_regex'),
 									),
 			'default'	=> '',
