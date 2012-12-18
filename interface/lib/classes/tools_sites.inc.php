@@ -143,6 +143,33 @@ class tools_sites {
         }
         return $res;
     }
+    
+    function getDomainModuleDomains() {
+        global $app;
+        
+        $sql = "SELECT domain_id, domain FROM domain WHERE";
+        if ($_SESSION["s"]["user"]["typ"] == 'admin') {
+            $sql .= " 1";
+        } else {
+            $groups = ( $_SESSION["s"]["user"]["groups"] ) ? $_SESSION["s"]["user"]["groups"] : 0;
+            $sql .= " sys_groupid IN (".$groups.")";
+        }
+        $sql .= " ORDER BY domain";
+        return $app->db->queryAllRecords($sql);
+    }
+    
+    function checkDomainModuleDomain($domain_id) {
+        global $app;
+        
+        $sql = "SELECT domain_id, domain FROM domain WHERE domain_id = " . $app->functions->intval($domain_id);
+        if ($_SESSION["s"]["user"]["typ"] != 'admin') {
+            $groups = ( $_SESSION["s"]["user"]["groups"] ) ? $_SESSION["s"]["user"]["groups"] : 0;
+            $sql .= " AND sys_groupid IN (".$groups.")";
+        }
+        $domain = $app->db->queryOneRecord($sql);
+        if(!$domain || !$domain['domain_id']) return false;
+        return $domain['domain'];
+    }
 }
 
 ?>
