@@ -38,4 +38,3 @@ $wb['template_nameserver_error_empty'] = 'Jmený server(y) nebyl vyplněn.';
 $wb['Virtual server'] = 'Virtuální server';
 $wb['Advanced'] = 'Pokročilé nastavení';
 ?>
-

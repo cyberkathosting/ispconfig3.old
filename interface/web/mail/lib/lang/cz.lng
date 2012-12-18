@@ -45,4 +45,3 @@ $wb['Statistics'] = 'Statistiky';
 $wb['Domain'] = 'E-mailová doména';
 $wb['Email'] = 'E-mail';
 ?>
-

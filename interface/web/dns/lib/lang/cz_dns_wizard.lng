@@ -36,4 +36,3 @@ $wb['globalsearch_suggestions_text_txt'] = 'Návrhy';
 $wb['list_head_txt'] = 'DNS Průvodce vytvořením zóny';
 $wb['list_desc_txt'] = 'Vytvoření zóny DNS pomocí průvodce';
 ?>
-

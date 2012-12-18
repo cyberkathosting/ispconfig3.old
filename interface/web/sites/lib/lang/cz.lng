@@ -31,4 +31,3 @@ $wb['Installed packages'] = 'Nainstalované balíčky';
 $wb['Update Packagelist'] = 'Aktualizace seznamu balíčků';
 $wb['Domain'] = 'Domain';
 ?>
-

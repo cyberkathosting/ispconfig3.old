@@ -139,5 +139,5 @@ $wb['email_error_isemail'] = 'Zadejte prosím platnou e-mailovou adresu.';
 $wb['customer_no_error_unique'] = 'Číslo zákazníka musí být unikátní (nebo prázdné).';
 $wb['paypal_email_error_isemail'] = 'Zadejte prosím platnou PayPal e-mailovou adresu.';
 $wb['paypal_email_txt'] = 'PayPal E-mail';
+$wb['err_msg_master_tpl_set'] = 'All custom limit settings are ignored if any master template other than \"custom\" is selected.';
 ?>
-

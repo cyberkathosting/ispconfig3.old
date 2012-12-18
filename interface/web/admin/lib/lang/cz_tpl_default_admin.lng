@@ -16,4 +16,3 @@ $wb['php_fpm_init_script_txt'] = 'Cesta k PHP-FPM init skriptu';
 $wb['php_fpm_ini_dir_txt'] = 'Cesta k adresáři ve kterém je  umístěn php.ini';
 $wb['php_fpm_pool_dir_txt'] = 'Cesta k PHP-FPM společnému (pool) adresáři';
 ?>
-

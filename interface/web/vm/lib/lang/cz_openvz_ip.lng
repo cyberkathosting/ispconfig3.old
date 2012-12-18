@@ -7,4 +7,3 @@ $wb['ip_error_wrong'] = 'Prosím, vyplňte platné IPv4 adresy.';
 $wb['ip_error_unique'] = 'Tato IP adresa již existuje.';
 $wb['IP address'] = 'IP adresa';
 ?>
-

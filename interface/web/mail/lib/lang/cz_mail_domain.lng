@@ -11,4 +11,3 @@ $wb['limit_maildomain_txt'] = 'Dosažen maximální počet e-mail domén pro Vá
 $wb['policy_txt'] = 'Spamový filter';
 $wb['no_policy'] = '- nepovoleno -';
 ?>
-
