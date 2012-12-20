@@ -493,7 +493,7 @@ class page_action extends tform_actions {
             if($client['limit_perl'] != 'y') $this->dataRecord['perl'] = '-';
             if($client['limit_ruby'] != 'y') $this->dataRecord['ruby'] = '-';
             if($client['limit_python'] != 'y') $this->dataRecord['python'] = '-';
-            if($client['force_suexec'] != 'n') $this->dataRecord['suexec'] = '-';
+            if($client['force_suexec'] == 'y') $this->dataRecord['suexec'] = 'y';
             if($client['limit_hterror'] != 'y') $this->dataRecord['errordocs'] = '-';
             if($client['limit_wildcard'] != 'y' && $this->dataRecord['subdomain'] == '*') $this->dataRecord['subdomain'] = '-';
             if($client['limit_ssl'] != 'y') $this->dataRecord['ssl'] = '-';
