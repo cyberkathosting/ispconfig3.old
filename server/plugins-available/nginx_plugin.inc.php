@@ -2313,8 +2313,35 @@ class nginx_plugin {
 
 		$lines = explode("\n", $vhost_conf);
 		
+		// if whole location block is in one line, split it up into multiple lines
 		if(is_array($lines) && !empty($lines)){
+			$linecount = sizeof($lines);
+			for($h=0;$h<$linecount;$h++){
+				$lines[$h] = rtrim($lines[$h]);
+				if(substr(ltrim($lines[$h]), 0, 8) == 'location' && strpos($lines[$h], '{') !== false && strpos($lines[$h], ';') !== false){
+					$lines[$h] = str_replace("{", "{\n", $lines[$h]);
+					$lines[$h] = str_replace(";", ";\n", $lines[$h]);
+					if(strpos($lines[$h], '##merge##') !== false){
+						$lines[$h] = str_replace('##merge##', '', $lines[$h]);
+						$lines[$h] = substr($lines[$h],0,strpos($lines[$h], '{')).' ##merge##'.substr($lines[$h],strpos($lines[$h], '{')+1);
+					}
+				}
+				if(substr(ltrim($lines[$h]), 0, 8) == 'location' && strpos($lines[$h], '{') !== false && strpos($lines[$h], '}') !== false && strpos($lines[$h], ';') === false){
+					$lines[$h] = str_replace("{", "{\n", $lines[$h]);
+					if(strpos($lines[$h], '##merge##') !== false){
+						$lines[$h] = str_replace('##merge##', '', $lines[$h]);
+						$lines[$h] = substr($lines[$h],0,strpos($lines[$h], '{')).' ##merge##'.substr($lines[$h],strpos($lines[$h], '{')+1);
+					}
+				}
+			}
+		}
+		$vhost_conf = implode("\n", $lines);
+		unset($lines);
+		unset($linecount);
 		
+		$lines = explode("\n", $vhost_conf);
+			
+		if(is_array($lines) && !empty($lines)){	
 			$locations = array();
 			$islocation = false;
 			$linecount = sizeof($lines);
@@ -2383,7 +2410,7 @@ class nginx_plugin {
 			$vhost_conf = implode("\n", $lines);
 		}
 		
-		return $vhost_conf;
+		return trim($vhost_conf);
 	}
 	
 	function client_delete($event_name,$data) {
