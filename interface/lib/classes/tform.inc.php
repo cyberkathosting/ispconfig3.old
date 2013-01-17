@@ -887,6 +887,7 @@ class tform {
 										  }
                                         }
                                 break;
+				/*
 				case 'ISV6PREFIX':
 					$v6_prefix_ok = 0;
 					$explode_field_value = explode(':',$field_value);
@@ -918,6 +919,7 @@ class tform {
 						$this->errorMessage .= $errmsg."<br />\r\n"; 
 					}
 				break;
+				*/
 								case 'ISIPV4':
 								$vip=1;
 								if(preg_match("/^[0-9]{1,3}(\.)[0-9]{1,3}(\.)[0-9]{1,3}(\.)[0-9]{1,3}$/", $field_value)){

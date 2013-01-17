@@ -86,6 +86,7 @@ $form["tabs"]['server'] = array(
 			'width' => '15',
 			'maxlength' => '255'
 		),
+		/*
 		'v6_prefix' => array(
 			'datatype' => 'VARCHAR',
 			'formtype' => 'TEXT',
@@ -94,6 +95,7 @@ $form["tabs"]['server'] = array(
                         ),
 		'default' => ''
 		),
+		*/
 		'gateway' => array(
 			'datatype' => 'VARCHAR',
 			'formtype' => 'TEXT',
@@ -420,8 +422,6 @@ $form["tabs"]['web'] = array(
 'default' => 'n',
 'value' => array(0 => 'n',1 => 'y')
 ),
-
-
 */
 		'vhost_conf_dir' => array(
 			'datatype' => 'VARCHAR',
