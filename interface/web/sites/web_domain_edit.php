@@ -350,7 +350,7 @@ class page_action extends tform_actions {
 			$php_directive_snippets_txt = '';
 			if(is_array($php_directive_snippets) && !empty($php_directive_snippets)){
 					foreach($php_directive_snippets as $php_directive_snippet){
-						$php_directive_snippets_txt .= '<a href="javascript:void(0);" class="addPlaceholderContent">['.$php_directive_snippet['name'].']<pre class="addPlaceholderContent" style="display:none;">'.$php_directive_snippet['snippet'].'</pre></a> ';
+						$php_directive_snippets_txt .= '<a href="javascript:void(0);" class="addPlaceholderContent">['.$php_directive_snippet['name'].']<pre class="addPlaceholderContent" style="display:none;">'.htmlentities($php_directive_snippet['snippet']).'</pre></a> ';
 					}
 			}
 			if($php_directive_snippets_txt == '') $php_directive_snippets_txt = '------';
@@ -361,7 +361,7 @@ class page_action extends tform_actions {
 				$apache_directive_snippets_txt = '';
 				if(is_array($apache_directive_snippets) && !empty($apache_directive_snippets)){
 						foreach($apache_directive_snippets as $apache_directive_snippet){
-							$apache_directive_snippets_txt .= '<a href="javascript:void(0);" class="addPlaceholderContent">['.$apache_directive_snippet['name'].']<pre class="addPlaceholderContent" style="display:none;">'.$apache_directive_snippet['snippet'].'</pre></a> ';
+							$apache_directive_snippets_txt .= '<a href="javascript:void(0);" class="addPlaceholderContent">['.$apache_directive_snippet['name'].']<pre class="addPlaceholderContent" style="display:none;">'.htmlentities($apache_directive_snippet['snippet']).'</pre></a> ';
 						}
 				}
 				if($apache_directive_snippets_txt == '') $apache_directive_snippets_txt = '------';
@@ -373,7 +373,7 @@ class page_action extends tform_actions {
 				$nginx_directive_snippets_txt = '';
 				if(is_array($nginx_directive_snippets) && !empty($nginx_directive_snippets)){
 						foreach($nginx_directive_snippets as $nginx_directive_snippet){
-							$nginx_directive_snippets_txt .= '<a href="javascript:void(0);" class="addPlaceholderContent">['.$nginx_directive_snippet['name'].']<pre class="addPlaceholderContent" style="display:none;">'.$nginx_directive_snippet['snippet'].'</pre></a> ';
+							$nginx_directive_snippets_txt .= '<a href="javascript:void(0);" class="addPlaceholderContent">['.$nginx_directive_snippet['name'].']<pre class="addPlaceholderContent" style="display:none;">'.htmlentities($nginx_directive_snippet['snippet']).'</pre></a> ';
 						}
 				}
 				if($nginx_directive_snippets_txt == '') $nginx_directive_snippets_txt = '------';
@@ -384,7 +384,7 @@ class page_action extends tform_actions {
 			$proxy_directive_snippets_txt = '';
 			if(is_array($proxy_directive_snippets) && !empty($proxy_directive_snippets)){
 					foreach($proxy_directive_snippets as $proxy_directive_snippet){
-						$proxy_directive_snippets_txt .= '<a href="javascript:void(0);" class="addPlaceholderContent">['.$proxy_directive_snippet['name'].']<pre class="addPlaceholderContent" style="display:none;">'.$proxy_directive_snippet['snippet'].'</pre></a> ';
+						$proxy_directive_snippets_txt .= '<a href="javascript:void(0);" class="addPlaceholderContent">['.$proxy_directive_snippet['name'].']<pre class="addPlaceholderContent" style="display:none;">'.htmlentities($proxy_directive_snippet['snippet']).'</pre></a> ';
 					}
 			}
 			if($proxy_directive_snippets_txt == '') $proxy_directive_snippets_txt = '------';
