@@ -446,12 +446,14 @@ class nginx_plugin {
 
 			//* Check if there is already some data in the new docroot and rename it as we need a clean path to move the existing site to the new path
 			if(@is_dir($data['new']['document_root'])) {
-				$app->system->rename($data['new']['document_root'],$data['new']['document_root'].'_bak_'.date('Y_m_d'));
-				$app->log('Renaming existing directory in new docroot location. mv '.$data['new']['document_root'].' '.$data['new']['document_root'].'_bak_'.date('Y_m_d'),LOGLEVEL_DEBUG);
+				$app->system->web_folder_protection($data['new']['document_root'],false);
+				$app->system->rename($data['new']['document_root'],$data['new']['document_root'].'_bak_'.date('Y_m_d_H_i_s'));
+				$app->log('Renaming existing directory in new docroot location. mv '.$data['new']['document_root'].' '.$data['new']['document_root'].'_bak_'.date('Y_m_d_H_i_s'),LOGLEVEL_DEBUG);
 			}
 			
 			//* Create new base directory, if it does not exist yet
 			if(!is_dir($new_dir)) $app->system->mkdirpath($new_dir);
+			$app->system->web_folder_protection($data['old']['document_root'],false);
 			exec('mv '.escapeshellarg($data['old']['document_root']).' '.escapeshellarg($new_dir));
 			//$app->system->rename($data['old']['document_root'],$new_dir);
 			$app->log('Moving site to new document root: mv '.$data['old']['document_root'].' '.$new_dir,LOGLEVEL_DEBUG);
