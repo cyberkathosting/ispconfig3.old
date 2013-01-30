@@ -170,7 +170,5 @@ $wb['enable_ip_wildcard_txt'] = 'IP Adressen Wildcard (*) aktivieren';
 $wb['web_folder_protection_txt'] = 'Webverzeichnis unveränderlich machen (erweiterte Attribute)';
 $wb['overtraffic_notify_admin_txt'] = 'Überschreiten des Transfer Limits an den Administrator senden';
 $wb['overtraffic_notify_client_txt'] = 'Überschreiten des Transfer Limits an den Kunden senden';
-$wb['v6_prefix_txt'] = 'IPv6 Präfix';
-$wb['vhost_rewrite_v6_txt'] = 'Rewrite IPv6 auf dem Mirror';
-$wb['v6_prefix_wrong'] = 'Falsches IPv6 Netzmasken Format.';
 ?>
+

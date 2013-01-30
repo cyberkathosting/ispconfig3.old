@@ -131,3 +131,4 @@ $wb['datalog_status_i_web_folder_user'] = 'Verzeichnisschutz Benutzer anlegen';
 $wb['datalog_status_u_web_folder_user'] = 'Verzeichnisschutz Benutzer &auml;ndern';
 $wb['datalog_status_d_web_folder_user'] = 'Verzeichnisschutz Benutzer l&ouml;schen';
 ?>
+

@@ -116,3 +116,4 @@ $wb['available_nginx_directive_snippets_txt'] = 'Verfügbare nginx Direktiven Sc
 $wb['proxy_directives_txt'] = 'Proxy Direktiven';
 $wb['available_proxy_directive_snippets_txt'] = 'Verfügbare Proxy Direktiven Schnipsel:';
 ?>
+
