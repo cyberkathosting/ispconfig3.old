@@ -243,7 +243,17 @@ class apache2_plugin {
 			if(trim($data["new"]["ssl_request"]) != '') $app->system->file_put_contents($csr_file,$data["new"]["ssl_request"]);
 			if(trim($data["new"]["ssl_cert"]) != '') $app->system->file_put_contents($crt_file,$data["new"]["ssl_cert"]);
 			if(trim($data["new"]["ssl_bundle"]) != '') $app->system->file_put_contents($bundle_file,$data["new"]["ssl_bundle"]);
-			if(trim($data["new"]["ssl_key"]) != '') $app->system->file_put_contents($key_file2,$data["new"]["ssl_key"]);
+			
+			//* Write the key file, if field is empty then import the key into the db
+			if(trim($data["new"]["ssl_key"]) != '') {
+				$app->system->file_put_contents($key_file2,$data["new"]["ssl_key"]);
+			} else {
+				$ssl_key2 = $app->db->quote($app->system->file_get_contents($key_file2));
+				/* Update the DB of the (local) Server */
+				$app->db->query("UPDATE web_domain SET ssl_key = '$ssl_key2' WHERE domain = '".$data['new']['domain']."'");
+				/* Update also the master-DB of the Server-Farm */
+				$app->dbmaster->query("UPDATE web_domain SET ssl_key = '$ssl_key2' WHERE domain = '".$data['new']['domain']."'");
+			}
 			
 			/* Update the DB of the (local) Server */
 			$app->db->query("UPDATE web_domain SET ssl_action = '' WHERE domain = '".$data['new']['domain']."'");
