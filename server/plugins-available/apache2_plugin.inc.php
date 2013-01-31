@@ -2668,8 +2668,13 @@ class apache2_plugin {
 			if(is_dir($client_dir) && !stristr($client_dir,'..')) {
 				// remove symlinks from $client_dir
 				$files = array_diff(scandir($client_dir), array('.','..'));
-				foreach($files as $file){
-					if(is_link($client_dir.'/'.$file)) unlink($client_dir.'/'.$file);
+				if(is_array($files) && !empty($files)){
+					foreach($files as $file){
+						if(is_link($client_dir.'/'.$file)){
+							unlink($client_dir.'/'.$file);
+							$app->log('Removed symlink: '.$client_dir.'/'.$file,LOGLEVEL_DEBUG);
+						}
+					}
 				}
 				
 				@rmdir($client_dir);
