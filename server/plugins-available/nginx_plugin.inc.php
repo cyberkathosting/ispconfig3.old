@@ -2441,6 +2441,12 @@ class nginx_plugin {
 			
 			$client_dir = $web_config['website_basedir'].'/clients/client'.$client_id;
 			if(is_dir($client_dir) && !stristr($client_dir,'..')) {
+				// remove symlinks from $client_dir
+				$files = array_diff(scandir($client_dir), array('.','..'));
+				foreach($files as $file){
+					if(is_link($client_dir.'/'.$file)) unlink($client_dir.'/'.$file);
+				} 
+				
 				@rmdir($client_dir);
 				$app->log('Removed client directory: '.$client_dir,LOGLEVEL_DEBUG);
 			}
