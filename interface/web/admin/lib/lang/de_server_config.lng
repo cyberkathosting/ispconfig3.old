@@ -171,4 +171,3 @@ $wb['web_folder_protection_txt'] = 'Webverzeichnis unveränderlich machen (erwei
 $wb['overtraffic_notify_admin_txt'] = 'Überschreiten des Transfer Limits an den Administrator senden';
 $wb['overtraffic_notify_client_txt'] = 'Überschreiten des Transfer Limits an den Kunden senden';
 ?>
-

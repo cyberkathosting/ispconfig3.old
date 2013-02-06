@@ -5,5 +5,3 @@ $wb['path_txt'] = 'Path';
 $wb['active_txt'] = 'Aktivní';
 $wb['path_error_regex'] = 'Invalid folder path.';
 ?>
-
-

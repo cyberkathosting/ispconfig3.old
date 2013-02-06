@@ -9,5 +9,3 @@ $wb['add_new_record_txt'] = 'Přidat distributora';
 $wb['customer_no_txt'] = 'Customer No.';
 $wb['username_txt'] = 'Username';
 ?>
-
-

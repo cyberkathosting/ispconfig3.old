@@ -42,6 +42,5 @@ $wb['optional_txt'] = 'Volitelný';
 $wb['select_dbuser_txt'] = 'Vyberte uživatele databáze';
 $wb['no_dbuser_txt'] = 'Žádný';
 $wb['database_client_differs_txt'] = 'The client of the parent web and the database do not match.';
+$wb['database_user_missing_txt'] = 'Please select a database user for this database.';
 ?>
-
-

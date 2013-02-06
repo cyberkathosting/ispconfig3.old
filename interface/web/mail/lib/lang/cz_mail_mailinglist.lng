@@ -19,5 +19,3 @@ $wb['password_match_txt'] = 'Hesla se shodují.';
 $wb['listname_error_unique'] = 'There is already a mailinlist with name on the server. Please choose a different listname.';
 $wb['email_error_isemail'] = 'Email address is invalid.';
 ?>
-
-
