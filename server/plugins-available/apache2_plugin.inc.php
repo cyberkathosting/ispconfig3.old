@@ -834,6 +834,12 @@ class apache2_plugin {
 					$master_php_ini_path = $web_config['php_ini_path_cgi'];
 				}
 			}
+			
+			//* Add php.ini to the path in case that the master_php_ini_path is a directory
+			if($master_php_ini_path != '' && is_dir($master_php_ini_path) && is_file($master_php_ini_path.'/php.ini')) {
+				$master_php_ini_path .= '/php.ini';
+			}
+			
 			if($master_php_ini_path != '' && substr($master_php_ini_path,-7) == 'php.ini' && is_file($master_php_ini_path)) {
 				$php_ini_content .= $app->system->file_get_contents($master_php_ini_path)."\n";
 			}
