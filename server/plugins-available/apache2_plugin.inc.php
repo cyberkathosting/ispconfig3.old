@@ -837,6 +837,7 @@ class apache2_plugin {
 			
 			//* Add php.ini to the path in case that the master_php_ini_path is a directory
 			if($master_php_ini_path != '' && is_dir($master_php_ini_path) && is_file($master_php_ini_path.'/php.ini')) {
+				if(substr($master_php_ini_path,-1) == '/') $master_php_ini_path = substr($master_php_ini_path,0,-1);
 				$master_php_ini_path .= '/php.ini';
 			}
 			
@@ -1126,6 +1127,7 @@ class apache2_plugin {
 			if(trim($data['new']['fastcgi_php_version']) != ''){
 				$default_fastcgi_php = false;
 				list($custom_fastcgi_php_name, $custom_fastcgi_php_executable, $custom_fastcgi_php_ini_dir) = explode(':', trim($data['new']['fastcgi_php_version']));
+				if(is_file($custom_fastcgi_php_ini_dir)) $custom_fastcgi_php_ini_dir = dirname($custom_fastcgi_php_ini_dir);
 				if(substr($custom_fastcgi_php_ini_dir,-1) != '/') $custom_fastcgi_php_ini_dir .= '/';
 			} else {
 				$default_fastcgi_php = true;
