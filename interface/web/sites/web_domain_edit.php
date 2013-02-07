@@ -806,9 +806,18 @@ class page_action extends tform_actions {
 			unset($rec);
 			
 			//* Update all subdomains and alias domains
-			$records = $app->db->queryAllRecords("SELECT domain_id FROM web_domain WHERE parent_domain_id = ".$this->id);
+			$records = $app->db->queryAllRecords("SELECT domain_id, `domain`, `type`, `web_folder` FROM web_domain WHERE parent_domain_id = ".$this->id);
 			foreach($records as $rec) {
-				$app->db->datalogUpdate('web_domain', "sys_userid = '".$web_rec['sys_userid']."', sys_groupid = '".$web_rec['sys_groupid']."'", 'domain_id', $rec['domain_id']);
+                $update_columns = "sys_userid = '".$web_rec['sys_userid']."', sys_groupid = '".$web_rec['sys_groupid']."'";
+                if($rec['type'] == 'vhostsubdomain') {
+                    $php_open_basedir = str_replace("[website_path]/web",$document_root.'/'.$rec['web_folder'],$web_config["php_open_basedir"]);
+                    $php_open_basedir = str_replace("[website_domain]/web",$rec['domain'].'/'.$rec['web_folder'],$php_open_basedir);
+                    $php_open_basedir = str_replace("[website_path]",$document_root,$php_open_basedir);
+                    $php_open_basedir = $app->db->quote(str_replace("[website_domain]",$rec['domain'],$php_open_basedir));
+
+                    $update_columns .= ", document_root = '".$document_root."', `php_open_basedir` = '".$php_open_basedir."'";
+                }
+				$app->db->datalogUpdate('web_domain', $update_columns, 'domain_id', $rec['domain_id']);
 			}
 			unset($records);
 			unset($rec);
