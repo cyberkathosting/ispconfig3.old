@@ -1439,7 +1439,7 @@ class apache2_plugin {
 				$app->system->web_folder_protection($data['new']['document_root'],false);
 				$app->system->file_put_contents($data['new']['document_root'].'/web/stats/.htpasswd_stats',$htp_file);
 				$app->system->web_folder_protection($data['new']['document_root'],true);
-				$app->system->chmod($data['new']['document_root'].'/web/stats/.htpasswd_stats',0750);
+				$app->system->chmod($data['new']['document_root'].'/web/stats/.htpasswd_stats',0755);
 				unset($htp_file);
 			}
 		}
