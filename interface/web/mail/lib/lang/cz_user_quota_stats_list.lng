@@ -5,3 +5,4 @@ $wb['name_txt'] = 'Jméno';
 $wb['email_txt'] = 'E-mailová adresa';
 $wb['used_txt'] = 'Využité místo';
 ?>
+
