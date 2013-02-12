@@ -699,7 +699,7 @@ class apache2_plugin {
 				}
 				
 				if($web_config['add_web_users_to_sshusers_group'] == 'y') {
-					$command = 'killall -u '.escapeshellcmd($data['new']['system_user']).' && usermod';
+					$command = 'usermod';
 					$command .= ' --groups sshusers';
 					$command .= ' '.escapeshellcmd($data['new']['system_user']);
 					$this->_exec($command);
@@ -1557,7 +1557,7 @@ class apache2_plugin {
 		$app->uses('system');
 		$web_config = $app->getconf->get_server_config($conf['server_id'], 'web');
 		
-		$app->system->web_folder_protection($data['old']['document_root'],false);
+		if($data['old']['type'] == 'vhost' || $data['old']['type'] == 'vhostsubdomain') $app->system->web_folder_protection($data['old']['document_root'],false);
 
 		//* Check if this is a chrooted setup
 		if($web_config['website_basedir'] != '' && @is_file($web_config['website_basedir'].'/etc/passwd')) {
@@ -1578,7 +1578,7 @@ class apache2_plugin {
             unset($tmp);
 		}
         
-		exec('umount '.escapeshellarg($data['old']['document_root'].'/'.$log_folder));
+		if($data['old']['type'] == 'vhost' || $data['old']['type'] == 'vhostsubdomain') exec('umount '.escapeshellarg($data['old']['document_root'].'/'.$log_folder));
 		
 		//* remove mountpoint from fstab
 		$fstab_line = '/var/log/ispconfig/httpd/'.$data['old']['domain'].' '.$data['old']['document_root'].'/'.$log_folder.'    none    bind';
