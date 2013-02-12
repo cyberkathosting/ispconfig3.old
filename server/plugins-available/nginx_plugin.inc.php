@@ -435,41 +435,43 @@ class nginx_plugin {
 				}
 			}
 
-			//* Move the site data
-			$tmp_docroot = explode('/',$data['new']['document_root']);
-			unset($tmp_docroot[count($tmp_docroot)-1]);
-			$new_dir = implode('/',$tmp_docroot);
+			if($data["new"]["type"] != "vhostsubdomain") {
+				//* Move the site data
+				$tmp_docroot = explode('/',$data['new']['document_root']);
+				unset($tmp_docroot[count($tmp_docroot)-1]);
+				$new_dir = implode('/',$tmp_docroot);
 
-			$tmp_docroot = explode('/',$data['old']['document_root']);
-			unset($tmp_docroot[count($tmp_docroot)-1]);
-			$old_dir = implode('/',$tmp_docroot);
+				$tmp_docroot = explode('/',$data['old']['document_root']);
+				unset($tmp_docroot[count($tmp_docroot)-1]);
+				$old_dir = implode('/',$tmp_docroot);
 
-			//* Check if there is already some data in the new docroot and rename it as we need a clean path to move the existing site to the new path
-			if(@is_dir($data['new']['document_root'])) {
-				$app->system->web_folder_protection($data['new']['document_root'],false);
-				$app->system->rename($data['new']['document_root'],$data['new']['document_root'].'_bak_'.date('Y_m_d_H_i_s'));
-				$app->log('Renaming existing directory in new docroot location. mv '.$data['new']['document_root'].' '.$data['new']['document_root'].'_bak_'.date('Y_m_d_H_i_s'),LOGLEVEL_DEBUG);
-			}
+				//* Check if there is already some data in the new docroot and rename it as we need a clean path to move the existing site to the new path
+				if(@is_dir($data['new']['document_root'])) {
+					$app->system->web_folder_protection($data['new']['document_root'],false);
+					$app->system->rename($data['new']['document_root'],$data['new']['document_root'].'_bak_'.date('Y_m_d_H_i_s'));
+					$app->log('Renaming existing directory in new docroot location. mv '.$data['new']['document_root'].' '.$data['new']['document_root'].'_bak_'.date('Y_m_d_H_i_s'),LOGLEVEL_DEBUG);
+				}
 			
-			//* Create new base directory, if it does not exist yet
-			if(!is_dir($new_dir)) $app->system->mkdirpath($new_dir);
-			$app->system->web_folder_protection($data['old']['document_root'],false);
-			exec('mv '.escapeshellarg($data['old']['document_root']).' '.escapeshellarg($new_dir));
-			//$app->system->rename($data['old']['document_root'],$new_dir);
-			$app->log('Moving site to new document root: mv '.$data['old']['document_root'].' '.$new_dir,LOGLEVEL_DEBUG);
+				//* Create new base directory, if it does not exist yet
+				if(!is_dir($new_dir)) $app->system->mkdirpath($new_dir);
+				$app->system->web_folder_protection($data['old']['document_root'],false);
+				exec('mv '.escapeshellarg($data['old']['document_root']).' '.escapeshellarg($new_dir));
+				//$app->system->rename($data['old']['document_root'],$new_dir);
+				$app->log('Moving site to new document root: mv '.$data['old']['document_root'].' '.$new_dir,LOGLEVEL_DEBUG);
 
-			// Handle the change in php_open_basedir
-			$data['new']['php_open_basedir'] = str_replace($data['old']['document_root'],$data['new']['document_root'],$data['old']['php_open_basedir']);
+				// Handle the change in php_open_basedir
+				$data['new']['php_open_basedir'] = str_replace($data['old']['document_root'],$data['new']['document_root'],$data['old']['php_open_basedir']);
 
-			//* Change the owner of the website files to the new website owner
-			exec('chown --recursive --from='.escapeshellcmd($data['old']['system_user']).':'.escapeshellcmd($data['old']['system_group']).' '.escapeshellcmd($data['new']['system_user']).':'.escapeshellcmd($data['new']['system_group']).' '.$new_dir);
+				//* Change the owner of the website files to the new website owner
+				exec('chown --recursive --from='.escapeshellcmd($data['old']['system_user']).':'.escapeshellcmd($data['old']['system_group']).' '.escapeshellcmd($data['new']['system_user']).':'.escapeshellcmd($data['new']['system_group']).' '.$new_dir);
 
-			//* Change the home directory and group of the website user
-			$command = 'usermod';
-			$command .= ' --home '.escapeshellcmd($data['new']['document_root']);
-			$command .= ' --gid '.escapeshellcmd($data['new']['system_group']);
-			$command .= ' '.escapeshellcmd($data['new']['system_user']);
-			exec($command);
+				//* Change the home directory and group of the website user
+				$command = 'usermod';
+				$command .= ' --home '.escapeshellcmd($data['new']['document_root']);
+				$command .= ' --gid '.escapeshellcmd($data['new']['system_group']);
+				$command .= ' '.escapeshellcmd($data['new']['system_user']);
+				exec($command);
+			}
 
 			if($nginx_chrooted) $this->_exec('chroot '.escapeshellcmd($web_config['website_basedir']).' '.$command);
 			
