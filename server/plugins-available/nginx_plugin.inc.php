@@ -2328,6 +2328,15 @@ class nginx_plugin {
 		}
 	}
 	
+	private function nginx_replace($matches){
+		$location = 'location'.($matches[1] != '' ? ' '.$matches[1] : '').' '.$matches[2].' '.$matches[3];
+		if($matches[4] == '##merge##' || $matches[7] == '##merge##') $location .= ' ##merge##';
+		$location .= "\n";
+		$location .= $matches[5]."\n";
+		$location .= $matches[6];
+		return $location;
+	}
+	
 	private function nginx_merge_locations($vhost_conf){
 
 		$lines = explode("\n", $vhost_conf);
@@ -2337,6 +2346,7 @@ class nginx_plugin {
 			$linecount = sizeof($lines);
 			for($h=0;$h<$linecount;$h++){
 				$lines[$h] = rtrim($lines[$h]);
+				/*
 				if(substr(ltrim($lines[$h]), 0, 8) == 'location' && strpos($lines[$h], '{') !== false && strpos($lines[$h], ';') !== false){
 					$lines[$h] = str_replace("{", "{\n", $lines[$h]);
 					$lines[$h] = str_replace(";", ";\n", $lines[$h]);
@@ -2352,6 +2362,9 @@ class nginx_plugin {
 						$lines[$h] = substr($lines[$h],0,strpos($lines[$h], '{')).' ##merge##'.substr($lines[$h],strpos($lines[$h], '{')+1);
 					}
 				}
+				*/
+				$pattern = '/^[^\S\n]*location[^\S\n]+(?:(.+)[^\S\n]+)?(.+)(\{)[^\S\n]*(##merge##)?[^\S\n]*(.+)[^\S\n]*(\})[^\S\n]*(##merge##)?[^\S\n]*$/';
+				$lines[$h] = preg_replace_callback($pattern, array($this, 'nginx_replace') ,$lines[$h]);
 			}
 		}
 		$vhost_conf = implode("\n", $lines);
