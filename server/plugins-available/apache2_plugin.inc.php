@@ -462,7 +462,7 @@ class apache2_plugin {
                 exec('chown --recursive --from='.escapeshellcmd($data['old']['system_user']).':'.escapeshellcmd($data['old']['system_group']).' '.escapeshellcmd($data['new']['system_user']).':'.escapeshellcmd($data['new']['system_group']).' '.$new_dir);
 
                 //* Change the home directory and group of the website user
-                $command = 'usermod';
+                $command = 'killall -u '.escapeshellcmd($data['new']['system_user']).' && usermod';
                 $command .= ' --home '.escapeshellcmd($data['new']['document_root']);
                 $command .= ' --gid '.escapeshellcmd($data['new']['system_group']);
                 $command .= ' '.escapeshellcmd($data['new']['system_user']);
@@ -699,7 +699,7 @@ class apache2_plugin {
 				}
 				
 				if($web_config['add_web_users_to_sshusers_group'] == 'y') {
-					$command = 'usermod';
+					$command = 'killall -u '.escapeshellcmd($data['new']['system_user']).' && usermod';
 					$command .= ' --groups sshusers';
 					$command .= ' '.escapeshellcmd($data['new']['system_user']);
 					$this->_exec($command);
@@ -1748,8 +1748,8 @@ class apache2_plugin {
             
             if($data['old']['type'] == 'vhost') {
                 //delete the web user
-                $command = 'userdel';
-                $command .= ' '.$data['old']['system_user'];
+                $command = 'killall -u '.escapeshellcmd($data['old']['system_user']).' && userdel';
+                $command .= ' '.escapeshellcmd($data['old']['system_user']);
                 exec($command);
                 if($apache_chrooted) $this->_exec('chroot '.escapeshellcmd($web_config['website_basedir']).' '.$command);
                 
