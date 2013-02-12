@@ -2363,7 +2363,7 @@ class nginx_plugin {
 					}
 				}
 				*/
-				$pattern = '/^[^\S\n]*location[^\S\n]+(?:(.+)[^\S\n]+)?(.+)(\{)[^\S\n]*(##merge##)?[^\S\n]*(.+)[^\S\n]*(\})[^\S\n]*(##merge##)?[^\S\n]*$/';
+				$pattern = '/^[^\S\n]*location[^\S\n]+(?:(.+)[^\S\n]+)?(.+)[^\S\n]*(\{)[^\S\n]*(##merge##)?[^\S\n]*(.+)[^\S\n]*(\})[^\S\n]*(##merge##)?[^\S\n]*$/';
 				$lines[$h] = preg_replace_callback($pattern, array($this, 'nginx_replace') ,$lines[$h]);
 			}
 		}
