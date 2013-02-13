@@ -50,3 +50,4 @@ $wb['mailbox_show_autoresponder_tab_txt'] = 'Zeige Autoresponder-Tab in Mailkont
 $wb['mailbox_show_mail_filter_tab_txt'] = 'Zeige Mail Filter-Tab in Mailkontodetails';
 $wb['mailbox_show_custom_rules_tab_txt'] = 'Zeige Benutzerregel-Tab in Mailkontodetails';
 ?>
+

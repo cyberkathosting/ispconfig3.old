@@ -141,3 +141,4 @@ $wb['paypal_email_error_isemail'] = 'Bitte geben Sie eine gültige PayPal-E-Mail
 $wb['paypal_email_txt'] = 'PayPal-E-Mail';
 $wb['err_msg_master_tpl_set'] = 'Die hier eingestellten Werte werden ignoriert, wenn als Mastervorlage nicht \\"Custom\\" gewählt ist.';
 ?>
+
