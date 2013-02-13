@@ -150,7 +150,7 @@ if($_SESSION['s']['user']['typ'] == 'admin')
 {
 $items[] = array(   'title'   => 'Update Packagelist',
                     'target'  => 'content',
-                    'link'    => 'sites/aps_cron_apscrawler_if.php',
+                    'link'    => 'sites/aps_update_packagelist.php',
                     'html_id' => 'aps_packagedetails_show');
 }
 
