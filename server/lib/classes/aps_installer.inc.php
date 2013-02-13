@@ -614,7 +614,7 @@ class ApsInstaller extends ApsBase
         if(!isset($task['instance_id'])) $task['instance_id'] = $instanceid;
 		
 		// Download aps package
-		if(!file_exists($this->packages_dir.'/'.$task['path'])) {
+		if(!file_exists($this->packages_dir.'/'.$task['path']) || filesize($this->packages_dir.'/'.$task['path']) == 0) {
 			$ch = curl_init();
 			$fh = fopen($this->packages_dir.'/'.$task['path'], 'wb');
 			curl_setopt($ch, CURLOPT_FILE, $fh); 
