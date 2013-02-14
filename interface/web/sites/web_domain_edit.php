@@ -848,7 +848,8 @@ class page_action extends tform_actions {
 			if(is_array($records) && !empty($records)){
 				foreach($records as $rec){
 					$app->db->datalogUpdate('aps_instances_settings', "value = '".$this->dataRecord["domain"]."'", 'id', $rec['id']);
-					$app->db->datalogUpdate('aps_instances', "instance_status = '1'", 'id', $rec['instance_id']);
+					// Reinstall of package needed?
+					//$app->db->datalogUpdate('aps_instances', "instance_status = '1'", 'id', $rec['instance_id']);
 				}
 			}
 			unset($records);
