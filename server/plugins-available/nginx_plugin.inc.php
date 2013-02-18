@@ -1637,7 +1637,24 @@ class nginx_plugin {
         $web_folder = '';
         if($data['old']['type'] == 'vhostsubdomain') {
             $tmp = $app->db->queryOneRecord('SELECT `domain`,`document_root` FROM web_domain WHERE domain_id = '.intval($data['old']['parent_domain_id']));
-            $subdomain_host = preg_replace('/^(.*)\.' . preg_quote($tmp['domain'], '/') . '$/', '$1', $data['old']['domain']);
+			if($tmp['domain'] != ''){
+				$subdomain_host = preg_replace('/^(.*)\.' . preg_quote($tmp['domain'], '/') . '$/', '$1', $data['old']['domain']);
+			} else {
+				// get log folder from /etc/fstab
+				$bind_mounts = $app->system->file_get_contents('/etc/fstab');
+				$bind_mount_lines = explode("\n", $bind_mounts);
+				if(is_array($bind_mount_lines) && !empty($bind_mount_lines)){
+					foreach($bind_mount_lines as $bind_mount_line){
+						$bind_mount_line = preg_replace('/\s+/', ' ', $bind_mount_line);
+						$bind_mount_parts = explode(' ', $bind_mount_line);
+						if(is_array($bind_mount_parts) && !empty($bind_mount_parts)){
+							if($bind_mount_parts[0] == '/var/log/ispconfig/httpd/'.$data['old']['domain'] && $bind_mount_parts[2] == 'none' && strpos($bind_mount_parts[3], 'bind') !== false){
+								$subdomain_host = str_replace($data['old']['document_root'].'/log/', '', $bind_mount_parts[1]);
+							}
+						}
+					}
+				}
+			}
             if($subdomain_host == '') $subdomain_host = 'web'.$data['old']['domain_id'];
             $web_folder = $data['old']['web_folder'];
             $log_folder .= '/' . $subdomain_host;
