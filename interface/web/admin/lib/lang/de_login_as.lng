@@ -1,11 +1,11 @@
 <?php
 $wb['login_1_txt'] = "Wollen Sie sich anmelden als Benutzer";
-$wb['login_2_txt'] = "If you do so, you can ";
-$wb['btn_yes_txt'] = "Ja, anmelden als Kunde";
+$wb['login_2_txt'] = "Wählen Sie Ja um zum Benutzerkonto zu gelangen oder Nein um zurückzukehren.";
+$wb['btn_yes_txt'] = "Ja, anmelden als Benutzer";
 $wb['btn_back_txt'] = "Nein, zurück zur Liste";
 $wb['udp_port_help_txt'] = "Getrennt durch Komma";
 $wb['active_txt'] = "Aktiv";
-$wb['firewall_error_unique'] = "Es gibt bereits eine Firewalleintrag für diesn Server.";
+$wb['firewall_error_unique'] = "Es gibt bereits einen Firewalleintrag für diesen Server.";
 $wb['tcp_ports_error_regex'] = "Es sind nur Zahlen in der TCP Port Definition erlaubt. ";
 $wb['udp_ports_error_regex'] = "Es sind nur Zahlen in der UDP Port Definition erlaubt., ";
 ?>
