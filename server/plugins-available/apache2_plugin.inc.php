@@ -340,7 +340,7 @@ class apache2_plugin {
 		}
 
 		if($data['new']['document_root'] == '') {
-			$app->log('document_root not set',LOGLEVEL_WARN);
+			if($data['new']['type'] == 'vhost' || $data['new']['type'] == 'vhostsubdomain') $app->log('document_root not set',LOGLEVEL_WARN);
 			return 0;
 		}
 		if($data['new']['system_user'] == 'root' or $data['new']['system_group'] == 'root') {
@@ -1575,6 +1575,7 @@ class apache2_plugin {
 				$subdomain_host = preg_replace('/^(.*)\.' . preg_quote($tmp['domain'], '/') . '$/', '$1', $data['old']['domain']);
 			} else {
 				// get log folder from /etc/fstab
+				/*
 				$bind_mounts = $app->system->file_get_contents('/etc/fstab');
 				$bind_mount_lines = explode("\n", $bind_mounts);
 				if(is_array($bind_mount_lines) && !empty($bind_mount_lines)){
@@ -1588,18 +1589,53 @@ class apache2_plugin {
 						}
 					}
 				}
+				*/
+				// we are deleting the parent domain, so we can delete everything in the log directory
+				$subdomain_hosts = array();
+				$files = array_diff(scandir($data['old']['document_root'].'/'.$log_folder), array('.','..'));
+				if(is_array($files) && !empty($files)){
+					foreach($files as $file){
+						if(is_dir($data['old']['document_root'].'/'.$log_folder.'/'.$file)){
+							$subdomain_hosts[] = $file;
+						}
+					}
+				}
 			}
-            if($subdomain_host == '') $subdomain_host = 'web'.$data['old']['domain_id'];
-            $web_folder = $data['old']['web_folder'];
-            $log_folder .= '/' . $subdomain_host;
+            if(is_array($subdomain_hosts) && !empty($subdomain_hosts)){
+				$log_folders = array();
+				foreach($subdomain_hosts as $subdomain_host){
+					$log_folders[] = $log_folder.'/'.$subdomain_host;
+				}
+			} else {
+				if($subdomain_host == '') $subdomain_host = 'web'.$data['old']['domain_id'];
+				$log_folder .= '/' . $subdomain_host;
+			}
+			$web_folder = $data['old']['web_folder'];
             unset($tmp);
+			unset($subdomain_hosts);
 		}
         
-		if($data['old']['type'] == 'vhost' || $data['old']['type'] == 'vhostsubdomain') exec('umount '.escapeshellarg($data['old']['document_root'].'/'.$log_folder));
+		if($data['old']['type'] == 'vhost' || $data['old']['type'] == 'vhostsubdomain'){
+			if(is_array($log_folders) && !empty($log_folders)){
+				foreach($log_folders as $log_folder){
+					if($app->system->is_mounted($data['old']['document_root'].'/'.$log_folder)) exec('umount '.escapeshellarg($data['old']['document_root'].'/'.$log_folder));
+				}
+			} else {
+				if($app->system->is_mounted($data['old']['document_root'].'/'.$log_folder)) exec('umount '.escapeshellarg($data['old']['document_root'].'/'.$log_folder));
+			}
+		}
 		
 		//* remove mountpoint from fstab
-		$fstab_line = '/var/log/ispconfig/httpd/'.$data['old']['domain'].' '.$data['old']['document_root'].'/'.$log_folder.'    none    bind';
-		$app->system->removeLine('/etc/fstab',$fstab_line);
+		if(is_array($log_folders) && !empty($log_folders)){
+			foreach($log_folders as $log_folder){
+				$fstab_line = '/var/log/ispconfig/httpd/'.$data['old']['domain'].' '.$data['old']['document_root'].'/'.$log_folder.'    none    bind';
+				$app->system->removeLine('/etc/fstab',$fstab_line);
+			}
+		} else {
+			$fstab_line = '/var/log/ispconfig/httpd/'.$data['old']['domain'].' '.$data['old']['document_root'].'/'.$log_folder.'    none    bind';
+			$app->system->removeLine('/etc/fstab',$fstab_line);
+		}
+		unset($log_folders);
 
 		if($data['old']['type'] != 'vhost' && $data['old']['type'] != 'vhostsubdomain' && $data['old']['parent_domain_id'] > 0) {
 			//* This is a alias domain or subdomain, so we have to update the website instead
