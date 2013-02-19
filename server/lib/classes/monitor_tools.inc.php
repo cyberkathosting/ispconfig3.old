@@ -485,7 +485,7 @@ class monitor_tools {
 		$state = 'ok';
 
 		/** Fetch the data of ALL devices into a array (needed for monitoring!) */
-		$dfData = shell_exec('df -hT');
+		$dfData = shell_exec('df -hT 2>/dev/null');
 
 		// split into array
 		$df = explode("\n", $dfData);
