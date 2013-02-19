@@ -98,7 +98,7 @@ class ApsCrawler extends ApsBase
             foreach($files as $file)
             {
                 if($file != '.' && $file != '..')
-                    if(filetype($dir.'/'.$file) == 'dir') rrmdir($dir.'/'.$file); 
+                    if(filetype($dir.'/'.$file) == 'dir') $this->removeDirectory($dir.'/'.$file); 
                     else @unlink($dir.'/'.$file);
             }
             reset($files);

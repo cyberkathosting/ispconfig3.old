@@ -397,8 +397,28 @@ class ApsInstaller extends ApsBase
 
             // Now delete an existing folder (affects install and removal in the same way)
             @chdir($this->local_installpath);
-            if(file_exists($this->local_installpath)) exec("rm -Rf ".escapeshellarg($this->local_installpath).'*');
-            else mkdir($this->local_installpath, 0777, true);
+            if(file_exists($this->local_installpath)){
+				// make sure we don't delete error and stats folders
+				if($this->local_installpath == $this->document_root.'/'){
+					if(is_dir($this->document_root)){
+						$files = array_diff(scandir($this->document_root), array('.','..','error','stats'));
+						foreach($files as $file){
+							if(is_dir($this->document_root.'/'.$file)){
+								$app->file->removeDirectory($this->document_root.'/'.$file);
+							} else {
+								@unlink($this->document_root.'/'.$file);
+							}
+						}
+					} else {
+						@unlink($this->document_root);
+						mkdir($this->document_root, 0777, true);
+					}
+				} else {
+					exec("rm -Rf ".escapeshellarg($this->local_installpath).'*');
+				}
+			} else {
+				mkdir($this->local_installpath, 0777, true);
+			}
 
             if($this->handle_type == 'install')
             {            
