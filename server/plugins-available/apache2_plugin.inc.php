@@ -465,7 +465,7 @@ class apache2_plugin {
                 $command = 'killall -u '.escapeshellcmd($data['new']['system_user']).' && usermod';
                 $command .= ' --home '.escapeshellcmd($data['new']['document_root']);
                 $command .= ' --gid '.escapeshellcmd($data['new']['system_group']);
-                $command .= ' '.escapeshellcmd($data['new']['system_user']);
+                $command .= ' '.escapeshellcmd($data['new']['system_user']).' 2>/dev/null';
                 exec($command);
             }
             
@@ -701,7 +701,7 @@ class apache2_plugin {
 				if($web_config['add_web_users_to_sshusers_group'] == 'y') {
 					$command = 'usermod';
 					$command .= ' --groups sshusers';
-					$command .= ' '.escapeshellcmd($data['new']['system_user']);
+					$command .= ' '.escapeshellcmd($data['new']['system_user']).' 2>/dev/null';
 					$this->_exec($command);
 				}
 
