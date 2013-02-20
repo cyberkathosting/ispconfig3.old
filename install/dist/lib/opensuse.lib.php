@@ -607,6 +607,24 @@ class installer_dist extends installer_base {
 		$command = 'groupadd sshusers';
 		if(!is_group('sshusers')) caselog($command.' &> /dev/null 2> /dev/null', __FILE__, __LINE__, "EXECUTED: $command", "Failed to execute the command $command");
 		
+		// create PHP-FPM pool dir
+		exec('mkdir -p '.$conf['nginx']['php_fpm_pool_dir']);
+		
+		$content = rf('/etc/php5/fpm/php-fpm.conf');
+		if(stripos($content, 'include=/etc/php5/fpm/pool.d/*.conf') === false){
+			af('/etc/php5/fpm/php-fpm.conf',"\ninclude=/etc/php5/fpm/pool.d/*.conf");
+		}
+		unset($content);
+		if(!@is_file($conf['nginx']['php_fpm_ini_path'])){
+			if(@is_file('/etc/php5/cli/php.ini')){
+				exec('cp -f /etc/php5/cli/php.ini '.$conf['nginx']['php_fpm_ini_path']);
+			} elseif(@is_file('/etc/php5/fastcgi/php.ini')){
+				exec('cp -f /etc/php5/fastcgi/php.ini '.$conf['nginx']['php_fpm_ini_path']);
+			} elseif(@is_file('/etc/php5/apache2/php.ini')){
+				exec('cp -f /etc/php5/apache2/php.ini '.$conf['nginx']['php_fpm_ini_path']);
+			}
+		}
+		
 	}
 	
 	public function configure_nginx(){
