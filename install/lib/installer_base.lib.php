@@ -215,6 +215,7 @@ class installer_base {
 		$tpl_ini_array['jailkit']['jailkit_chroot_app_programs'] = $conf['jailkit']['jailkit_chroot_app_programs'];
 		$tpl_ini_array['fastcgi']['fastcgi_phpini_path'] = $conf['fastcgi']['fastcgi_phpini_path'];
 		$tpl_ini_array['fastcgi']['fastcgi_starter_path'] = $conf['fastcgi']['fastcgi_starter_path'];
+		$tpl_ini_array['fastcgi']['fastcgi_bin'] = $conf['fastcgi']['fastcgi_bin'];
 		$tpl_ini_array['server']['hostname'] = $conf['hostname'];
 		$tpl_ini_array['server']['ip_address'] = @gethostbyname($conf['hostname']);
 		$tpl_ini_array['web']['website_basedir'] = $conf['web']['website_basedir'];
@@ -1919,12 +1920,14 @@ class installer_base {
 				}
 			}
 			if(!is_file('/var/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter')) {
+				$content = rf('tpl/apache_ispconfig_fcgi_starter.master');
+				$content = str_replace('{fastcgi_bin}', $conf['fastcgi']['fastcgi_bin'], $content);
+				$content = str_replace('{fastcgi_phpini_path}', $conf['fastcgi']['fastcgi_phpini_path'], $content);
 				mkdir('/var/www/php-fcgi-scripts/ispconfig', 0755, true);
-				copy('tpl/apache_ispconfig_fcgi_starter.master','/var/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter');
+				wf('/var/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter', $content);
 				exec('chmod +x /var/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter');
 				symlink($install_dir.'/interface/web','/var/www/ispconfig');
 				exec('chown -R ispconfig:ispconfig /var/www/php-fcgi-scripts/ispconfig');
-
 			}
 		}
 

@@ -988,8 +988,11 @@ class installer_dist extends installer_base {
 			wf("$vhost_conf_dir/ispconfig.vhost", $content);
 		
 			if(!is_file('/srv/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter')) {
+				$content = rf('tpl/apache_ispconfig_fcgi_starter.master');
+				$content = str_replace('{fastcgi_bin}', $conf['fastcgi']['fastcgi_bin'], $content);
+				$content = str_replace('{fastcgi_phpini_path}', $conf['fastcgi']['fastcgi_phpini_path'], $content);
 				exec('mkdir -p /srv/www/php-fcgi-scripts/ispconfig');
-				exec('cp tpl/apache_ispconfig_fcgi_starter.master /srv/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter');
+				wf('/srv/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter', $content);
 				exec('chmod +x /srv/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter');
 				exec('ln -s /usr/local/ispconfig/interface/web /srv/www/ispconfig');
 				exec('chown -R ispconfig:ispconfig /srv/www/php-fcgi-scripts/ispconfig');

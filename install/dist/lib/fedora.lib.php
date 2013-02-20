@@ -957,6 +957,7 @@ class installer_dist extends installer_base {
 					exec("ln -s $vhost_conf_dir/ispconfig.vhost $vhost_conf_enabled_dir/000-ispconfig.vhost");
 				}
 			
+				/*
 				exec('mkdir -p /var/www/php-fcgi-scripts/ispconfig');
 				exec('cp tpl/apache_ispconfig_fcgi_starter.master /var/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter');
 				exec('chmod +x /var/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter');
@@ -964,6 +965,17 @@ class installer_dist extends installer_base {
 				exec('chown -R ispconfig:ispconfig /var/www/php-fcgi-scripts/ispconfig');
 			
 				replaceLine('/var/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter','PHPRC=','PHPRC=/etc/',0,0);
+				*/
+				if(!is_file('/var/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter')) {
+					$content = rf('tpl/apache_ispconfig_fcgi_starter.master');
+					$content = str_replace('{fastcgi_bin}', $conf['fastcgi']['fastcgi_bin'], $content);
+					$content = str_replace('{fastcgi_phpini_path}', $conf['fastcgi']['fastcgi_phpini_path'], $content);
+					exec('mkdir -p /var/www/php-fcgi-scripts/ispconfig');
+					wf('/var/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter', $content);
+					exec('chmod +x /var/www/php-fcgi-scripts/ispconfig/.php-fcgi-starter');
+					exec('ln -s /usr/local/ispconfig/interface/web /var/www/ispconfig');
+					exec('chown -R ispconfig:ispconfig /var/www/php-fcgi-scripts/ispconfig');
+				}
 			}
 		}
 		
