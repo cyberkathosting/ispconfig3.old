@@ -221,11 +221,13 @@ class ApsGUIController extends ApsBase
 		$web_config = $app->getconf->get_server_config($app->functions->intval($websrv["server_id"]),'web');
 			
 		//* Set mysql mode to php-fcgi and enable suexec in website on apache servers
+		/*
 		if($web_config['server_type'] == 'apache') {
 			if($websrv['php'] != 'fast-cgi' || $websrv['suexec'] != 'y') {
 				$app->db->datalogUpdate('web_domain', "php = 'fast-cgi', suexec = 'y'", 'domain_id', $websrv['domain_id']);
 			}
 		}
+		*/
 		
 		//* Create the MySQL database for the application
 		$pkg = $app->db->queryOneRecord('SELECT * FROM aps_packages WHERE id = '.$app->db->quote($packageid).';');
