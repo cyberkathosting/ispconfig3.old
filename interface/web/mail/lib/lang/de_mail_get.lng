@@ -16,4 +16,3 @@ $wb['source_server_error_regex'] = 'POP3/IMAP Server ist kein gültiger Domainna
 $wb['source_read_all_txt'] = 'Alle E-Mails abrufen (inkl. bereits gelesene E-Mails)';
 $wb['error_delete_read_all_combination'] = 'Unzulässige Kombination von Optionen. Sie können ';
 ?>
-
