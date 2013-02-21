@@ -1090,10 +1090,6 @@ class apache2_plugin {
 		} else {
 			$tpl->setVar('rewrite_enabled',0);
 		}
-		
-		if(count($alias_seo_redirects) > 0) {
-			$tpl->setLoop('alias_seo_redirects',$alias_seo_redirects);
-		}
 
 		//$tpl->setLoop('redirects',$rewrite_rules);
 
@@ -1306,12 +1302,12 @@ class apache2_plugin {
 		//* create empty vhost array
 		$vhosts = array();
 		
-		//* Add vhost for ipv4 IP	
-		if(count($rewrite_rules) > 0){
-			$vhosts[] = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 0, 'port' => 80, 'redirects' => $rewrite_rules);
-		} else {
-			$vhosts[] = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 0, 'port' => 80);
-		}
+		//* Add vhost for ipv4 IP
+		$tmp_vhost_arr = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 0, 'port' => 80);
+		if(count($rewrite_rules) > 0)  $tmp_vhost_arr = $tmp_vhost_arr + array('redirects' => $rewrite_rules);
+		if(count($alias_seo_redirects) > 0) $tmp_vhost_arr = $tmp_vhost_arr + array('alias_seo_redirects' => $alias_seo_redirects);
+		$vhosts[] = $tmp_vhost_arr;
+		unset($tmp_vhost_arr);
 		
 		//* Add vhost for ipv4 IP with SSL
 		$ssl_dir = $data['new']['document_root'].'/ssl';
@@ -1320,11 +1316,11 @@ class apache2_plugin {
 		$crt_file = $ssl_dir.'/'.$domain.'.crt';
 		
 		if($data['new']['ssl_domain'] != '' && $data['new']['ssl'] == 'y' && @is_file($crt_file) && @is_file($key_file) && (@filesize($crt_file)>0)  && (@filesize($key_file)>0)) {
-			if(count($rewrite_rules) > 0){
-				$vhosts[] = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 1, 'port' => '443', 'redirects' => $rewrite_rules);
-			} else {
-				$vhosts[] = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 1, 'port' => '443');
-			}
+			$tmp_vhost_arr = array('ip_address' => $data['new']['ip_address'], 'ssl_enabled' => 1, 'port' => '443');
+			if(count($rewrite_rules) > 0)  $tmp_vhost_arr = $tmp_vhost_arr + array('redirects' => $rewrite_rules);
+			if(count($alias_seo_redirects) > 0) $tmp_vhost_arr = $tmp_vhost_arr + array('alias_seo_redirects' => $alias_seo_redirects);
+			$vhosts[] = $tmp_vhost_arr;
+			unset($tmp_vhost_arr);
 			$app->log('Enable SSL for: '.$domain,LOGLEVEL_DEBUG);
 		}
 		
@@ -1341,20 +1337,20 @@ class apache2_plugin {
 				$data['new']['ipv6_address'] = implode(':',$explode_v6);
 			}
 		}
-			if(count($rewrite_rules) > 0){
-				$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 0, 'port' => 80, 'redirects' => $rewrite_rules);
-			} else {
-				$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 0, 'port' => 80);
-			}
+			
+			$tmp_vhost_arr = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 0, 'port' => 80);
+			if(count($rewrite_rules) > 0)  $tmp_vhost_arr = $tmp_vhost_arr + array('redirects' => $rewrite_rules);
+			if(count($alias_seo_redirects) > 0) $tmp_vhost_arr = $tmp_vhost_arr + array('alias_seo_redirects' => $alias_seo_redirects);
+			$vhosts[] = $tmp_vhost_arr;
+			unset($tmp_vhost_arr);
 		
 			//* Add vhost for ipv6 IP with SSL
 			if($data['new']['ssl_domain'] != '' && $data['new']['ssl'] == 'y' && @is_file($crt_file) && @is_file($key_file) && (@filesize($crt_file)>0)  && (@filesize($key_file)>0)) {
-				
-				if(count($rewrite_rules) > 0){
-					$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 1, 'port' => '443', 'redirects' => $rewrite_rules);
-				} else {
-					$vhosts[] = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 1, 'port' => '443');
-				}
+				$tmp_vhost_arr = array('ip_address' => '['.$data['new']['ipv6_address'].']', 'ssl_enabled' => 1, 'port' => '443');
+				if(count($rewrite_rules) > 0)  $tmp_vhost_arr = $tmp_vhost_arr + array('redirects' => $rewrite_rules);
+				if(count($alias_seo_redirects) > 0) $tmp_vhost_arr = $tmp_vhost_arr + array('alias_seo_redirects' => $alias_seo_redirects);
+				$vhosts[] = $tmp_vhost_arr;
+				unset($tmp_vhost_arr);
 				$app->log('Enable SSL for IPv6: '.$domain,LOGLEVEL_DEBUG);
 			}
 		}
