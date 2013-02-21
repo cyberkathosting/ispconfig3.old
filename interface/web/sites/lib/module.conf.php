@@ -132,6 +132,8 @@ $module["nav"][] = array(   'title' => 'Command Line',
 }
 
 // APS menu
+if($app->auth->get_client_limit($userid,'aps') != 0)
+{
 $items = array();
 
 $items[] = array(   'title'   => 'Available packages',
@@ -157,7 +159,7 @@ $items[] = array(   'title'   => 'Update Packagelist',
 $module['nav'][] = array(   'title' => 'APS Installer',
                             'open'  => 1,
                             'items' => $items);
-
+}
 
 // Statistics menu
 $items = array();

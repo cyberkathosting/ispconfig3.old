@@ -84,4 +84,7 @@ $wb['database_limits_txt'] = 'Datenbank Limits';
 $wb['cron_job_limits_txt'] = 'Cronjob Limits';
 $wb['dns_limits_txt'] = 'DNS Limits';
 $wb['virtualization_limits_txt'] = 'Virtualisierungs Limits';
+$wb['aps_limits_txt'] = 'APS Installationsassistent Limits';
+$wb['limit_aps_txt'] = 'Max. Anzahl an APS-Instanzen';
+$wb['limit_aps_error_notint'] = 'Das APS Instanzen Limit muss eine Zahl sein.';
 ?>
