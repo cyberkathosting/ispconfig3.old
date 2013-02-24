@@ -267,8 +267,8 @@ class mysql_clientdb_plugin {
                         if($old_db_user['database_user'] == 'root'){
 							$app->log('User root not allowed for Client databases',LOGLEVEL_WARNING);
                         } else {
-							//$this->process_host_list('DROP', $data['new']['database_name'], $old_db_user['database_user'], $old_db_user['database_password'], $host_list, $link);
-							$this->process_host_list('REVOKE', $data['new']['database_name'], $old_db_user['database_user'], $old_db_user['database_password'], $host_list, $link);
+							//$this->process_host_list('DROP', $data['new']['database_name'], $old_db_user['database_user'], $old_db_user['database_password'], $old_host_list, $link);
+							$this->process_host_list('REVOKE', $data['new']['database_name'], $old_db_user['database_user'], $old_db_user['database_password'], $old_host_list, $link);
 						}
                     }
                 }
@@ -284,8 +284,8 @@ class mysql_clientdb_plugin {
                         if($old_db_user['database_user'] == 'root'){
 							$app->log('User root not allowed for Client databases',LOGLEVEL_WARNING);
                         } else {
-							//$this->process_host_list('DROP', $data['new']['database_name'], $old_db_user['database_user'], $old_db_user['database_password'], $host_list, $link);
-							$this->process_host_list('REVOKE', $data['new']['database_name'], $old_db_user['database_user'], $old_db_user['database_password'], $host_list, $link);
+							//$this->process_host_list('DROP', $data['new']['database_name'], $old_db_user['database_user'], $old_db_user['database_password'], $old_host_list, $link);
+							$this->process_host_list('REVOKE', $data['new']['database_name'], $old_db_user['database_user'], $old_db_user['database_password'], $old_host_list, $link);
 						}
                     }
                 }
