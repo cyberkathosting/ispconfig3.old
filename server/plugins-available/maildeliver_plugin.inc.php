@@ -180,6 +180,8 @@ class maildeliver_plugin {
 				}
 			}
 			
+            $addresses = array_unique($addresses);
+            
 			$address_str = '';
 			if(is_array($addresses) && count($addresses) > 0) {
 				$address_str .= ':addresses [';
