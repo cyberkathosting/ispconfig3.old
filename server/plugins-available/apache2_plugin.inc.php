@@ -822,6 +822,13 @@ class apache2_plugin {
 		if(!stristr($data['new']['custom_php_ini'],'open_basedir') && $data['new']['php'] == 'suphp') {
 			$data['new']['custom_php_ini'] .= "\nopen_basedir = '".$data['new']['php_open_basedir']."'\n";
 		}
+		
+		if(trim($data['new']['fastcgi_php_version']) != ''){
+			list($custom_fastcgi_php_name, $custom_fastcgi_php_executable, $custom_fastcgi_php_ini_dir) = explode(':', trim($data['new']['fastcgi_php_version']));
+			if(is_file($custom_fastcgi_php_ini_dir)) $custom_fastcgi_php_ini_dir = dirname($custom_fastcgi_php_ini_dir);
+			if(substr($custom_fastcgi_php_ini_dir,-1) == '/') $custom_fastcgi_php_ini_dir = substr($custom_fastcgi_php_ini_dir,0,-1);
+		}
+
 		//* Create custom php.ini
 		if(trim($data['new']['custom_php_ini']) != '') {
 			$has_custom_php_ini = true;
@@ -830,8 +837,14 @@ class apache2_plugin {
 			if($data['new']['php'] == 'mod') {
 				$master_php_ini_path = $web_config['php_ini_path_apache'];
 			} else {
-				if($data["new"]['php'] == 'fast-cgi' && file_exists($fastcgi_config["fastcgi_phpini_path"])) {
-					$master_php_ini_path = $fastcgi_config["fastcgi_phpini_path"];
+				if($data["new"]['php'] == 'fast-cgi') {
+					if(trim($data['new']['fastcgi_php_version']) != '' && file_exists($custom_fastcgi_php_ini_dir)){
+						$master_php_ini_path = $custom_fastcgi_php_ini_dir;
+					} elseif(file_exists($fastcgi_config["fastcgi_phpini_path"])){
+						$master_php_ini_path = $fastcgi_config["fastcgi_phpini_path"];
+					} else {
+						$master_php_ini_path = $web_config['php_ini_path_cgi'];
+					}
 				} else {
 					$master_php_ini_path = $web_config['php_ini_path_cgi'];
 				}
@@ -1124,8 +1137,6 @@ class apache2_plugin {
 			// Support for multiple PHP versions (FastCGI)
 			if(trim($data['new']['fastcgi_php_version']) != ''){
 				$default_fastcgi_php = false;
-				list($custom_fastcgi_php_name, $custom_fastcgi_php_executable, $custom_fastcgi_php_ini_dir) = explode(':', trim($data['new']['fastcgi_php_version']));
-				if(is_file($custom_fastcgi_php_ini_dir)) $custom_fastcgi_php_ini_dir = dirname($custom_fastcgi_php_ini_dir);
 				if(substr($custom_fastcgi_php_ini_dir,-1) != '/') $custom_fastcgi_php_ini_dir .= '/';
 			} else {
 				$default_fastcgi_php = true;
