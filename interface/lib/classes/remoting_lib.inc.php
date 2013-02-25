@@ -802,18 +802,24 @@ class remoting_lib {
 				$sql = "SELECT * FROM ".$escape.$this->formDef['db_table'].$escape." WHERE ".$this->formDef['db_table_idx']." = ".$primary_id;
             	return $app->db->queryOneRecord($sql);
 			} elseif (@is_array($primary_id)) {
-				$sql_where = '';
+				$sql_offset = 0;
+                $sql_limit = 0;
+                $sql_where = '';
 				foreach($primary_id as $key => $val) {
 					$key = $app->db->quote($key);
 					$val = $app->db->quote($val);
-					if(stristr($val,'%')) {
+                    if($key == '#OFFSET#') $sql_offset = $app->functions->intval($val);
+                    elseif($key == '#LIMIT#') $sql_limit = $app->functions->intval($val);
+					elseif(stristr($val,'%')) {
 						$sql_where .= "$key like '$val' AND ";
 					} else {
 						$sql_where .= "$key = '$val' AND ";
 					}
 				}
 				$sql_where = substr($sql_where,0,-5);
+                if($sql_where == '') $sql_where = '1';
 				$sql = "SELECT * FROM ".$escape.$this->formDef['db_table'].$escape." WHERE ".$sql_where;
+                if($sql_offset >= 0 && $sql_limit > 0) $sql .= ' LIMIT ' . $sql_offset . ',' . $sql_limit;
 				return $app->db->queryAllRecords($sql);
 			} else {
 				$this->errorMessage = 'The ID must be either an integer or an array.';
