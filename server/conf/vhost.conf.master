@@ -10,11 +10,11 @@
 <tmpl_if name='php' op='==' value='suphp'>
 		DocumentRoot <tmpl_var name='web_document_root'>
 </tmpl_else>
-	<tmpl_if name='php' op='==' value='cgi'>
+<tmpl_if name='php' op='==' value='cgi'>
 		DocumentRoot <tmpl_var name='web_document_root'>
-	</tmpl_else>
+</tmpl_else>
 		DocumentRoot <tmpl_var name='web_document_root_www'>
-	</tmpl_if>
+</tmpl_if>
 </tmpl_if>
 
 		ServerName <tmpl_var name='domain'>
@@ -91,63 +91,63 @@
 
 <tmpl_if name='ruby' op='==' value='y'>
 		<IfModule mod_ruby.c>
-			<Directory {tmpl_var name='web_document_root_www'}>
-				Options +ExecCGI
-			</Directory>
-			RubyRequire apache/ruby-run
-			#RubySafeLevel 0
-			AddType text/html .rb
-			AddType text/html .rbx
-			<Files *.rb>
-				SetHandler ruby-object
-				RubyHandler Apache::RubyRun.instance
-			</Files>
-			<Files *.rbx>
-				SetHandler ruby-object
-				RubyHandler Apache::RubyRun.instance
-			</Files>
+				<Directory {tmpl_var name='web_document_root_www'}>
+						Options +ExecCGI
+				</Directory>
+				RubyRequire apache/ruby-run
+				#RubySafeLevel 0
+				AddType text/html .rb
+				AddType text/html .rbx
+				<Files *.rb>
+						SetHandler ruby-object
+						RubyHandler Apache::RubyRun.instance
+				</Files>
+				<Files *.rbx>
+						SetHandler ruby-object
+						RubyHandler Apache::RubyRun.instance
+				</Files>
 		</IfModule>
 </tmpl_if>
 
 <tmpl_if name='perl' op='==' value='y'>
 		<IfModule mod_perl.c>
-			PerlModule ModPerl::Registry
-			PerlModule Apache2::Reload
-			<Directory {tmpl_var name='web_document_root_www'}>
-				PerlResponseHandler ModPerl::Registry
-				PerlOptions +ParseHeaders
-				Options +ExecCGI
-			</Directory>
-            <Files *.pl>
-				SetHandler perl-script
-            </Files>
+				PerlModule ModPerl::Registry
+				PerlModule Apache2::Reload
+				<Directory {tmpl_var name='web_document_root_www'}>
+						PerlResponseHandler ModPerl::Registry
+						PerlOptions +ParseHeaders
+						Options +ExecCGI
+				</Directory>
+				<Files *.pl>
+						SetHandler perl-script
+				</Files>
 		</IfModule>
 </tmpl_if>
 
 <tmpl_if name='python' op='==' value='y'>
 		<IfModule mod_python.c>
-			<Directory {tmpl_var name='web_document_root_www'}>
-				AddHandler mod_python .py
-				PythonHandler mod_python.publisher
-				PythonDebug On
-			</Directory>
+				<Directory {tmpl_var name='web_document_root_www'}>
+						AddHandler mod_python .py
+						PythonHandler mod_python.publisher
+						PythonDebug On
+				</Directory>
 		</IfModule>
 </tmpl_if>
 
 <tmpl_if name='cgi' op='==' value='y'>
 		# cgi enabled
-	<Directory {tmpl_var name='document_root'}/cgi-bin>
-			Order allow,deny
-			Allow from all
+		<Directory {tmpl_var name='document_root'}/cgi-bin>
+				Order allow,deny
+				Allow from all
 		</Directory>
-		ScriptAlias  /cgi-bin/ <tmpl_var name='document_root'>/cgi-bin/
+		ScriptAlias /cgi-bin/ <tmpl_var name='document_root'>/cgi-bin/
 		AddHandler cgi-script .cgi
 		AddHandler cgi-script .pl
 </tmpl_if>
 <tmpl_if name='suexec' op='==' value='y'>
 		# suexec enabled
 		<IfModule mod_suexec.c>
-			SuexecUserGroup <tmpl_var name='system_user'> <tmpl_var name='system_group'>
+				SuexecUserGroup <tmpl_var name='system_user'> <tmpl_var name='system_group'>
 		</IfModule>
 </tmpl_if>
 		# Clear PHP settings of this website
@@ -160,7 +160,7 @@
 		php_admin_value sendmail_path "/usr/sbin/sendmail -t -i -fwebmaster@<tmpl_var name='domain'>"
 		php_admin_value upload_tmp_dir <tmpl_var name='document_root'>/tmp
 		php_admin_value session.save_path <tmpl_var name='document_root'>/tmp
-	# PHPIniDir <tmpl_var name='custom_php_ini_dir'>
+		# PHPIniDir <tmpl_var name='custom_php_ini_dir'>
 <tmpl_if name='security_level' op='==' value='20'>
 		php_admin_value open_basedir <tmpl_var name='php_open_basedir'>
 </tmpl_if>
@@ -168,15 +168,15 @@
 <tmpl_if name='php' op='==' value='suphp'>
 		# suphp enabled
 		<Directory {tmpl_var name='web_document_root'}>
-		<IfModule mod_suphp.c>
-				suPHP_Engine on
-				# suPHP_UserGroup <tmpl_var name='system_user'> <tmpl_var name='system_group'>
+				<IfModule mod_suphp.c>
+						suPHP_Engine on
+						# suPHP_UserGroup <tmpl_var name='system_user'> <tmpl_var name='system_group'>
 <tmpl_if name='has_custom_php_ini'>
-	suPHP_ConfigPath <tmpl_var name='custom_php_ini_dir'>
+						suPHP_ConfigPath <tmpl_var name='custom_php_ini_dir'>
 </tmpl_if>
-				AddHandler x-httpd-suphp .php .php3 .php4 .php5
-				suPHP_AddHandler x-httpd-suphp
-		</IfModule>
+						AddHandler x-httpd-suphp .php .php3 .php4 .php5
+						suPHP_AddHandler x-httpd-suphp
+				</IfModule>
 		</Directory>
 </tmpl_if>
 <tmpl_if name='php' op='==' value='cgi'>
@@ -191,7 +191,7 @@
 </tmpl_if>
 <tmpl_if name='php' op='==' value='fast-cgi'>
 		# php as fast-cgi enabled
-	# For config options see: http://httpd.apache.org/mod_fcgid/mod/mod_fcgid.html
+		# For config options see: http://httpd.apache.org/mod_fcgid/mod/mod_fcgid.html
 		<IfModule mod_fcgid.c>
 <tmpl_if name='fastcgi_config_syntax' op='==' value='2'>
 				FcgidIdleTimeout 300
@@ -237,15 +237,15 @@
 				<Directory {tmpl_var name='document_root'}/cgi-bin>
 						Order allow,deny
 						Allow from all
-			    </Directory>
-                AddHandler php5-fcgi .php
-                Action php5-fcgi /php5-fcgi
+				</Directory>
+				AddHandler php5-fcgi .php
+				Action php5-fcgi /php5-fcgi
 				Alias /php5-fcgi {tmpl_var name='document_root'}/cgi-bin/php5-fcgi-{tmpl_var name='ip_address'}-{tmpl_var name='port'}-{tmpl_var name='domain'}
 <tmpl_if name='use_tcp'>
-                FastCgiExternalServer {tmpl_var name='document_root'}/cgi-bin/php5-fcgi-{tmpl_var name='ip_address'}-{tmpl_var name='port'}-{tmpl_var name='domain'} -host 127.0.0.1:<tmpl_var name='fpm_port'> -pass-header Authorization
+				FastCgiExternalServer {tmpl_var name='document_root'}/cgi-bin/php5-fcgi-{tmpl_var name='ip_address'}-{tmpl_var name='port'}-{tmpl_var name='domain'} -host 127.0.0.1:<tmpl_var name='fpm_port'> -pass-header Authorization
 </tmpl_if>
 <tmpl_if name='use_socket'>
-                FastCgiExternalServer {tmpl_var name='document_root'}/cgi-bin/php5-fcgi-{tmpl_var name='ip_address'}-{tmpl_var name='port'}-{tmpl_var name='domain'} -socket <tmpl_var name='fpm_socket'> -pass-header Authorization
+				FastCgiExternalServer {tmpl_var name='document_root'}/cgi-bin/php5-fcgi-{tmpl_var name='ip_address'}-{tmpl_var name='port'}-{tmpl_var name='domain'} -socket <tmpl_var name='fpm_socket'> -pass-header Authorization
 </tmpl_if>
 		</IfModule>
 </tmpl_if>
@@ -272,25 +272,25 @@
 
 		# add support for apache mpm_itk
 		<IfModule mpm_itk_module>
-			AssignUserId <tmpl_var name='system_user'> <tmpl_var name='system_group'>
+				AssignUserId <tmpl_var name='system_user'> <tmpl_var name='system_group'>
 		</IfModule>
 
 		<IfModule mod_dav_fs.c>
-		# Do not execute PHP files in webdav directory
-			<Directory {tmpl_var name='document_root'}/webdav>
-				<ifModule mod_security2.c>
-					SecRuleRemoveById 960015
-					SecRuleRemoveById 960032
-				</ifModule>
-				<FilesMatch "\.ph(p3?|tml)$">
-					SetHandler None
-				</FilesMatch>
-			</Directory>
-			DavLockDB {tmpl_var name='document_root'}/tmp/DavLock
-			# DO NOT REMOVE THE COMMENTS!
-			# IF YOU REMOVE THEM, WEBDAV WILL NOT WORK ANYMORE!
-			# WEBDAV BEGIN
-			# WEBDAV END
+				# Do not execute PHP files in webdav directory
+				<Directory {tmpl_var name='document_root'}/webdav>
+						<ifModule mod_security2.c>
+								SecRuleRemoveById 960015
+								SecRuleRemoveById 960032
+						</ifModule>
+						<FilesMatch "\.ph(p3?|tml)$">
+								SetHandler None
+						</FilesMatch>
+				</Directory>
+				DavLockDB {tmpl_var name='document_root'}/tmp/DavLock
+				# DO NOT REMOVE THE COMMENTS!
+				# IF YOU REMOVE THEM, WEBDAV WILL NOT WORK ANYMORE!
+				# WEBDAV BEGIN
+				# WEBDAV END
 		</IfModule>
 
 <tmpl_var name='apache_directives'>
